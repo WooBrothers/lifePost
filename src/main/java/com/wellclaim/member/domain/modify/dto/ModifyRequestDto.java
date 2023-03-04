@@ -11,5 +11,5 @@ public class ModifyRequestDto {
     private static final String ENUM_NAME = "ModifyErrorEnum.";
 
     @NotNull(message = ENUM_NAME + "ID_NOT_NULL")
-    private final String id;
+    private final int id;
 }

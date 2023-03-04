@@ -1,7 +1,7 @@
-package com.wellclaim.member.domain.withdraw;
+package com.wellclaim.member.domain.withdrawal;
 
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController("/withdraw")
-public class WithdrawController {
+public class WithdrawalController {
 }
