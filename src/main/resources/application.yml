@@ -2,4 +2,4 @@ spring:
   profiles:
     active: ${profileActive}
 server:
-  port: 8088
+  port: 8080

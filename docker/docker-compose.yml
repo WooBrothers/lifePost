@@ -9,7 +9,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 2023
       MYSQL_DATABASE: member
-      MYSQL_USER: app
-      MYSQL_PASSWORD: 2023
+      MYSQL_USER: member_app
+      MYSQL_PASSWORD: member2023
     ports:
       - "3306:3306"
