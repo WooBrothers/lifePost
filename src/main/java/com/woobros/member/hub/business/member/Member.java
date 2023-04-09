@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -17,6 +19,8 @@ import org.hibernate.validator.constraints.Length;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @DynamicInsert
 @Entity
 public class Member {

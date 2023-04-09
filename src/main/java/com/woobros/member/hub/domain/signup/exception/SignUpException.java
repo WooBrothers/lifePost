@@ -2,13 +2,12 @@ package com.woobros.member.hub.domain.signup.exception;
 
 import com.woobros.member.hub.common.exception.MemberErrorEnum;
 import com.woobros.member.hub.common.exception.MemberException;
-import com.woobros.member.hub.domain.logout.exception.LogoutMemberErrorEnum;
 
 public class SignUpException extends MemberException {
 
     private final MemberErrorEnum memberErrorEnum;
 
-    public SignUpException(LogoutMemberErrorEnum errorEnum) {
+    public SignUpException(SignUpMemberErrorEnum errorEnum) {
         super(errorEnum);
         this.memberErrorEnum = errorEnum;
     }

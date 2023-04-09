@@ -12,5 +12,4 @@ class MemberApplicationTests {
         String a = LogoutMemberErrorEnum.class.getSimpleName() + ".";
         System.out.println(a);
     }
-
 }

@@ -3,7 +3,7 @@ package com.woobros.member.hub.domain.logout.exception;
 import com.woobros.member.hub.common.exception.MemberErrorEnum;
 
 public enum LogoutMemberErrorEnum implements MemberErrorEnum {
-    LOGOUT_ERROR("logout error occur", "LO0001", "400"),
+    LOGOUT_ERROR("email duplicated", "LO0001", "409"),
     ;
 
     private final String message;
@@ -27,4 +27,5 @@ public enum LogoutMemberErrorEnum implements MemberErrorEnum {
     public String getHttpStatusCode() {
         return this.httpStatusCode;
     }
+
 }

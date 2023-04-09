@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -42,6 +43,7 @@ public class ControllerExceptionHandler {
         List<String> errorCodeList = new ArrayList<>();
 
         BindingResult bindResult = e.getBindingResult();
+
         for (FieldError fieldError : bindResult.getFieldErrors()) {
             /* 예외 발생 message 양식 : [열거형 에러 이름].[에러 이름] */
             String errorMsg = Optional.ofNullable(fieldError.getDefaultMessage())
@@ -80,14 +82,26 @@ public class ControllerExceptionHandler {
         /* MemberException 인터페이스 구현 예외 핸들러 */
 
         logger.error(e.getErrorMessage());
-
         MemberErrorResponse memberErrorResponse = MemberErrorResponse.builder()
             .errorMessage(e.getMessage())
             .errorCode(e.getErrorCode())
             .build();
 
-        HttpStatus status = HttpStatus.valueOf(e.getHttpStatusCode());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(memberErrorResponse);
+    }
 
-        return ResponseEntity.status(status).body(memberErrorResponse);
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolationException(
+        /* JPA 데이터 중복 생성 실패 에러 처리 */
+        DataIntegrityViolationException ex) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Duplicate data exists");
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleAllException(Exception e) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMap);
     }
 }
