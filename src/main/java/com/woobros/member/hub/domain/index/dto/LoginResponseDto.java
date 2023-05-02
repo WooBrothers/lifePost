@@ -1,4 +1,4 @@
-package com.woobros.member.hub.domain.login.dto;
+package com.woobros.member.hub.domain.index.dto;
 
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class LoginRequestDto {
+public class LoginResponseDto {
 
     private static final String ENUM_NAME = "LoginErrorEnum.";
 

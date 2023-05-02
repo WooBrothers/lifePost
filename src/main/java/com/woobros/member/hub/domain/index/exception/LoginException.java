@@ -1,4 +1,4 @@
-package com.woobros.member.hub.domain.login.exception;
+package com.woobros.member.hub.domain.index.exception;
 
 import com.woobros.member.hub.common.exception.MemberErrorEnum;
 import com.woobros.member.hub.common.exception.MemberException;

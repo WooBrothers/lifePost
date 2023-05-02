@@ -1,4 +1,4 @@
-package com.woobros.member.hub.domain.login.exception;
+package com.woobros.member.hub.domain.index.exception;
 
 import com.woobros.member.hub.common.exception.MemberErrorEnum;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public enum LoginMemberErrorEnum implements MemberErrorEnum {
 
     LoginMemberErrorEnum(String message, String errorCode, String httpStatusCode,
         String fieldName) {
-        
+
         this.message = message;
         this.errorCode = errorCode;
         this.httpStatusCode = httpStatusCode;

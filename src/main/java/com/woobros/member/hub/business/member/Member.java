@@ -3,6 +3,8 @@ package com.woobros.member.hub.business.member;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
@@ -11,12 +13,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,7 +32,6 @@ public class Member {
     @GeneratedValue
     private Long id;
 
-    @NotNull
     @Length(min = 1, max = 30)
     private String name;
 
@@ -38,32 +40,47 @@ public class Member {
     @Email
     private String email;
 
-    @NotNull
-    @Column(unique = true)
-    private String phone;
-
-    @NotNull
-    @ColumnDefault("false")
-    private boolean marketingSms;
-
-    @NotNull
-    @ColumnDefault("false")
-    private boolean marketingEmail;
-
-    @NotNull
-    @ColumnDefault("false")
-    private boolean marketingKakao;
-
-    @NotNull
-    @Length(min = 6, max = 25)
     private String password;
 
-    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     private String nickName;
+
+    private String picture;
+
+    private String accessToken;
+
+    private String refreshToken;
+
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updateAt;
+
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
+
+    public Member update(String name) {
+        this.name = name;
+
+        return this;
+    }
+
+    public Member updateRefreshToken(String reIssueRefreshToken) {
+        this.refreshToken = reIssueRefreshToken;
+        return this;
+    }
+
+    public Member updateTokens(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        return this;
+    }
 }

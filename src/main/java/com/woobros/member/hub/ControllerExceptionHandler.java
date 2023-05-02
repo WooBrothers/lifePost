@@ -3,7 +3,7 @@ package com.woobros.member.hub;
 import com.woobros.member.hub.common.exception.MemberErrorEnum;
 import com.woobros.member.hub.common.exception.MemberErrorResponse;
 import com.woobros.member.hub.common.exception.MemberException;
-import com.woobros.member.hub.domain.login.exception.LoginMemberErrorEnum;
+import com.woobros.member.hub.domain.index.exception.LoginMemberErrorEnum;
 import com.woobros.member.hub.domain.logout.exception.LogoutMemberErrorEnum;
 import com.woobros.member.hub.domain.modify.exception.ModifyMemberErrorEnum;
 import com.woobros.member.hub.domain.signup.exception.SignUpMemberErrorEnum;
@@ -43,6 +43,7 @@ public class ControllerExceptionHandler {
         List<String> errorCodeList = new ArrayList<>();
 
         BindingResult bindResult = e.getBindingResult();
+        MemberErrorEnum memberErrorEnum;
 
         for (FieldError fieldError : bindResult.getFieldErrors()) {
             /* 예외 발생 message 양식 : [열거형 에러 이름].[에러 이름] */
@@ -53,14 +54,25 @@ public class ControllerExceptionHandler {
             String enumName = errorMsgLit.get(0);
             String errorName = errorMsgLit.get(1);
 
-            MemberErrorEnum memberErrorEnum = switch (enumName) {
-                case "LoginErrorEnum" -> LoginMemberErrorEnum.valueOf(errorName);
-                case "LogoutErrorEnum" -> LogoutMemberErrorEnum.valueOf(errorName);
-                case "ModifyErrorEnum" -> ModifyMemberErrorEnum.valueOf(errorName);
-                case "SignUpErrorEnum" -> SignUpMemberErrorEnum.valueOf(errorName);
-                case "WithdrawErrorEnum" -> WithdrawMemberErrorEnum.valueOf(errorName);
-                default -> throw new RuntimeException("error enum is not defined.");
-            };
+            switch (enumName) {
+                case "LoginErrorEnum":
+                    memberErrorEnum = LoginMemberErrorEnum.valueOf(errorName);
+                    break;
+                case "LogoutErrorEnum":
+                    memberErrorEnum = LogoutMemberErrorEnum.valueOf(errorName);
+                    break;
+                case "ModifyErrorEnum":
+                    memberErrorEnum = ModifyMemberErrorEnum.valueOf(errorName);
+                    break;
+                case "SignUpErrorEnum":
+                    memberErrorEnum = SignUpMemberErrorEnum.valueOf(errorName);
+                    break;
+                case "WithdrawErrorEnum":
+                    memberErrorEnum = WithdrawMemberErrorEnum.valueOf(errorName);
+                    break;
+                default:
+                    throw new RuntimeException("error enum is not defined.");
+            }
 
             errorCodeMsgMap.put(memberErrorEnum.getErrorCode(), memberErrorEnum.getMessage());
             errorCodeList.add(memberErrorEnum.getErrorCode());
