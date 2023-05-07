@@ -1,8 +1,8 @@
 package com.woobros.member.hub.config.oauth;
 
-import com.woobros.member.hub.business.member.Member;
-import com.woobros.member.hub.business.member.Role;
-import com.woobros.member.hub.business.member.SocialType;
+import com.woobros.member.hub.model.member.Member;
+import com.woobros.member.hub.model.member.Role;
+import com.woobros.member.hub.model.member.SocialType;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;

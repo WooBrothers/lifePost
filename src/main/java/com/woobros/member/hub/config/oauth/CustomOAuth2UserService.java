@@ -1,9 +1,9 @@
 package com.woobros.member.hub.config.oauth;
 
-import com.woobros.member.hub.business.member.Member;
-import com.woobros.member.hub.business.member.MemberRepository;
-import com.woobros.member.hub.business.member.Role;
-import com.woobros.member.hub.business.member.SocialType;
+import com.woobros.member.hub.model.member.Member;
+import com.woobros.member.hub.model.member.MemberRepository;
+import com.woobros.member.hub.model.member.Role;
+import com.woobros.member.hub.model.member.SocialType;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -51,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String userNameAttributeName = userRequest.getClientRegistration()
             .getProviderDetails().getUserInfoEndpoint()
             .getUserNameAttributeName(); // OAuth2 로그인 시 키(PK)가 되는 값
-        
+
         Map<String, Object> attributes = oAuth2User
             .getAttributes(); // 소셜 로그인에서 API가 제공하는 userInfo의 Json 값(유저 정보들)
 

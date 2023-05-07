@@ -1,7 +1,7 @@
 package com.woobros.member.hub.config.jwt;
 
-import com.woobros.member.hub.business.member.Member;
-import com.woobros.member.hub.business.member.MemberRepository;
+import com.woobros.member.hub.model.member.Member;
+import com.woobros.member.hub.model.member.MemberRepository;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

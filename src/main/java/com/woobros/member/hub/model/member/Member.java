@@ -1,4 +1,4 @@
-package com.woobros.member.hub.business.member;
+package com.woobros.member.hub.model.member;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -8,7 +8,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,8 +34,7 @@ public class Member {
     @Length(min = 1, max = 30)
     private String name;
 
-    @Column(unique = true)
-    @NotNull
+    @Column(unique = true, nullable = false)
     @Email
     private String email;
 

@@ -2,7 +2,7 @@ package com.woobros.member.hub.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.woobros.member.hub.business.member.MemberRepository;
+import com.woobros.member.hub.model.member.MemberRepository;
 import java.util.Date;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.woobros.member.hub.business.member;
+package com.woobros.member.hub.model.member;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.Email;

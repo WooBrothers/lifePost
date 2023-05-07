@@ -1,8 +1,8 @@
 package com.woobros.member.hub.config.oauth;
 
-import com.woobros.member.hub.business.member.MemberRepository;
-import com.woobros.member.hub.business.member.Role;
 import com.woobros.member.hub.config.jwt.JwtService;
+import com.woobros.member.hub.model.member.MemberRepository;
+import com.woobros.member.hub.model.member.Role;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

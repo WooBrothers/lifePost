@@ -1,9 +1,9 @@
 package com.woobros.member.hub.config;
 
-import com.woobros.member.hub.business.member.Role;
 import com.woobros.member.hub.config.oauth.CustomOAuth2UserService;
 import com.woobros.member.hub.config.oauth.OAuth2LoginFailureHandler;
 import com.woobros.member.hub.config.oauth.OAuth2LoginSuccessHandler;
+import com.woobros.member.hub.model.member.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

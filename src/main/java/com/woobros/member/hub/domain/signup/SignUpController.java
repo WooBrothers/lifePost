@@ -1,7 +1,7 @@
 package com.woobros.member.hub.domain.signup;
 
-import com.woobros.member.hub.business.member.MemberDto;
 import com.woobros.member.hub.domain.signup.service.SignUpService;
+import com.woobros.member.hub.model.member.MemberDto;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

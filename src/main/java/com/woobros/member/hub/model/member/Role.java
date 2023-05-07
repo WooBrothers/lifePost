@@ -1,4 +1,4 @@
-package com.woobros.member.hub.business.member;
+package com.woobros.member.hub.model.member;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
