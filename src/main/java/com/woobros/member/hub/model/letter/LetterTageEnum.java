@@ -7,6 +7,7 @@ public enum LetterTageEnum {
     SUCCESS("성공"),
     HAPPINESS("행복"),
     DETERMINATION("마음가짐"),
+    TEST("테스트"),
     ;
 
     private String tag;

@@ -62,11 +62,11 @@ public class SecurityConfig {
             .authorizeRequests()
             // 권한 관리 대상을 지정하는 옵션. URL, HTTP 메소드별로 관리가 가능합
             .antMatchers("/", "/templates/**", "/css/**", "/js/**",
-                "/favicon.ico", "/h2/**", "/login/page")
+                "/favicon.ico", "/h2/**", "/login/page", "/api/v1/**")
             .permitAll()
             // antMatchers에서 지정된 URL들은 permitAll() 옵션을 통해 전체 열람 권한 설정
             // /api/v1/** 의 URL에 대해 권한 설정
-            .antMatchers("/v1/auth/**")
+            .antMatchers("/auth/api/v1/**")
             // "ROLE_USER" 권한을 가져야만 접근 가능하도록 설정
             .hasRole(Role.USER.name())
             // antMatchers 에서 지정되지 안읂 나머지 url은

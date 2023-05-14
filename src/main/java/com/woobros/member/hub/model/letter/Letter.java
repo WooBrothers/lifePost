@@ -1,6 +1,7 @@
 package com.woobros.member.hub.model.letter;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -27,6 +28,7 @@ public class Letter {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
     private String letterImage;
@@ -34,8 +36,10 @@ public class Letter {
     private String postStampImage;
 
     @Lob
+    @Column(nullable = false)
     private String contents;
 
+    @Column(nullable = false)
     private String writer;
 
     @Enumerated(EnumType.STRING)
