@@ -37,9 +37,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
 
                 response.addHeader(accessHeader, "Bearer " + accessToken);
-//                response.sendRedirect(
-//                    "https://developers.kakao.com/console/app/892571/config/platform"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
-
+                // TODO 해당 URL 환경변수 처리
+                response.sendRedirect("http://localhost:8080/");
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null);
             } else {
                 loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
@@ -58,5 +57,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
+        // TODO 해당 URL 환경변수 처리
+        response.sendRedirect("http://localhost:8080/");
     }
 }
