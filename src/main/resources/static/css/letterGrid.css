@@ -1,0 +1,26 @@
+#letter-grid-containers {
+  overflow: auto;
+  height: 80vh;
+}
+
+.letter-grid-container {
+  display: grid;
+  align-items: stretch;
+  justify-items: stretch;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: 1fr 1fr 5fr;
+  overflow: auto;
+  margin-bottom: 1vh;
+}
+
+.letter-item-title {
+  /* 1번 라인에서 2칸 */
+  grid-column: 1 / span 2;
+  font-size: 35px;
+}
+
+.letter-item-date {
+  /* 2번 라인에서 2칸 */
+  grid-column: 1 / span 2;
+  font-size: 30px;
+}

@@ -1,34 +1,15 @@
-{{>layout/headers}}
+<!DOCTYPE HTML>
 
-<style>
-  #letter-grid-containers {
-    overflow: auto;
-    height: 80vh;
-  }
-
-  .letter-grid-container {
-    display: grid;
-    align-items: stretch;
-    justify-items: stretch;
-    grid-template-columns: 1.5fr 1fr;
-    grid-template-rows: 1fr 1fr 5fr;
-    overflow: auto;
-    margin-bottom: 1vh;
-  }
-
-  .letter-item-title {
-    /* 1번 라인에서 2칸 */
-    grid-column: 1 / span 2;
-    font-size: 35px;
-  }
-
-  .letter-item-date {
-    /* 2번 라인에서 2칸 */
-    grid-column: 1 / span 2;
-    font-size: 30px;
-  }
-
-</style>
+<html lang="ko">
+<head>
+  <title>Life Post</title>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/letterGrid.css">
+  <link rel="stylesheet" type="text/css" href="/css/cardGrid.css">
+</head>
+<body>
 
 <div class="container">
   <div id="lp-title">
@@ -41,5 +22,10 @@
   </div>
 </div>
 
-<script type="text/javascript" src="/js/latter.js"></script>
-{{>layout/footer}}
+<script type="module" src="/js/indexPage.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+
