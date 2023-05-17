@@ -20,7 +20,9 @@ public class LetterServiceImpl implements LetterService {
     public LetterDto.Response getLatestLetter() {
         /* 가장 최근의 편지 조회 */
 
-        Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc();
+        Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc().orElseThrow(
+            () -> new RuntimeException("no have any letters.")
+        );
         log.debug(latestLetter.toString());
 
         LetterDto.Response response = letterMapper.toResponseDto(latestLetter);

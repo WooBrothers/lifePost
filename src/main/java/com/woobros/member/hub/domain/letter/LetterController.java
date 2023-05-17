@@ -19,12 +19,14 @@ public class LetterController {
     /* beans */
     private final LetterService letterService;
 
-    @GetMapping("/today")
+    @GetMapping("/latest")
     public ResponseEntity<LetterDto.Response> getTodayLetter() {
         log.debug("postLetter controller getLetter access");
 
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
+
+    @GetMapping("/")
 
     @PostMapping
     public ResponseEntity<LetterDto.Response> postLetter(
@@ -33,4 +35,5 @@ public class LetterController {
 
         return ResponseEntity.ok().body(letterService.postLetter(letterReqDto));
     }
+
 }
