@@ -29,15 +29,14 @@ public class LetterController {
     }
 
     @GetMapping("/page/{lastLetterId}/{size}")
-    public ResponseEntity<Page<LetterDto.PageResponse>> getLettersPage(
+    public Page<LetterDto.PageResponse> getLettersPage(
         @PathVariable Long lastLetterId,
         @PathVariable int size) {
         log.debug("postLetter controller getLettersPage access");
-        return ResponseEntity.ok().body(letterService.getLettersPage(lastLetterId, size));
+        return letterService.getLettersPage(lastLetterId, size);
     }
 
     @PostMapping
-
     public ResponseEntity<LetterDto.Response> postLetter(
         @RequestBody LetterDto.Request letterReqDto) {
         log.debug("postLetter controller postLetter access");

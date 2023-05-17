@@ -51,6 +51,7 @@ public class LetterDto {
     @Builder
     public static class Response {
 
+        private final Long id;
         private final String title;
         private final String letterImage;
         private final String postStampImage;
@@ -64,6 +65,7 @@ public class LetterDto {
     @Builder
     public static class PageResponse {
 
+        private final Long id;
         private final String title;
         private final String letterImage;
         private final String postStampImage;
