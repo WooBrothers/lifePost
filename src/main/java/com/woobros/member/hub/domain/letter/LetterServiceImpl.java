@@ -4,8 +4,12 @@ import com.woobros.member.hub.model.letter.Letter;
 import com.woobros.member.hub.model.letter.LetterDto;
 import com.woobros.member.hub.model.letter.LetterMapper;
 import com.woobros.member.hub.model.letter.LetterRepository;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -29,6 +33,18 @@ public class LetterServiceImpl implements LetterService {
         log.debug(response.toString());
 
         return response;
+    }
+
+    @Override
+    public Page<LetterDto.PageResponse> getLettersPage(Long lastLetterId, int size) {
+        /*  */
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        Page<Letter> lettersPage = letterRepository
+            .findByIdLessThanOrderByIdDesc(lastLetterId, pageRequest);
+
+        return new PageImpl<>(
+            lettersPage.stream().map(letterMapper::toPageResponseDto).collect(Collectors.toList()));
     }
 
     @Override

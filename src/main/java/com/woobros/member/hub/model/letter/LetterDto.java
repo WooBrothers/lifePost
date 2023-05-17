@@ -58,4 +58,17 @@ public class LetterDto {
         private final String writer;
         private final LetterTageEnum tag;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class PageResponse {
+
+        private final String title;
+        private final String letterImage;
+        private final String postStampImage;
+        private final String writer;
+        private final LetterTageEnum tag;
+        private final String createdDate;
+    }
 }

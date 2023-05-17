@@ -117,7 +117,6 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
   <!-- 프로파일 설정 -->
