@@ -1,5 +1,6 @@
 package com.woobros.member.hub.model.letter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,6 +45,10 @@ public class Letter {
 
     @Enumerated(EnumType.STRING)
     private LetterTageEnum tag;
+
+    @Column(unique = true, nullable = false)
+    @CreationTimestamp
+    private LocalDate createdDate;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

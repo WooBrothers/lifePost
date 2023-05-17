@@ -18,18 +18,27 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     public LetterDto.Response getLatestLetter() {
-        log.debug("getLatestLetter method is run.");
+        /* 가장 최근의 편지 조회 */
+
         Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc();
-        return letterMapper.toResponseDto(latestLetter);
+        log.debug(latestLetter.toString());
+
+        LetterDto.Response response = letterMapper.toResponseDto(latestLetter);
+        log.debug(response.toString());
+
+        return response;
     }
 
     @Override
     public LetterDto.Response postLetter(LetterDto.Request letterReqDto) {
-        log.debug("postLetter method is run.");
-
+        /* 편지 쓰기 */
         Letter letter = letterMapper.toEntity(letterReqDto);
         log.debug(letter.toString());
 
-        return letterMapper.toResponseDto(letterRepository.save(letter));
+        LetterDto.Response resultResponse = letterMapper
+            .toResponseDto(letterRepository.save(letter));
+        log.debug(resultResponse.toString());
+
+        return resultResponse;
     }
 }
