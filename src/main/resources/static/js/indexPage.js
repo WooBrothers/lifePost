@@ -21,5 +21,5 @@ window.onload = async () => {
     await LetterGrid.createGridByLetterId(todayLetterId, letterGridContainers);
 
     const todayCardGrid = document.getElementById("today-card-grid");
-    CardGrid.createCardGridByPageIndex(1, todayCardGrid);
+    CardGrid.createCardGridByPageIndex(todayCardGrid);
 }

@@ -1,9 +1,15 @@
 export class CardGrid {
     /* later grid를 만드는 함수 */
 
+    static createCardGridByPageIndex(todayCardGrid) {
+        /* 카드 그리드 조합 함수 */
+
+        CardGrid.createCardImgGrid(todayCardGrid);
+        CardGrid.createCardTextGrid(todayCardGrid);
+    }
+
     static createCardTextGrid(todayCardGrid) {
         /* 전달하는 div 객체에 자식으로 card grid를 추가 함수 */
-        // TODO innerHTML은 서버에서 받은 값으로 변경
 
         const cardTextGrid = document.createElement("div");
 
@@ -22,13 +28,6 @@ export class CardGrid {
         cardImgGrid.innerHTML = "card image";
 
         todayCardGrid.appendChild(cardImgGrid);
-    }
-
-    static createCardGridByPageIndex(pageIndex, todayCardGrid) {
-        /* 카드 그리드 조합 함수 */
-
-        CardGrid.createCardImgGrid(todayCardGrid);
-        CardGrid.createCardTextGrid(todayCardGrid);
     }
 }
 
