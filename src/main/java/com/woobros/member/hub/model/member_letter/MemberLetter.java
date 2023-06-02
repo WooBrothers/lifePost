@@ -1,8 +1,8 @@
-package com.woobros.member.hub.model.letter.summary.card.archive;
+package com.woobros.member.hub.model.member_letter;
 
 import com.woobros.member.hub.model.letter.Letter;
+import com.woobros.member.hub.model.member.Member;
 import java.time.LocalDateTime;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Setter
@@ -22,29 +21,25 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@DynamicInsert
 @Entity
-public class SummaryCardArchive {
+public class MemberLetter {
 
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(nullable = false)
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
     private Letter letter;
-
-    @Column(unique = true, nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String contents;
-
-    private String tag;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updateAt;
+
 }

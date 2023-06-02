@@ -25,7 +25,7 @@ public class LetterDto {
         private final String postStampImage;
         private final String contents;
         private final String writer;
-        private final LetterTageEnum tag;
+        private final LetterTagEnum tag;
         private final LocalDateTime createdAt;
         private final LocalDateTime updateAt;
     }
@@ -43,7 +43,7 @@ public class LetterDto {
         @NotBlank
         @Size(min = 1, max = 15)
         private String writer;
-        private LetterTageEnum tag;
+        private LetterTagEnum tag;
     }
 
     @Getter
@@ -57,7 +57,7 @@ public class LetterDto {
         private final String postStampImage;
         private final String contents;
         private final String writer;
-        private final LetterTageEnum tag;
+        private final LetterTagEnum tag;
     }
 
     @Getter
@@ -70,7 +70,7 @@ public class LetterDto {
         private final String letterImage;
         private final String postStampImage;
         private final String writer;
-        private final LetterTageEnum tag;
+        private final LetterTagEnum tag;
         private final String createdDate;
     }
 }

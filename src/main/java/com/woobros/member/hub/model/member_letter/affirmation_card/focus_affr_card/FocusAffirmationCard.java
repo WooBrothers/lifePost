@@ -1,13 +1,12 @@
-package com.woobros.member.hub.model.tincase.summary.card;
+package com.woobros.member.hub.model.member_letter.affirmation_card.focus_affr_card;
 
-import com.woobros.member.hub.model.letter.summary.card.archive.SummaryCardArchive;
-import com.woobros.member.hub.model.tincase.TinCase;
+import com.woobros.member.hub.model.member_letter.affirmation_card.MemberLetterAffirmationCard;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,26 +16,30 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @DynamicInsert
 @Entity
-public class SummaryCard {
+@Table(name = "FOCUS_AFFR_CARD")
+public class FocusAffirmationCard {
 
+    /*
+     * 획득한 확언 카드 혹은 멤버가 생성한 카드(추후) 중 집중하고 싶은 카드 저장 (즐겨찾기)
+     *
+     * */
     @Id
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @JoinColumn
-    private TinCase tinCase;
+    @OneToOne
+    private MemberLetterAffirmationCard memberLetterAffirmationCard;
 
-    @ManyToOne
-    @JoinColumn
-    private SummaryCardArchive summaryCardArchive;
+    private String title;
+
+    private String contents;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

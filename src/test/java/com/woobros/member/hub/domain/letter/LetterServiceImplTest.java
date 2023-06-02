@@ -4,7 +4,7 @@ import com.woobros.member.hub.model.letter.Letter;
 import com.woobros.member.hub.model.letter.LetterDto;
 import com.woobros.member.hub.model.letter.LetterMapper;
 import com.woobros.member.hub.model.letter.LetterMapperImpl;
-import com.woobros.member.hub.model.letter.LetterTageEnum;
+import com.woobros.member.hub.model.letter.LetterTagEnum;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,13 +22,13 @@ class LetterServiceImplTest {
 
         // test data
         List<Letter> letters = Stream.of(
-            Letter.builder().writer("tester").title("test1").tag(LetterTageEnum.TEST)
+            Letter.builder().writer("tester").title("test1").tag(LetterTagEnum.TEST)
                 .contents("test1").build(),
-            Letter.builder().writer("tester").title("test2").tag(LetterTageEnum.TEST)
+            Letter.builder().writer("tester").title("test2").tag(LetterTagEnum.TEST)
                 .contents("test2").build(),
-            Letter.builder().writer("tester").title("test3").tag(LetterTageEnum.TEST)
+            Letter.builder().writer("tester").title("test3").tag(LetterTagEnum.TEST)
                 .contents("test3").build(),
-            Letter.builder().writer("tester").title("test4").tag(LetterTageEnum.TEST)
+            Letter.builder().writer("tester").title("test4").tag(LetterTagEnum.TEST)
                 .contents("test4").build()
         ).collect(Collectors.toList());
 

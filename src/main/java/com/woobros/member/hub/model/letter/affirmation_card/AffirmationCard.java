@@ -1,7 +1,6 @@
-package com.woobros.member.hub.model.tincase.summary.card.focus.card;
+package com.woobros.member.hub.model.letter.affirmation_card;
 
-import com.woobros.member.hub.model.member.Member;
-import com.woobros.member.hub.model.tincase.summary.card.SummaryCard;
+import com.woobros.member.hub.model.letter.Letter;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +24,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder
 @DynamicInsert
 @Entity
-public class FocusCard {
+public class AffirmationCard {
 
     @Id
     @GeneratedValue
@@ -34,17 +32,15 @@ public class FocusCard {
 
     @ManyToOne
     @JoinColumn
-    private Member member;
+    private Letter letter;
 
-    @OneToOne
-    @JoinColumn(nullable = true)
-    private SummaryCard summaryCard;
-
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String contents;
+
+    private String tag;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

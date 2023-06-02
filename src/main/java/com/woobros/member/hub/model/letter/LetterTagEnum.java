@@ -1,6 +1,6 @@
 package com.woobros.member.hub.model.letter;
 
-public enum LetterTageEnum {
+public enum LetterTagEnum {
 
     ADVICE("조언"),
     AFFIRMATION("확언"),
@@ -12,7 +12,7 @@ public enum LetterTageEnum {
 
     private String tag;
 
-    LetterTageEnum(String tag) {
+    LetterTagEnum(String tag) {
         this.tag = tag;
     }
 }

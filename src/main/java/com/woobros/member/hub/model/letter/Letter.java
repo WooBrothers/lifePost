@@ -44,7 +44,7 @@ public class Letter {
     private String writer;
 
     @Enumerated(EnumType.STRING)
-    private LetterTageEnum tag;
+    private LetterTagEnum tag;
 
     @Column(unique = true, nullable = false)
     @CreationTimestamp
