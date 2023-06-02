@@ -23,8 +23,8 @@ public class LetterController {
 
     @GetMapping("/latest")
     public ResponseEntity<LetterDto.Response> getTodayLetter() {
-        log.debug("postLetter controller getLetter access");
 
+        log.debug("postLetter controller getLetter access");
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
 
@@ -32,6 +32,7 @@ public class LetterController {
     public Page<LetterDto.PageResponse> getLettersPage(
         @PathVariable Long lastLetterId,
         @PathVariable int size) {
+
         log.debug("postLetter controller getLettersPage access");
         return letterService.getLettersPage(lastLetterId, size);
     }
@@ -39,9 +40,8 @@ public class LetterController {
     @PostMapping
     public ResponseEntity<LetterDto.Response> postLetter(
         @RequestBody LetterDto.Request letterReqDto) {
-        log.debug("postLetter controller postLetter access");
 
+        log.debug("postLetter controller postLetter access");
         return ResponseEntity.ok().body(letterService.postLetter(letterReqDto));
     }
-
 }
