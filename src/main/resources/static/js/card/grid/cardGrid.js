@@ -32,7 +32,7 @@ export class CardGrid {
         CardGrid.createCardTextGrid(todayCardGrid);
     }
 
-    static ClickTodayLetter() {
+    static clickTodayLetter() {
         // 오늘의 편지 클릭 이벤트
         console.log("click today letter.");
     }

@@ -1,5 +1,5 @@
 #letter-grid-containers {
-  overflow: auto;
+  overflow-y: scroll;
   height: 80vh;
 }
 
@@ -9,7 +9,7 @@
   justify-items: stretch;
   grid-template-columns: 1.5fr 1fr;
   grid-template-rows: 1fr 1fr 5fr;
-  overflow: auto;
+  overflow-y: scroll;
   margin-bottom: 1vh;
 }
 
