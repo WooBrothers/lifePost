@@ -28,18 +28,7 @@ export class CardGrid {
         /* 카드 그리드 조합 함수 */
 
         CardGrid.createCardImgGrid(todayCardGrid);
-
         CardGrid.createCardTextGrid(todayCardGrid);
-    }
-
-    static clickTodayLetter() {
-        // 오늘의 편지 클릭 이벤트
-        console.log("click today letter.");
-    }
-
-    // 그리드 이벤트 바인딩 함수
-    static BindEventToCardGrid() {
-
     }
 }
 
