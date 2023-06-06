@@ -2,6 +2,7 @@ package com.woobros.member.hub.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
 import java.util.Date;
 import java.util.Optional;
@@ -13,10 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-@Getter
 @Slf4j
+@Getter
+@RequiredArgsConstructor
+@Service
 public class JwtService {
 
     @Value("${jwt.secretKey}")
@@ -41,6 +42,8 @@ public class JwtService {
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String EMAIL_CLAIM = "email";
+    private static final String ROLE_CLAIM = "role";
+
     private static final String BEARER = "Bearer ";
 
     private final MemberRepository memberRepository;
@@ -48,16 +51,14 @@ public class JwtService {
     /**
      * AccessToken 생성 메소드
      */
-    public String createAccessToken(String email) {
+    public String createAccessToken(Member member) {
         Date now = new Date();
         return JWT.create() // JWT 토큰을 생성하는 빌더 반환
             .withSubject(ACCESS_TOKEN_SUBJECT) // JWT의 Subject 지정 -> AccessToken이므로 AccessToken
             .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod)) // 토큰 만료 시간 설정
 
-            //클레임으로는 저희는 email 하나만 사용합니다.
-            //추가적으로 식별자나, 이름 등의 정보를 더 추가하셔도 됩니다.
-            //추가하실 경우 .withClaim(클래임 이름, 클래임 값) 으로 설정해주시면 됩니다
-            .withClaim(EMAIL_CLAIM, email)
+            // .withClaim(클래임 이름, 클래임 값) 으로 설정
+            .withClaim(EMAIL_CLAIM, member.getEmail())
             .sign(Algorithm
                 .HMAC512(secretKey)); // HMAC512 알고리즘 사용, application-jwt.yml에서 지정한 secret 키로 암호화
     }
@@ -126,6 +127,20 @@ public class JwtService {
                 .build() // 반환된 빌더로 JWT verifier 생성
                 .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
                 .getClaim(EMAIL_CLAIM) // claim(Emial) 가져오기
+                .asString());
+        } catch (Exception e) {
+            log.error("액세스 토큰이 유효하지 않습니다.");
+            return Optional.empty();
+        }
+    }
+
+    public Optional<String> extractRole(String accessToken) {
+        try {
+            // 토큰 유효성 검사하는 데에 사용할 알고리즘이 있는 JWT verifier builder 반환
+            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                .build() // 반환된 빌더로 JWT verifier 생성
+                .verify(accessToken) // accessToken을 검증하고 유효하지 않다면 예외 발생
+                .getClaim(ROLE_CLAIM) // claim(Emial) 가져오기
                 .asString());
         } catch (Exception e) {
             log.error("액세스 토큰이 유효하지 않습니다.");

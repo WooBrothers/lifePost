@@ -1,6 +1,7 @@
 package com.woobros.member.hub.config.oauth;
 
 import com.woobros.member.hub.config.jwt.JwtService;
+import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -51,7 +52,12 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User)
         throws IOException {
 
-        String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
+        Member member = Member.builder()
+            .email(oAuth2User.getEmail())
+            .role(oAuth2User.getRole())
+            .build();
+
+        String accessToken = jwtService.createAccessToken(member);
         String refreshToken = jwtService.createRefreshToken();
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);

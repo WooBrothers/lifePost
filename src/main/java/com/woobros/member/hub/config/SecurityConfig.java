@@ -1,8 +1,11 @@
 package com.woobros.member.hub.config;
 
+import com.woobros.member.hub.config.jwt.JwtAuthenticationProcessingFilter;
+import com.woobros.member.hub.config.jwt.JwtService;
 import com.woobros.member.hub.config.oauth.CustomOAuth2UserService;
 import com.woobros.member.hub.config.oauth.OAuth2LoginFailureHandler;
 import com.woobros.member.hub.config.oauth.OAuth2LoginSuccessHandler;
+import com.woobros.member.hub.model.member.MemberRepository;
 import com.woobros.member.hub.model.member.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 
 @RequiredArgsConstructor
@@ -23,6 +27,10 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+
+    private final JwtService jwtService;
+    private final MemberRepository memberRepository;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -86,11 +94,14 @@ public class SecurityConfig {
             .userInfoEndpoint().userService(oAuth2UserService);
 
         // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
-        // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
-        // 순서 : LogoutFilter -> JwtAuthenticationProcessingFilter -> CustomJsonUsernamePasswordAuthenticationFilter
-        // http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
-        // http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(jwtAuthenticationProcessingFilter(), LogoutFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
+        return new JwtAuthenticationProcessingFilter(
+            jwtService, memberRepository);
     }
 }

@@ -28,6 +28,20 @@ public class LetterController {
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
 
+    @GetMapping("/auth/latest")
+    public ResponseEntity<LetterDto.ReadResponse> getTodayLetterAuth() {
+
+        log.debug("/api/v1/letter/latest getTodayLetter access");
+        return ResponseEntity.ok().body(letterService.getLatestLetter());
+    }
+
+    @GetMapping("/admin/latest")
+    public ResponseEntity<LetterDto.ReadResponse> getTodayLetterAdmin() {
+
+        log.debug("/api/v1/letter/latest getTodayLetter access");
+        return ResponseEntity.ok().body(letterService.getLatestLetter());
+    }
+
     @GetMapping("/open/page/{lastLetterId}/{size}")
     public Page<LetterDto.PageResponse> getLettersPage(
         @PathVariable Long lastLetterId,
