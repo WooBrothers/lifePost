@@ -5,9 +5,9 @@ import org.springframework.data.domain.Page;
 
 public interface LetterService {
 
-    LetterDto.Response postLetter(LetterDto.Request letterReqDto);
+    LetterDto.ReadResponse postLetter(LetterDto.PostRequest letterReqDto);
 
-    LetterDto.Response getLatestLetter();
+    LetterDto.ReadResponse getLatestLetter();
 
     Page<LetterDto.PageResponse> getLettersPage(Long lastLetterId, int size);
 }

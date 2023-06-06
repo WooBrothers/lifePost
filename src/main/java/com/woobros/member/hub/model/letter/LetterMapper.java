@@ -10,11 +10,11 @@ public interface LetterMapper {
 
     LetterMapper INSTANCE = Mappers.getMapper(LetterMapper.class);
 
-    Letter toEntity(LetterDto.Request requestDto);
+    Letter toEntity(LetterDto.PostRequest requestDto);
 
-    LetterDto.Response toResponseDto(Letter letter);
+    LetterDto.ReadResponse toResponseDto(Letter letter);
 
-    LetterDto.Request toRequestDto(Letter letter);
+    LetterDto.PostRequest toRequestDto(Letter letter);
 
     @Mapping(source = "letter.createdDate", target = "createdDate", dateFormat = "yyyy-MM-dd")
     LetterDto.PageResponse toPageResponseDto(Letter letter);

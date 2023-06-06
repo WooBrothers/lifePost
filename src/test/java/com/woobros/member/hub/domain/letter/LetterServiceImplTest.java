@@ -36,11 +36,11 @@ class LetterServiceImplTest {
         Page<Letter> given = new PageImpl<>(letters);
 
         // Page<Entity> to Page<Dto> convert logic result
-        Page<LetterDto.Response> actual = new PageImpl<>(given.stream()
+        Page<LetterDto.ReadResponse> actual = new PageImpl<>(given.stream()
             .map(letterMapper::toResponseDto).collect(Collectors.toList()));
 
         // List<Entity> to Page<Dto> convert logic result
-        Page<LetterDto.Response> expected = new PageImpl<>(
+        Page<LetterDto.ReadResponse> expected = new PageImpl<>(
             letters.stream().map(letterMapper::toResponseDto)
                 .collect(Collectors.toList()));
 

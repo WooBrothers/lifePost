@@ -21,27 +21,29 @@ public class LetterController {
     /* beans */
     private final LetterService letterService;
 
-    @GetMapping("/latest")
-    public ResponseEntity<LetterDto.Response> getTodayLetter() {
+    @GetMapping("/open/latest")
+    public ResponseEntity<LetterDto.ReadResponse> getTodayLetter() {
 
-        log.debug("postLetter controller getLetter access");
+        log.debug("/api/v1/letter/latest getTodayLetter access");
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
 
-    @GetMapping("/page/{lastLetterId}/{size}")
+    @GetMapping("/open/page/{lastLetterId}/{size}")
     public Page<LetterDto.PageResponse> getLettersPage(
         @PathVariable Long lastLetterId,
         @PathVariable int size) {
 
-        log.debug("postLetter controller getLettersPage access");
+        log.debug(
+            "/api/v1/letter/page/" + lastLetterId + "/" + size
+                + " getLettersPage access");
         return letterService.getLettersPage(lastLetterId, size);
     }
 
-    @PostMapping
-    public ResponseEntity<LetterDto.Response> postLetter(
-        @RequestBody LetterDto.Request letterReqDto) {
+    @PostMapping("/admin")
+    public ResponseEntity<LetterDto.ReadResponse> postLetter(
+        @RequestBody LetterDto.PostRequest letterReqDto) {
 
-        log.debug("postLetter controller postLetter access");
+        log.debug("/api/v1/letter postLetter access");
         return ResponseEntity.ok().body(letterService.postLetter(letterReqDto));
     }
 }

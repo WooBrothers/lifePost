@@ -21,7 +21,7 @@ public class LetterServiceImpl implements LetterService {
     private final LetterMapper letterMapper;
 
     @Override
-    public LetterDto.Response getLatestLetter() {
+    public LetterDto.ReadResponse getLatestLetter() {
         /* 가장 최근의 편지 조회 */
 
         Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc().orElseThrow(
@@ -29,7 +29,7 @@ public class LetterServiceImpl implements LetterService {
         );
         log.debug(latestLetter.toString());
 
-        LetterDto.Response response = letterMapper.toResponseDto(latestLetter);
+        LetterDto.ReadResponse response = letterMapper.toResponseDto(latestLetter);
         log.debug(response.toString());
 
         return response;
@@ -48,12 +48,12 @@ public class LetterServiceImpl implements LetterService {
     }
 
     @Override
-    public LetterDto.Response postLetter(LetterDto.Request letterReqDto) {
+    public LetterDto.ReadResponse postLetter(LetterDto.PostRequest letterReqDto) {
         /* 편지 쓰기 */
         Letter letter = letterMapper.toEntity(letterReqDto);
         log.debug(letter.toString());
 
-        LetterDto.Response resultResponse = letterMapper
+        LetterDto.ReadResponse resultResponse = letterMapper
             .toResponseDto(letterRepository.save(letter));
         log.debug(resultResponse.toString());
 

@@ -1,9 +1,10 @@
 package com.woobros.member.hub.model.letter;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,11 +12,10 @@ import lombok.Setter;
 public class LetterDto {
 
     private LetterDto() {
-
     }
 
     @Getter
-    @AllArgsConstructor
+    @JsonInclude(Include.NON_NULL)
     @Builder
     public static class Info {
 
@@ -23,7 +23,6 @@ public class LetterDto {
         private final String title;
         private final String letterImage;
         private final String postStampImage;
-        private final String contents;
         private final String writer;
         private final LetterTagEnum tag;
         private final LocalDateTime createdAt;
@@ -32,7 +31,7 @@ public class LetterDto {
 
     @Getter
     @Setter
-    public static class Request {
+    public static class PostRequest {
 
         @NotBlank
         @Size(min = 1, max = 30)
@@ -47,9 +46,9 @@ public class LetterDto {
     }
 
     @Getter
-    @AllArgsConstructor
+    @JsonInclude(Include.NON_NULL)
     @Builder
-    public static class Response {
+    public static class ReadResponse {
 
         private final Long id;
         private final String title;
@@ -61,7 +60,7 @@ public class LetterDto {
     }
 
     @Getter
-    @AllArgsConstructor
+    @JsonInclude(Include.NON_NULL)
     @Builder
     public static class PageResponse {
 
