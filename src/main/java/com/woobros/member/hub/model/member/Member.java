@@ -72,7 +72,7 @@ public class Member {
     }
 
     public Member updateRefreshToken(String reIssueRefreshToken) {
-        this.refreshToken = reIssueRefreshToken;
+        this.setRefreshToken(reIssueRefreshToken);
         return this;
     }
 

@@ -60,16 +60,17 @@ public class SecurityConfig {
         http
             // URL별 권한 관리를 설정하는 옵션 시작점, 해당 옵션이 선언되어야만 antMatchers를 사용 가능함
             .authorizeRequests()
-            // 권한 관리 대상을 지정하는 옵션. URL, HTTP 메소드별로 관리가 가능합
+            // open url과 자원 요청은 권한 없이 허가
             .antMatchers("/", "/templates/**", "/css/**", "/js/**",
-                "/favicon.ico", "/h2/**", "/login/page", "/api/v1/**")
+                "/favicon.ico", "/h2/**", "/login/page", "/api/v1/**/open/**")
             .permitAll()
-            // antMatchers에서 지정된 URL들은 permitAll() 옵션을 통해 전체 열람 권한 설정
-            // /api/v1/** 의 URL에 대해 권한 설정
-            .antMatchers("/auth/api/v1/**")
-            // "ROLE_USER" 권한을 가져야만 접근 가능하도록 설정
+            // 구독자만 접근 가능
+            .antMatchers("/api/v1/**/auth/**")
             .hasRole(Role.USER.name())
-            // antMatchers 에서 지정되지 안읂 나머지 url은
+            // 관리자만 접근 가능
+            .antMatchers("/api/v1/**/admin/**")
+            .hasRole(Role.ADMIN.name())
+            // antMatchers 에서 지정되지 않은 나머지 url은
             .anyRequest()
             // 인증된 사용자들에게만 접근 허용 처리
             .authenticated();
