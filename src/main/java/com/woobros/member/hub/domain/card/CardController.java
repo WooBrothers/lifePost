@@ -19,16 +19,8 @@ public class CardController {
 
     private final CardService cardService;
 
-    @PostMapping("/auth/admin/affirmation")
+    @PostMapping("/admin/affirmation")
     public ResponseEntity<ReadResponse> postAffirmationCard(
-        @RequestBody CardDto.PostRequest cardPostReqDto) {
-
-        log.debug("/api/v1/card postAffirmationCard access");
-        return ResponseEntity.ok(cardService.postCard(cardPostReqDto));
-    }
-
-    @PostMapping("/auth/affirmation")
-    public ResponseEntity<ReadResponse> postAffirmationCardTest(
         @RequestBody CardDto.PostRequest cardPostReqDto) {
 
         log.debug("/api/v1/card postAffirmationCard access");
@@ -49,7 +41,7 @@ public class CardController {
         return null;
     }
 
-    @GetMapping("/today")
+    @GetMapping("/open/today")
     public ResponseEntity<CardDto.PageResponse> getTodayCard() {
         log.debug("/api/v1/card getTodayCard access");
         return ResponseEntity.ok(cardService.getLatestCard());
@@ -62,8 +54,8 @@ public class CardController {
         return null;
     }
 
-    @GetMapping("/auth/member-letter-affirmation")
-    public ResponseEntity<CardDto.ReadResponse> getMemberLetterAffirmationCards() {
+    @GetMapping("/auth/limited-affirmation")
+    public ResponseEntity<CardDto.ReadResponse> getLimitedCards() {
         log.debug("/api/v1/card getMemberLetterAffirmationCards access");
 //        return ResponseEntity.ok(cardService.getLatestCard());
         return null;

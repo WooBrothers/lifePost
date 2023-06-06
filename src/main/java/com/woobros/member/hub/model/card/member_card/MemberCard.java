@@ -1,12 +1,10 @@
-package com.woobros.member.hub.model.letter.affirmation_card;
+package com.woobros.member.hub.model.card.member_card;
 
-import com.woobros.member.hub.model.letter.Letter;
+import com.woobros.member.hub.model.member.Member;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,24 +15,22 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @DynamicInsert
 @Entity
-public class AffirmationCard {
+public class MemberCard {
 
     @Id
-    @GeneratedValue
     private Long id;
 
     @ManyToOne
-    @JoinColumn
-    private Letter letter;
+    private Member member;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)

@@ -1,6 +1,6 @@
-package com.woobros.member.hub.model.member_letter.affirmation_card;
+package com.woobros.member.hub.model.card.limited_affr_card;
 
-import com.woobros.member.hub.model.letter.affirmation_card.AffirmationCard;
+import com.woobros.member.hub.model.card.affirmation_card.AffirmationCard;
 import com.woobros.member.hub.model.member_letter.MemberLetter;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
@@ -25,16 +25,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder
 @DynamicInsert
 @Entity
-@Table(name = "MEM_LTER_AFFR_CARD")
-public class MemberLetterAffirmationCard {
-
-    @Id
-    @GeneratedValue
-    private Long id;
+@Table(name = "limited_affr_card")
+public class LimitedAffirmationCard {
 
     /*
      * letter 하나에 여러 card 존재 가능하다. (ex. 하나의 편지에 3개의 확언)
-     * 즉 member_letter 하나에도 member_letter_affirmation_card가 여러개 존재 가능하다.
+     * 즉 member_letter 하나에도 limited_affirmation_card가 여러개 존재 가능하다.
      *
      * ex) 편지 하나에 확언 카드 3개 생성 시
      * letter 1 : card 1, 2, 3
@@ -43,22 +39,27 @@ public class MemberLetterAffirmationCard {
      * memberLetter 1 생성
      *
      * member 1 -> card 1, 2, 3 획득
-     * memberLetterAffirmationCard 1 생성 : card_id 1
-     * memberLetterAffirmationCard 2 생성 : card_id 2
-     * memberLetterAffirmationCard 3 생성 : card_id 3
+     * limitedAffirmationCard 1 생성 : card_id 1
+     * limitedAffirmationCard 2 생성 : card_id 2
+     * limitedAffirmationCard 3 생성 : card_id 3
      *
      * member 2 -> letter 1획득
      * memberLetter 2 생성
      *
      * member 2 -> card 1, 2, 3 획득
-     * memberLetterAffirmationCard 4 생성 : card_id 1
-     * memberLetterAffirmationCard 5 생성 : card_id 2
-     * memberLetterAffirmationCard 6 생성 : card_id 3
+     * limitedAffirmationCard 4 생성 : card_id 1
+     * limitedAffirmationCard 5 생성 : card_id 2
+     * limitedAffirmationCard 6 생성 : card_id 3
      *
-     * memberLetter : memberLetterAffirmationCard = 1: N
-     * affirmationCard : memberLetterAffirmationCard = 1: N
+     * memberLetter : limitedAffirmationCard = 1: N
+     * affirmationCard : limitedAffirmationCard = 1: N
      *
      * */
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
     @ManyToOne
     @JoinColumn
     private MemberLetter memberLetter;

@@ -1,12 +1,12 @@
-package com.woobros.member.hub.model.member_letter.affirmation_card.focus_affr_card;
+package com.woobros.member.hub.model.card.focus_card;
 
-import com.woobros.member.hub.model.member_letter.affirmation_card.MemberLetterAffirmationCard;
+import com.woobros.member.hub.model.card.limited_affr_card.LimitedAffirmationCard;
+import com.woobros.member.hub.model.card.member_card.MemberCard;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,11 +23,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder
 @DynamicInsert
 @Entity
-@Table(name = "FOCUS_AFFR_CARD")
-public class FocusAffirmationCard {
+public class FocusCard {
 
     /*
-     * 획득한 확언 카드 혹은 멤버가 생성한 카드(추후) 중 집중하고 싶은 카드 저장 (즐겨찾기)
+     * member가 집중하고 싶은 카드 저장 (즐겨찾기)
+     *
+     * 1. letter에 딸린 card 집중하기
+     * 2. member가 집적 만든 card 집중하기
      *
      * */
     @Id
@@ -35,11 +37,10 @@ public class FocusAffirmationCard {
     private Long id;
 
     @OneToOne
-    private MemberLetterAffirmationCard memberLetterAffirmationCard;
+    private LimitedAffirmationCard limitedAffirmationCard;
 
-    private String title;
-
-    private String contents;
+    @OneToOne
+    private MemberCard memberCard;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

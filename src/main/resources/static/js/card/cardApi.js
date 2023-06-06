@@ -3,12 +3,14 @@ export class CardApi {
 
     // card api url 상수
     static CARD_API_URL = "/api/v1/card";
+    static CARD_OPEN_API_URL = CardApi.CARD_API_URL + "/open";
+    static CARD_AUTH_API_URL = CardApi.CARD_API_URL + "/auth";
     static CARD_LOAD_SIZE = 3;
 
     static async getLatestCard() {
         /* 가장 최신의 카드 조회 */
 
-        const url = CardApi.CARD_API_URL + "/latest";
+        const url = CardApi.CARD_OPEN_API_URL + "/latest";
 
         return await fetch(url).then(response => {
             if (response.ok) {
@@ -21,9 +23,9 @@ export class CardApi {
     }
 
     static async getNextCardsByPageId(pageId) {
-        /* 입력받은 page id 이후의 편지 리스트 조회 */
+        /* 입력받은 card id 이후의 카드 리스트 조회 */
 
-        const url = CardApi.CARD_API_URL + "/page/"
+        const url = CardApi.CARD_OPEN_API_URL + "/page/"
             + pageId + "/" + CardApi.CARD_LOAD_SIZE;
 
         return await fetch(url).then(response => {
