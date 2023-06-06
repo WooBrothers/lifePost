@@ -14,8 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +25,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
+@Slf4j
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
     private static final String INVALID_PARAM_EXCEPTION = "Invalid parameter Exception occurred. ";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -37,7 +36,7 @@ public class ControllerExceptionHandler {
         MethodArgumentNotValidException e) {
         /* DTO @Valid 예외 핸들러 */
 
-        logger.error(ControllerExceptionHandler.INVALID_PARAM_EXCEPTION, e);
+        log.error(ControllerExceptionHandler.INVALID_PARAM_EXCEPTION, e);
 
         Map<String, String> errorCodeMsgMap = new HashMap<>();
         List<String> errorCodeList = new ArrayList<>();
@@ -93,7 +92,7 @@ public class ControllerExceptionHandler {
     protected ResponseEntity<MemberErrorResponse> handleMemberException(MemberException e) {
         /* MemberException 인터페이스 구현 예외 핸들러 */
 
-        logger.error(e.getErrorMessage());
+        log.error(e.getErrorMessage());
         MemberErrorResponse memberErrorResponse = MemberErrorResponse.builder()
             .errorMessage(e.getMessage())
             .errorCode(e.getErrorCode())
