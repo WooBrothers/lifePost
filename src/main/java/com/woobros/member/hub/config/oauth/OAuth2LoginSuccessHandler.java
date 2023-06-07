@@ -5,6 +5,7 @@ import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,17 +33,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         try {
             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-            // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
-//            if (oAuth2User.getRole() == Role.GUEST) {
-//                String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
-//
-//                response.addHeader(accessHeader, "Bearer " + accessToken);
-//                // TODO 해당 URL 환경변수 처리
-//                response.sendRedirect("http://localhost:8080/");
-//                jwtService.sendAccessAndRefreshToken(response, accessToken, null);
-//            } else {
-//                loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
-//            }
             loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
         } catch (Exception e) {
             throw e;
@@ -62,7 +52,13 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
-        // TODO 해당 URL 환경변수 처리
-        response.sendRedirect("http://localhost:8080/");
+
+        Cookie cookie = new Cookie("accessToken", accessToken);
+        cookie.setHttpOnly(true);
+        // cookie.setSecure(true); // TODO HTTPS에서만 전송
+        cookie.setPath("/"); // 전역적으로 접근 가능하도록 설정
+        response.addCookie(cookie);
+
+        response.sendRedirect("/");
     }
 }
