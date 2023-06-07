@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +24,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"member_id", "letter_id"})})
 public class MemberLetter {
 
     @Id
@@ -29,11 +32,11 @@ public class MemberLetter {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "letter_id", nullable = false)
     private Letter letter;
 
     @CreationTimestamp
@@ -41,5 +44,4 @@ public class MemberLetter {
 
     @UpdateTimestamp
     private LocalDateTime updateAt;
-
 }

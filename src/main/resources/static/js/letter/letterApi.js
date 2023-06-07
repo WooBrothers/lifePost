@@ -38,4 +38,10 @@ export class LetterApi {
             })
         });
     }
+
+    static async getLetterContentsById(letterId) {
+        /* 입력받은 letterId 에 해당하는 편지 내용 조회 */
+
+        const url = LetterApi.LETTER_AUTH_API_URL + ""
+    }
 }
