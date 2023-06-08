@@ -15,5 +15,4 @@ public interface MemberMapper {
 
     MemberDto.Response toResponse(Member member);
 
-    Member toEntity(MemberDto.Request requestDto);
 }

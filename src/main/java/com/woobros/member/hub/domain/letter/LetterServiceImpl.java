@@ -10,6 +10,7 @@ import com.woobros.member.hub.model.member_letter.MemberLetter;
 import com.woobros.member.hub.model.member_letter.MemberLetterRepository;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class LetterServiceImpl implements LetterService {
 
@@ -79,7 +81,7 @@ public class LetterServiceImpl implements LetterService {
         Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc()
             .filter(letter -> letter.getId().equals(letterId))
             .filter(letter -> letter.getCreatedDate().equals(LocalDate.now()))
-            .orElseThrow(() -> new RuntimeException("letter request is not valid."));
+            .orElseThrow(() -> new RuntimeException("letter request is invalid."));
 
         if (memberLetterRepository.findByMemberIdAndLetterId(member.getId(), latestLetter.getId())
             .isEmpty()) {

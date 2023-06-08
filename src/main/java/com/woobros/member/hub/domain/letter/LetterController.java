@@ -1,6 +1,7 @@
 package com.woobros.member.hub.domain.letter;
 
 import com.woobros.member.hub.model.letter.LetterDto;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -72,7 +73,7 @@ public class LetterController {
 
     @PostMapping("/admin")
     public ResponseEntity<LetterDto.ReadResponse> postLetter(
-        @RequestBody LetterDto.PostRequest letterReqDto) {
+        @Valid @RequestBody LetterDto.PostRequest letterReqDto) {
 
         log.debug("/api/v1/letter postLetter access");
         return ResponseEntity.ok().body(letterService.postLetter(letterReqDto));

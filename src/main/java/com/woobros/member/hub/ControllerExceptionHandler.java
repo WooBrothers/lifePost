@@ -1,24 +1,18 @@
 package com.woobros.member.hub;
 
-import com.woobros.member.hub.common.exception.ErrorEnum;
+import com.woobros.member.hub.common.exception.ErrorConst;
 import com.woobros.member.hub.common.exception.ErrorException;
 import com.woobros.member.hub.common.exception.ErrorResponse;
-import com.woobros.member.hub.domain.index.exception.LoginErrorEnum;
-import com.woobros.member.hub.domain.logout.exception.LogoutErrorEnum;
-import com.woobros.member.hub.domain.modify.exception.ModifyErrorEnum;
-import com.woobros.member.hub.domain.signup.exception.SignUpErrorEnum;
-import com.woobros.member.hub.domain.withdrawal.exception.WithdrawErrorEnum;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,60 +23,32 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    private static final String INVALID_PARAM_EXCEPTION = "Invalid parameter Exception occurred. ";
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleInvalidParameterException(
-        MethodArgumentNotValidException e) {
-        /* DTO @Valid 예외 핸들러 */
+        MethodArgumentNotValidException e) throws IllegalAccessException {
+        /* dto 인자들이 매핑시에 문제가 발생했을 때 에러를 핸들하는 메소드, */
 
-        log.error(ControllerExceptionHandler.INVALID_PARAM_EXCEPTION, e);
+        log.error(e.getMessage());
 
-        Map<String, String> errorCodeMsgMap = new HashMap<>();
-        List<String> errorCodeList = new ArrayList<>();
+        FieldError fieldError = e.getBindingResult().getFieldError();
 
-        BindingResult bindResult = e.getBindingResult();
-        ErrorEnum errorEnum;
+        List<String> errorInfos = Arrays.asList(
+            Optional.ofNullable(fieldError)
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .map(errorMsgChunk -> errorMsgChunk.split("@"))
+                .orElseThrow(() -> new RuntimeException("dto error handler exception occur."))
+        );
 
-        for (FieldError fieldError : bindResult.getFieldErrors()) {
-            /* 예외 발생 message 양식 : [열거형 에러 이름].[에러 이름] */
-            String errorMsg = Optional.ofNullable(fieldError.getDefaultMessage())
-                .orElse("NotDefineEnumClass.NOT_DEFINE_MSG");
+        String fieldName = errorInfos.get(0);
+        String errorType = errorInfos.get(1);
 
-            List<String> errorMsgLit = Arrays.asList(errorMsg.split("\\."));
-            String enumName = errorMsgLit.get(0);
-            String errorName = errorMsgLit.get(1);
+        String errorMsg = ErrorConst.getErrorMessage(fieldName, errorType);
 
-            switch (enumName) {
-                case "LoginErrorEnum":
-                    errorEnum = LoginErrorEnum.valueOf(errorName);
-                    break;
-                case "LogoutErrorEnum":
-                    errorEnum = LogoutErrorEnum.valueOf(errorName);
-                    break;
-                case "ModifyErrorEnum":
-                    errorEnum = ModifyErrorEnum.valueOf(errorName);
-                    break;
-                case "SignUpErrorEnum":
-                    errorEnum = SignUpErrorEnum.valueOf(errorName);
-                    break;
-                case "WithdrawErrorEnum":
-                    errorEnum = WithdrawErrorEnum.valueOf(errorName);
-                    break;
-                default:
-                    throw new RuntimeException("error enum is not defined.");
-            }
-
-            errorCodeMsgMap.put(errorEnum.getErrorCode(), errorEnum.getMessage());
-            errorCodeList.add(errorEnum.getErrorCode());
-        }
-
-        /* 파라미터 에러가 다수 발생 했을 경우 -> 첫번째 에러 메시지와 코드를 리턴한다. */
         ErrorResponse memberErrorResponse = ErrorResponse.builder()
-            .errorMessage(errorCodeMsgMap.get(errorCodeList.get(0)))
-            .errorCode(errorCodeList.get(0))
-            .fieldErrorCodeMsgMap(errorCodeMsgMap)
-            .fieldErrorCodes(errorCodeList)
+            .errorMessage(errorMsg)
+            .errorCode(ErrorConst.DTO_FIELD_ERROR_CODE)
+            .fieldErrorCodeMsgMap(null)
+            .fieldErrorCodes(null)
             .build();
 
         return ResponseEntity.badRequest().body(memberErrorResponse);

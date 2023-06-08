@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,15 +34,20 @@ public class LetterDto {
     @Setter
     public static class PostRequest {
 
-        @NotBlank
-        @Size(min = 1, max = 30)
+        @NotNull(message = "title@NotNull")
+        @NotBlank(message = "title@NotBlank")
+        @Size(message = "title@Size", min = 1, max = 30)
         private String title;
+
+        @NotBlank(message = "contents@NotBlank")
+        private String contents;
+
+        @NotBlank(message = "writer@NotBlank")
+        @Size(message = "writer@Size", min = 1, max = 15)
+        private String writer;
+
         private String letterImage;
         private String postStampImage;
-        private String contents;
-        @NotBlank
-        @Size(min = 1, max = 15)
-        private String writer;
         private LetterTagEnum tag;
     }
 
