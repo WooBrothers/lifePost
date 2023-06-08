@@ -1,6 +1,6 @@
 package com.woobros.member.hub.common.exception;
 
-public interface MemberErrorEnum {
+public interface ErrorEnum {
 
     String getMessage();
 

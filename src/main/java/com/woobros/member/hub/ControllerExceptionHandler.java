@@ -1,13 +1,13 @@
 package com.woobros.member.hub;
 
-import com.woobros.member.hub.common.exception.MemberErrorEnum;
-import com.woobros.member.hub.common.exception.MemberErrorResponse;
-import com.woobros.member.hub.common.exception.MemberException;
-import com.woobros.member.hub.domain.index.exception.LoginMemberErrorEnum;
-import com.woobros.member.hub.domain.logout.exception.LogoutMemberErrorEnum;
-import com.woobros.member.hub.domain.modify.exception.ModifyMemberErrorEnum;
-import com.woobros.member.hub.domain.signup.exception.SignUpMemberErrorEnum;
-import com.woobros.member.hub.domain.withdrawal.exception.WithdrawMemberErrorEnum;
+import com.woobros.member.hub.common.exception.ErrorEnum;
+import com.woobros.member.hub.common.exception.ErrorException;
+import com.woobros.member.hub.common.exception.ErrorResponse;
+import com.woobros.member.hub.domain.index.exception.LoginErrorEnum;
+import com.woobros.member.hub.domain.logout.exception.LogoutErrorEnum;
+import com.woobros.member.hub.domain.modify.exception.ModifyErrorEnum;
+import com.woobros.member.hub.domain.signup.exception.SignUpErrorEnum;
+import com.woobros.member.hub.domain.withdrawal.exception.WithdrawErrorEnum;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class ControllerExceptionHandler {
     private static final String INVALID_PARAM_EXCEPTION = "Invalid parameter Exception occurred. ";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<MemberErrorResponse> handleInvalidParameterException(
+    protected ResponseEntity<ErrorResponse> handleInvalidParameterException(
         MethodArgumentNotValidException e) {
         /* DTO @Valid 예외 핸들러 */
 
@@ -42,7 +42,7 @@ public class ControllerExceptionHandler {
         List<String> errorCodeList = new ArrayList<>();
 
         BindingResult bindResult = e.getBindingResult();
-        MemberErrorEnum memberErrorEnum;
+        ErrorEnum errorEnum;
 
         for (FieldError fieldError : bindResult.getFieldErrors()) {
             /* 예외 발생 message 양식 : [열거형 에러 이름].[에러 이름] */
@@ -55,30 +55,30 @@ public class ControllerExceptionHandler {
 
             switch (enumName) {
                 case "LoginErrorEnum":
-                    memberErrorEnum = LoginMemberErrorEnum.valueOf(errorName);
+                    errorEnum = LoginErrorEnum.valueOf(errorName);
                     break;
                 case "LogoutErrorEnum":
-                    memberErrorEnum = LogoutMemberErrorEnum.valueOf(errorName);
+                    errorEnum = LogoutErrorEnum.valueOf(errorName);
                     break;
                 case "ModifyErrorEnum":
-                    memberErrorEnum = ModifyMemberErrorEnum.valueOf(errorName);
+                    errorEnum = ModifyErrorEnum.valueOf(errorName);
                     break;
                 case "SignUpErrorEnum":
-                    memberErrorEnum = SignUpMemberErrorEnum.valueOf(errorName);
+                    errorEnum = SignUpErrorEnum.valueOf(errorName);
                     break;
                 case "WithdrawErrorEnum":
-                    memberErrorEnum = WithdrawMemberErrorEnum.valueOf(errorName);
+                    errorEnum = WithdrawErrorEnum.valueOf(errorName);
                     break;
                 default:
                     throw new RuntimeException("error enum is not defined.");
             }
 
-            errorCodeMsgMap.put(memberErrorEnum.getErrorCode(), memberErrorEnum.getMessage());
-            errorCodeList.add(memberErrorEnum.getErrorCode());
+            errorCodeMsgMap.put(errorEnum.getErrorCode(), errorEnum.getMessage());
+            errorCodeList.add(errorEnum.getErrorCode());
         }
 
         /* 파라미터 에러가 다수 발생 했을 경우 -> 첫번째 에러 메시지와 코드를 리턴한다. */
-        MemberErrorResponse memberErrorResponse = MemberErrorResponse.builder()
+        ErrorResponse memberErrorResponse = ErrorResponse.builder()
             .errorMessage(errorCodeMsgMap.get(errorCodeList.get(0)))
             .errorCode(errorCodeList.get(0))
             .fieldErrorCodeMsgMap(errorCodeMsgMap)
@@ -88,12 +88,12 @@ public class ControllerExceptionHandler {
         return ResponseEntity.badRequest().body(memberErrorResponse);
     }
 
-    @ExceptionHandler(MemberException.class)
-    protected ResponseEntity<MemberErrorResponse> handleMemberException(MemberException e) {
+    @ExceptionHandler(ErrorException.class)
+    protected ResponseEntity<ErrorResponse> handleMemberException(ErrorException e) {
         /* MemberException 인터페이스 구현 예외 핸들러 */
 
         log.error(e.getErrorMessage());
-        MemberErrorResponse memberErrorResponse = MemberErrorResponse.builder()
+        ErrorResponse memberErrorResponse = ErrorResponse.builder()
             .errorMessage(e.getMessage())
             .errorCode(e.getErrorCode())
             .build();

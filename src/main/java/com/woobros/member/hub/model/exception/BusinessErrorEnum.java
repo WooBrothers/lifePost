@@ -1,10 +1,10 @@
 package com.woobros.member.hub.model.exception;
 
-import com.woobros.member.hub.common.exception.MemberErrorEnum;
+import com.woobros.member.hub.common.exception.ErrorEnum;
 import lombok.Getter;
 
 @Getter
-public enum BusinessErrorEnum implements MemberErrorEnum {
+public enum BusinessErrorEnum implements ErrorEnum {
 
     NOT_FOUND("data not found", "BE0001", "404", ""),
     ;
