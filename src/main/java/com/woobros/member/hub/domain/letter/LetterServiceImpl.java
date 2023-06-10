@@ -45,10 +45,8 @@ public class LetterServiceImpl implements LetterService {
         Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc().orElseThrow(
             () -> new CommonException(ErrorEnum.NOT_FOUND)
         );
-        log.debug(latestLetter.toString());
 
         LetterDto.ReadResponse response = letterMapper.toResponseDto(latestLetter);
-        log.debug(response.toString());
 
         return response;
     }
@@ -71,11 +69,9 @@ public class LetterServiceImpl implements LetterService {
         /* 편지 쓰기 */
 
         Letter letter = letterMapper.toEntity(letterReqDto);
-        log.debug(letter.toString());
 
         LetterDto.ReadResponse resultResponse = letterMapper
             .toResponseDto(letterRepository.save(letter));
-        log.debug(resultResponse.toString());
 
         return resultResponse;
     }
@@ -87,13 +83,11 @@ public class LetterServiceImpl implements LetterService {
 
         Member member = memberRepository.findByEmail(userDetails.getUsername())
             .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
-        log.debug(member.toString());
 
         Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc()
             .filter(letter -> letter.getId().equals(letterId))
             .filter(letter -> letter.getCreatedDate().equals(LocalDate.now()))
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
-        log.debug(latestLetter.toString());
 
         if (memberLetterRepository.findByMemberIdAndLetterId(member.getId(), latestLetter.getId())
             .isEmpty()) {
@@ -103,21 +97,18 @@ public class LetterServiceImpl implements LetterService {
                     .member(member)
                     .letter(latestLetter)
                     .build());
-            log.debug(memberLetter.toString());
 
             List<AffirmationCard> affirmationCards = affirmationCardRepository
                 .findByLetterId(latestLetter.getId());
-            log.debug(affirmationCards.toString());
 
             for (AffirmationCard affirmationCard : affirmationCards) {
-                LimitedAffirmationCard limitedAffirmationCard = limitedAffirmationCardRepository
+                limitedAffirmationCardRepository
                     .save(
                         LimitedAffirmationCard.builder()
                             .memberLetter(memberLetter)
                             .affirmationCard(affirmationCard)
                             .build()
                     );
-                log.debug(limitedAffirmationCard.toString());
             }
         }
 
