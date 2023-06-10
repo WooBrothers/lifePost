@@ -1,7 +1,6 @@
 package com.woobros.member.hub.domain.letter;
 
 import com.woobros.member.hub.model.letter.Letter;
-import com.woobros.member.hub.model.letter.LetterDto;
 import com.woobros.member.hub.model.letter.LetterMapper;
 import com.woobros.member.hub.model.letter.LetterMapperImpl;
 import com.woobros.member.hub.model.letter.LetterTagEnum;

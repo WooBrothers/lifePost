@@ -1,7 +1,8 @@
-package com.woobros.member.hub.model.letter;
+package com.woobros.member.hub.domain.letter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.woobros.member.hub.model.letter.LetterTagEnum;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

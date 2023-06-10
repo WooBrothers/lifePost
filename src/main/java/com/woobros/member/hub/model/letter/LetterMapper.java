@@ -1,5 +1,6 @@
 package com.woobros.member.hub.model.letter;
 
+import com.woobros.member.hub.domain.letter.LetterDto;
 import java.time.LocalDate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

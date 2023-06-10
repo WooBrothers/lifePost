@@ -1,6 +1,5 @@
 package com.woobros.member.hub.domain.letter;
 
-import com.woobros.member.hub.model.letter.LetterDto;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
 

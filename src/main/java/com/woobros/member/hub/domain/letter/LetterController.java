@@ -1,6 +1,5 @@
 package com.woobros.member.hub.domain.letter;
 
-import com.woobros.member.hub.model.letter.LetterDto;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

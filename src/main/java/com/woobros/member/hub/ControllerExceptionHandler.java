@@ -1,7 +1,6 @@
 package com.woobros.member.hub;
 
 import com.woobros.member.hub.common.exception.ErrorConst;
-import com.woobros.member.hub.common.exception.ErrorException;
 import com.woobros.member.hub.common.exception.ErrorResponse;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,19 +52,6 @@ public class ControllerExceptionHandler {
             .build();
 
         return ResponseEntity.badRequest().body(memberErrorResponse);
-    }
-
-    @ExceptionHandler(ErrorException.class)
-    protected ResponseEntity<ErrorResponse> handleMemberException(ErrorException e) {
-        /* MemberException 인터페이스 구현 예외 핸들러 */
-
-        log.error(e.getErrorMessage());
-        ErrorResponse memberErrorResponse = ErrorResponse.builder()
-            .errorMessage(e.getMessage())
-            .errorCode(e.getErrorCode())
-            .build();
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(memberErrorResponse);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
