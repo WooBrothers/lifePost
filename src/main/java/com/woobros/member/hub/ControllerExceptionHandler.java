@@ -36,7 +36,8 @@ public class ControllerExceptionHandler {
             Optional.ofNullable(fieldError)
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .map(errorMsgChunk -> errorMsgChunk.split("@"))
-                .orElseThrow(() -> new RuntimeException("dto error handler exception occur."))
+                .orElseThrow(() -> new RuntimeException(
+                    "During dto validation exception handler, dto error message empty exception occur."))
         );
 
         String fieldName = errorInfos.get(0);
