@@ -1,5 +1,6 @@
 package com.woobros.member.hub;
 
+import com.woobros.member.hub.common.exception.CommonException;
 import com.woobros.member.hub.common.exception.ErrorConst;
 import com.woobros.member.hub.common.exception.ErrorResponse;
 import java.util.Arrays;
@@ -16,7 +17,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 
 @Slf4j
 @RestControllerAdvice
@@ -36,22 +36,35 @@ public class ControllerExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .map(errorMsgChunk -> errorMsgChunk.split("@"))
                 .orElseThrow(() -> new RuntimeException(
-                    "During dto validation exception handler, dto error message empty exception occur."))
+                    "During dto validation exception handler, dto error message empty exception occur.")
+                )
         );
 
         String fieldName = errorInfos.get(0);
         String errorType = errorInfos.get(1);
-
         String errorMsg = ErrorConst.getErrorMessage(fieldName, errorType);
 
         ErrorResponse memberErrorResponse = ErrorResponse.builder()
             .errorMessage(errorMsg)
             .errorCode(ErrorConst.DTO_FIELD_ERROR_CODE)
-            .fieldErrorCodeMsgMap(null)
-            .fieldErrorCodes(null)
             .build();
 
         return ResponseEntity.badRequest().body(memberErrorResponse);
+    }
+
+    @ExceptionHandler(CommonException.class)
+    public ResponseEntity<ErrorResponse> handleCommonException(CommonException e) {
+        /* domain 로직중 발생하는 예외를 처리하는 공통 에러 핸들러 */
+
+        log.error("[Error Msg]: " + e.getMessage());
+        log.error("[Error Code]: " + e.getErrorCode());
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+            .errorMessage(e.getMessage())
+            .errorCode(e.getErrorCode())
+            .build();
+
+        return ResponseEntity.status((e.getHttpStatusCode())).body(errorResponse);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -65,6 +78,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleAllException(Exception e) {
         Map<String, String> errorMap = new HashMap<>();
+
         errorMap.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMap);
     }
