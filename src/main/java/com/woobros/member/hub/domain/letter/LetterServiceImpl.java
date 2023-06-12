@@ -130,14 +130,14 @@ public class LetterServiceImpl implements LetterService {
         UserDetails userDetails) {
 
         Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .filter(mem -> mem.getStampCount() > 0)
             .orElseThrow(() -> new CommonException(ErrorEnum.STAMP_NOT_ENOUGH));
 
         Letter letter = letterRepository.findById(letterId)
             .filter(let -> !let.getCreatedDate().equals(LocalDate.now()))
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
 
-        if (doesNotHaveLetterForMember(member.getId(), letter.getId())) {
+        if (doesNotHaveLetterForMember(member.getId(), letter.getId())
+            && member.getStampCount() > 0) {
 
             memberRepository.save(member.useStamp());
             saveLetterAndCardToMember(member, letter);
