@@ -1,4 +1,4 @@
-package com.woobros.member.hub.model.card.affirmation_card;
+package com.woobros.member.hub.model.card.affr_card;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

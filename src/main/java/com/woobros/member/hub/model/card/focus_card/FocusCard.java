@@ -1,7 +1,7 @@
 package com.woobros.member.hub.model.card.focus_card;
 
-import com.woobros.member.hub.model.card.limited_affr_card.LimitedAffirmationCard;
-import com.woobros.member.hub.model.card.member_card.MemberCard;
+import com.woobros.member.hub.model.card.memb_card.MemberCard;
+import com.woobros.member.hub.model.card.memb_cret_card.MemberCreateCard;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,10 +37,10 @@ public class FocusCard {
     private Long id;
 
     @OneToOne
-    private LimitedAffirmationCard limitedAffirmationCard;
+    private MemberCard memberCard;
 
     @OneToOne
-    private MemberCard memberCard;
+    private MemberCreateCard memberCreateCard;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

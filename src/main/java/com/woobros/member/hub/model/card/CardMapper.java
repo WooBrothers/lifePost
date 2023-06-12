@@ -1,6 +1,6 @@
 package com.woobros.member.hub.model.card;
 
-import com.woobros.member.hub.model.card.affirmation_card.AffirmationCard;
+import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import java.time.LocalDate;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

@@ -3,8 +3,8 @@ package com.woobros.member.hub.domain.card;
 import com.woobros.member.hub.model.card.CardDto;
 import com.woobros.member.hub.model.card.CardDto.PageResponse;
 import com.woobros.member.hub.model.card.CardMapper;
-import com.woobros.member.hub.model.card.affirmation_card.AffirmationCard;
-import com.woobros.member.hub.model.card.affirmation_card.AffirmationCardRepository;
+import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
+import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,7 +27,7 @@ public class CardServiceImpl implements CardService {
             affirmationCardRepository.save(affirmationCard)
         );
         log.debug(resultResponse.toString());
-        
+
         return resultResponse;
     }
 

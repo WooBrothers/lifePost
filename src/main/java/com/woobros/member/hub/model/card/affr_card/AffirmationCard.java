@@ -1,4 +1,4 @@
-package com.woobros.member.hub.model.card.affirmation_card;
+package com.woobros.member.hub.model.card.affr_card;
 
 import com.woobros.member.hub.model.letter.Letter;
 import java.time.LocalDateTime;
