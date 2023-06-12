@@ -2,10 +2,10 @@ package com.woobros.member.hub.domain.letter;
 
 import com.woobros.member.hub.common.exception.CommonException;
 import com.woobros.member.hub.common.exception.ErrorEnum;
-import com.woobros.member.hub.model.card.affirmation_card.AffirmationCard;
-import com.woobros.member.hub.model.card.affirmation_card.AffirmationCardRepository;
-import com.woobros.member.hub.model.card.limited_affr_card.LimitedAffirmationCard;
-import com.woobros.member.hub.model.card.limited_affr_card.LimitedAffirmationCardRepository;
+import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
+import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;
+import com.woobros.member.hub.model.card.memb_card.MemberCard;
+import com.woobros.member.hub.model.card.memb_card.MemberCardRepository;
 import com.woobros.member.hub.model.letter.Letter;
 import com.woobros.member.hub.model.letter.LetterMapper;
 import com.woobros.member.hub.model.letter.LetterRepository;
@@ -34,7 +34,7 @@ public class LetterServiceImpl implements LetterService {
     private final LetterRepository letterRepository;
     private final MemberRepository memberRepository;
     private final MemberLetterRepository memberLetterRepository;
-    private final LimitedAffirmationCardRepository limitedAffirmationCardRepository;
+    private final MemberCardRepository memberCardRepository;
     private final AffirmationCardRepository affirmationCardRepository;
     private final LetterMapper letterMapper;
 
@@ -102,9 +102,9 @@ public class LetterServiceImpl implements LetterService {
                 .findByLetterId(latestLetter.getId());
 
             for (AffirmationCard affirmationCard : affirmationCards) {
-                limitedAffirmationCardRepository
+                memberCardRepository
                     .save(
-                        LimitedAffirmationCard.builder()
+                        MemberCard.builder()
                             .memberLetter(memberLetter)
                             .affirmationCard(affirmationCard)
                             .build()
