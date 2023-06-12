@@ -1,4 +1,4 @@
-package com.woobros.member.hub.bean;
+package com.woobros.member.hub.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
