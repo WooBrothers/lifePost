@@ -1,8 +1,8 @@
 package com.woobros.member.hub.model.stamp;
 
 
-import com.woobros.member.hub.model.letter.Letter;
 import com.woobros.member.hub.model.member.Member;
+import com.woobros.member.hub.model.member_letter.MemberLetter;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +26,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"member_id", "letter_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"member_id", "member_letter_id"})})
 public class Stamp {
 
     @Id
@@ -38,11 +38,11 @@ public class Stamp {
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "letter_id")
-    private Letter letter;
+    @JoinColumn(name = "member_letter_id")
+    private MemberLetter memberLetter;
 
     @Column(nullable = false)
-    private Integer action;
+    private Integer action; // +1 = 우표 획득, -1 우표 사용
 
     @CreationTimestamp
     private LocalDateTime createdAt;

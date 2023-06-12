@@ -76,4 +76,9 @@ public class Member {
         this.setRefreshToken(reIssueRefreshToken);
         return this;
     }
+
+    public Member useStamp() {
+        this.setStampCount(this.getStampCount() - 1);
+        return this;
+    }
 }
