@@ -48,12 +48,13 @@ public class Member {
 
     private String picture;
 
-    private String accessToken;
-
     private String refreshToken;
 
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
+
+    @Column(columnDefinition = "int default 0")
+    private Integer stampCount;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -73,12 +74,6 @@ public class Member {
 
     public Member updateRefreshToken(String reIssueRefreshToken) {
         this.setRefreshToken(reIssueRefreshToken);
-        return this;
-    }
-
-    public Member updateTokens(String accessToken, String refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
         return this;
     }
 }
