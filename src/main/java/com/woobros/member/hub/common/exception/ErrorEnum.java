@@ -8,6 +8,7 @@ public enum ErrorEnum {
     /* 로직 관련 에러 메시지 */
     // LETTER domain LTxxxx
     LETTER_REQUEST_INVALID("letter request is invalid.", "LT0001", 409),
+    STAMP_NOT_ENOUGH("member doesn't have enough stamp.", "LT0002", 409),
     ;
 
     private String message;

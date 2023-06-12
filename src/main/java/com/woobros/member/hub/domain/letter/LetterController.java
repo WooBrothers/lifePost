@@ -23,26 +23,16 @@ public class LetterController {
     /* beans */
     private final LetterService letterService;
 
-    private static final String DEFAULT_URL = "/api/v1/letter";
+    @PostMapping("/admin")
+    public ResponseEntity<LetterDto.ReadResponse> postLetter(
+        @Valid @RequestBody LetterDto.PostRequest letterReqDto) {
+
+        return ResponseEntity.ok().body(letterService.postLetter(letterReqDto));
+    }
 
     @GetMapping("/open/latest")
     public ResponseEntity<LetterDto.ReadResponse> getTodayLetter() {
 
-        log.debug(DEFAULT_URL + "latest getTodayLetter access");
-        return ResponseEntity.ok().body(letterService.getLatestLetter());
-    }
-
-    @GetMapping("/auth/latest")
-    public ResponseEntity<LetterDto.ReadResponse> getTodayLetterAuth() {
-
-        log.debug(DEFAULT_URL + "latest getTodayLetterAuth access");
-        return ResponseEntity.ok().body(letterService.getLatestLetter());
-    }
-
-    @GetMapping("/admin/latest")
-    public ResponseEntity<LetterDto.ReadResponse> getTodayLetterAdmin() {
-
-        log.debug(DEFAULT_URL + "latest getTodayLetterAdmin access");
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
 
@@ -51,9 +41,6 @@ public class LetterController {
         @PathVariable Long lastLetterId,
         @PathVariable int size) {
 
-        log.debug(
-            DEFAULT_URL + "page/" + lastLetterId + "/" + size
-                + " getLettersPage access");
         return letterService.getLettersPage(lastLetterId, size);
     }
 
@@ -61,20 +48,16 @@ public class LetterController {
     public ResponseEntity<LetterDto.ReadResponse> getTodayLetterContents(
         @PathVariable Long letterId,
         @AuthenticationPrincipal UserDetails userDetails) {
-        /* 오늘의 편지 읽기 요청 */
-
-        log.debug(DEFAULT_URL + "/auth/" + letterId);
 
         return ResponseEntity.ok(letterService
             .getTodayLetterContentsByLetterId(letterId, userDetails));
     }
 
+    @GetMapping("/auth/stamp/{letterId}")
+    public ResponseEntity<LetterDto.ReadResponse> getLetterContentsUsingStamp(
+        @PathVariable Long letterId,
+        @AuthenticationPrincipal UserDetails userDetails) {
 
-    @PostMapping("/admin")
-    public ResponseEntity<LetterDto.ReadResponse> postLetter(
-        @Valid @RequestBody LetterDto.PostRequest letterReqDto) {
-
-        log.debug("/api/v1/letter postLetter access");
-        return ResponseEntity.ok().body(letterService.postLetter(letterReqDto));
+        return ResponseEntity.ok(letterService.getLetterContentsByLetterId(letterId, userDetails));
     }
 }

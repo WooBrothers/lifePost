@@ -55,5 +55,5 @@ public class Letter {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
+    
 }
