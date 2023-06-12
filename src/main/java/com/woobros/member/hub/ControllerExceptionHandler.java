@@ -28,6 +28,7 @@ public class ControllerExceptionHandler {
         /* dto 인자들이 매핑시에 문제가 발생했을 때 에러를 핸들하는 메소드, */
 
         log.error(e.getMessage());
+        e.printStackTrace();
 
         FieldError fieldError = e.getBindingResult().getFieldError();
 
@@ -56,8 +57,9 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ErrorResponse> handleCommonException(CommonException e) {
         /* domain 로직중 발생하는 예외를 처리하는 공통 에러 핸들러 */
 
-        log.error("[Error Msg]: " + e.getMessage());
-        log.error("[Error Code]: " + e.getErrorCode());
+        log.error("[Error Msg] " + e.getMessage());
+        log.error("[Error Code] " + e.getErrorCode());
+        e.printStackTrace();
 
         ErrorResponse errorResponse = ErrorResponse.builder()
             .errorMessage(e.getMessage())
