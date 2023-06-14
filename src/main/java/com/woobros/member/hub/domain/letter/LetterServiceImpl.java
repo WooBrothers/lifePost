@@ -2,6 +2,7 @@ package com.woobros.member.hub.domain.letter;
 
 import com.woobros.member.hub.common.exception.CommonException;
 import com.woobros.member.hub.common.exception.ErrorEnum;
+import com.woobros.member.hub.domain.letter.LetterDto.PageResponse;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;
 import com.woobros.member.hub.model.card.memb_card.MemberCard;
@@ -40,6 +41,7 @@ public class LetterServiceImpl implements LetterService {
     private final MemberCardRepository memberCardRepository;
     private final AffirmationCardRepository affirmationCardRepository;
     private final StampRepository stampRepository;
+
     private final LetterMapper letterMapper;
 
 
@@ -93,6 +95,78 @@ public class LetterServiceImpl implements LetterService {
         );
     }
 
+    @Override
+    public Page<PageResponse> getHaveLatestLetterPage(int size, UserDetails userDetails) {
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        Member member = memberRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        Page<MemberLetter> memberLetterPage = memberLetterRepository
+            .findByMemberIdOrderByLetterIdDesc(member.getId(), pageRequest);
+
+        return new PageImpl<>(
+            memberLetterPage.stream()
+                .map(MemberLetter::getLetter)
+                .map(letterMapper::toPageResponseDto)
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public Page<LetterDto.PageResponse> getHaveLetterPage(Long lastLetterId, int size,
+        UserDetails userDetails) {
+
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        Member member = memberRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        Page<MemberLetter> memberLetterPage = memberLetterRepository
+            .findByMemberIdAndLetterIdLessThanOrderByLetterIdDesc(
+                member.getId(), lastLetterId, pageRequest);
+
+        return new PageImpl<>(
+            memberLetterPage.stream()
+                .map(MemberLetter::getLetter)
+                .map(letterMapper::toPageResponseDto)
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public Page<PageResponse> getDoesNotHaveLatestLetterPage(int size, UserDetails userDetails) {
+
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        Member member = memberRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        Page<Letter> letterPage = letterRepository
+            .findDoesNotHaveLastLetter(member.getId(), pageRequest);
+
+        return new PageImpl<>(
+            letterPage.stream()
+                .map(letterMapper::toPageResponseDto)
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public Page<PageResponse> getDoesNotHaveLetterPage(Long lastLetterId, int size,
+        UserDetails userDetails) {
+
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        Member member = memberRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        Page<Letter> letterPage = letterRepository
+            .findDoesNotHaveLetter(member.getId(), lastLetterId, pageRequest);
+
+        return new PageImpl<>(
+            letterPage.stream()
+                .map(letterMapper::toPageResponseDto)
+                .collect(Collectors.toList()));
+    }
+
     /**
      * [auth] 오늘의 편지 요청 시 처음이면 저장 + 편지 내용 조회
      *
@@ -136,16 +210,19 @@ public class LetterServiceImpl implements LetterService {
             .filter(let -> !let.getCreatedDate().equals(LocalDate.now()))
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
 
-        if (doesNotHaveLetterForMember(member.getId(), letter.getId())
-            && member.getStampCount() > 0) {
-
-            memberRepository.save(member.useStamp());
-            saveLetterAndCardToMember(member, letter);
-            saveMemberStampUsed(member, letter);
+        if (doesNotHaveLetterForMember(member.getId(), letter.getId())) {
+            if (member.getStampCount() > 0) {
+                memberRepository.save(member.useStamp());
+                saveLetterAndCardToMember(member, letter);
+                saveMemberStampUsed(member, letter);
+            } else {
+                throw new CommonException(ErrorEnum.LETTER_REQUEST_INVALID);
+            }
         }
 
         return letterMapper.toResponseDto(letter);
     }
+
 
     /**
      * 멤버가 최초로 편지를 읽으면 편지와 그 편지에 딸린 카드를 멤버가 소유하도록 저장

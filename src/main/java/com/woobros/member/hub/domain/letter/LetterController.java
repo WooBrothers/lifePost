@@ -36,7 +36,7 @@ public class LetterController {
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
 
-    @GetMapping("/open/page/{lastLetterId}/{size}")
+    @GetMapping("/open/page/{size}/{lastLetterId}")
     public Page<LetterDto.PageResponse> getLettersPage(
         @PathVariable Long lastLetterId,
         @PathVariable int size) {
@@ -59,5 +59,38 @@ public class LetterController {
         @AuthenticationPrincipal UserDetails userDetails) {
 
         return ResponseEntity.ok(letterService.getLetterContentsByLetterId(letterId, userDetails));
+    }
+
+    @GetMapping("/auth/page/{size}")
+    public Page<LetterDto.PageResponse> getHaveLatestLetterPage(
+        @PathVariable int size,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        return letterService.getHaveLatestLetterPage(size, userDetails);
+    }
+
+    @GetMapping("/auth/page/{size}/{letterId}")
+    public Page<LetterDto.PageResponse> getHaveLetterPage(
+        @PathVariable Long letterId, @PathVariable int size,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        return letterService.getHaveLetterPage(letterId, size, userDetails);
+    }
+
+    @GetMapping("/auth/page/not-have/{size}")
+    public Page<LetterDto.PageResponse> getDoesNotHaveLatestLetterPage(
+        @PathVariable int size,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        return letterService.getDoesNotHaveLatestLetterPage(size, userDetails);
+    }
+
+    @GetMapping("/auth/page/not-have/{size}/{letterId}")
+    public Page<LetterDto.PageResponse> getDoesNotHaveLetterPage(
+        @PathVariable int size,
+        @PathVariable Long letterId,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        return letterService.getDoesNotHaveLetterPage(letterId, size, userDetails);
     }
 }
