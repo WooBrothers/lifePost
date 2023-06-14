@@ -12,7 +12,7 @@ class ErrorConstTest {
 
         try {
             String actual = ErrorConst.getErrorMessage(givenFieldName, givenErrorTypeName);
-            String expect = givenFieldName + " " + ErrorConst.NOT_BLANK;
+            String expect = givenFieldName + ErrorConst.NOT_BLANK;
 
             assert expect.equals(actual);
 
