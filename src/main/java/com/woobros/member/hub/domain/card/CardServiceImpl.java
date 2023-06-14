@@ -1,7 +1,6 @@
 package com.woobros.member.hub.domain.card;
 
-import com.woobros.member.hub.model.card.CardDto;
-import com.woobros.member.hub.model.card.CardDto.PageResponse;
+import com.woobros.member.hub.domain.card.CardDto.PageResponse;
 import com.woobros.member.hub.model.card.CardMapper;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;

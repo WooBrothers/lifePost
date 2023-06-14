@@ -3,6 +3,7 @@ package com.woobros.member.hub.model.card.memb_card;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.member_letter.MemberLetter;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -58,6 +59,9 @@ public class MemberCard {
     @ManyToOne
     @JoinColumn
     private AffirmationCard affirmationCard;
+
+    @Column(columnDefinition = "int default 0")
+    private Long writeCount;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -1,4 +1,4 @@
-package com.woobros.member.hub.model.card.memb_cret_card;
+package com.woobros.member.hub.model.card.memb_cust_card;
 
 import com.woobros.member.hub.model.member.Member;
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder
 @DynamicInsert
 @Entity
-public class MemberCreateCard {
+public class MemberCustomCard {
     /* 멤버가 생성한 카드 */
 
     @Id

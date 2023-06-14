@@ -1,18 +1,20 @@
-package com.woobros.member.hub.model.card;
+package com.woobros.member.hub.domain.card;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.woobros.member.hub.model.card.CardTypeEnum;
 import com.woobros.member.hub.model.letter.Letter;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 public class CardDto {
+
+    private CardDto() {
+    }
 
     @Getter
     @JsonInclude(Include.NON_NULL)
