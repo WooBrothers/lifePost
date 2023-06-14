@@ -66,8 +66,6 @@ class LetterIntegrationTest {
     private final String authorization = "Authorization";
     private final String tokenType = "Bearer ";
     private final String loginRedirectUrl = "http://localhost/login/page";
-    private final String forwardUrl = "/forbidden";
-
 
     @Value("${test.accessToken}")
     private String testAccessToken;
@@ -95,7 +93,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testUserPostLetterWillForbidden() throws Exception {
+    void testPostLetter_WhenHaveUserToken_WillForbidden() throws Exception {
         Letter letter = Letter.builder()
             .title("test16")
             .contents("think every time.")
@@ -116,7 +114,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testAdminPostLetterWillOk() throws Exception {
+    void testPostLetter_WhenHaveAdminToken_WillOk() throws Exception {
         Letter letter = Letter.builder()
             .title("test16")
             .contents("think every time.")
@@ -143,7 +141,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testAdminWrongRequestPostLetterWillInvalid() {
+    void testPostLetter_WhenHaveAdminToken_WillInvalid() {
         Member member = memberRepository.findById(1L).orElseThrow();
         member.setRole(Role.ADMIN);
 
@@ -198,29 +196,31 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetTodayLetter_WhenNoHaveToken() throws Exception {
+    void testGetTodayLetter_WhenNoHaveToken_WillOk() throws Exception {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/open/latest")
             .contentType(MediaType.APPLICATION_JSON));
 
         response.andDo(print())
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.id", is(15)))
             .andExpect(jsonPath("$.title", is("test15")));
     }
 
     @Test
-    void testGetTodayLetter_WhenHaveUserToken() throws Exception {
+    void testGetTodayLetter_WhenHaveUserToken_WillOk() throws Exception {
         // USER role
         ResultActions response = mockMvc.perform(get("/api/v1/letter/open/latest")
             .header(authorization, tokenType + testAccessToken)
             .contentType(MediaType.APPLICATION_JSON));
 
         response.andDo(print())
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.id", is(15)))
             .andExpect(jsonPath("$.title", is("test15")));
     }
 
     @Test
-    void testGetTodayLetter_WhenHaveAdminToken() throws Exception {
+    void testGetTodayLetter_WhenHaveAdminToken_WillOk() throws Exception {
         // ADMIN role
         Member member = memberRepository.findById(1L).orElseThrow();
         member.setRole(Role.ADMIN);
@@ -230,23 +230,25 @@ class LetterIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON));
 
         response.andDo(print())
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.id", is(15)))
             .andExpect(jsonPath("$.title", is("test15")));
     }
 
     @Test
-    void testGetLettersPage_WhenNoHaveToken() throws Exception {
+    void testGetLettersPage_WhenNoHaveToken_WillOk() throws Exception {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/3/15")
             .contentType(MediaType.APPLICATION_JSON));
 
         response.andDo(print())
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.content[0].id", is(14)))
             .andExpect(jsonPath("$.content[1].id", is(13)))
             .andExpect(jsonPath("$.content[2].id", is(12)));
     }
 
     @Test
-    void testGetLettersPage_WhenHaveGuestToken() throws Exception {
+    void testGetLettersPage_WhenHaveGuestToken_WillOk() throws Exception {
         Member member = memberRepository.findById(1L).orElseThrow();
         member.setRole(Role.GUEST);
 
@@ -255,25 +257,27 @@ class LetterIntegrationTest {
             .header(authorization, tokenType + testAccessToken));
 
         response.andDo(print())
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.content[0].id", is(14)))
             .andExpect(jsonPath("$.content[1].id", is(13)))
             .andExpect(jsonPath("$.content[2].id", is(12)));
     }
 
     @Test
-    void testGetLettersPage_WhenHaveUserToken() throws Exception {
+    void testGetLettersPage_WhenHaveUserToken_WillOk() throws Exception {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/3/15")
             .header(authorization, tokenType + testAccessToken)
             .contentType(MediaType.APPLICATION_JSON));
 
         response.andDo(print())
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.content[0].id", is(14)))
             .andExpect(jsonPath("$.content[1].id", is(13)))
             .andExpect(jsonPath("$.content[2].id", is(12)));
     }
 
     @Test
-    void testGetLettersPage_WhenHaveAdminToken() throws Exception {
+    void testGetLettersPage_WhenHaveAdminToken_WillOk() throws Exception {
         Member member = memberRepository.findById(1L).orElseThrow();
         member.setRole(Role.ADMIN);
 
@@ -282,13 +286,14 @@ class LetterIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON));
 
         response.andDo(print())
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.content[0].id", is(14)))
             .andExpect(jsonPath("$.content[1].id", is(13)))
             .andExpect(jsonPath("$.content[2].id", is(12)));
     }
 
     @Test
-    void testGetTodayLetterContents_WhenNoHaveToken() throws Exception {
+    void testGetTodayLetterContents_WhenNoHaveToken_Will302() throws Exception {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/15")
             .contentType(MediaType.APPLICATION_JSON));
 
@@ -297,7 +302,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetTodayLetterContents_WhenHaveGuestToken() throws Exception {
+    void testGetTodayLetterContents_WhenHaveGuestToken_WillForbidden() throws Exception {
         Member member = memberRepository.findById(1L).orElseThrow();
         member.setRole(Role.GUEST);
 
@@ -309,7 +314,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetTodayLetterContents_WhenHaveUserToken() throws Exception {
+    void testGetTodayLetterContents_WhenHaveUserToken_WillOk() throws Exception {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/15")
             .header(authorization, tokenType + testAccessToken)
             .contentType(MediaType.APPLICATION_JSON));
@@ -322,7 +327,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetTodayLetterContents_WhenHaveAdminToken() throws Exception {
+    void testGetTodayLetterContents_WhenHaveAdminToken_WillForbidden() throws Exception {
         Member member = memberRepository.findById(1L).orElseThrow();
         member.setRole(Role.ADMIN);
 
@@ -334,7 +339,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetLetterContentsUsingStamp_WhenNoHaveToken() throws Exception {
+    void testGetLetterContentsUsingStamp_WhenNoHaveToken_Will302() throws Exception {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/stamp/14")
             .contentType(MediaType.APPLICATION_JSON));
 
@@ -343,7 +348,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetLetterContentsUsingStamp_WhenHaveGuestToken() throws Exception {
+    void testGetLetterContentsUsingStamp_WhenHaveGuestToken_WillForbidden() throws Exception {
         Member member = memberRepository.findById(1L).orElseThrow();
         member.setRole(Role.GUEST);
 
@@ -351,13 +356,14 @@ class LetterIntegrationTest {
             .header(authorization, tokenType + testAccessToken)
             .contentType(MediaType.APPLICATION_JSON));
 
+        String forwardUrl = "/forbidden";
         response.andDo(print()).andExpect(status().isForbidden())
             .andExpect(forwardedUrl(forwardUrl))
         ;
     }
 
     @Test
-    void testGetLetterContentsUsingStamp_WhenHaveUserToken() throws Exception {
+    void testGetLetterContentsUsingStamp_WhenHaveUserToken_WillOk() throws Exception {
         // 정삭적인 요청일 때 member_letter와 member_card 가 잘 저장되는지 확인
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/stamp/9")
             .header(authorization, tokenType + testAccessToken)
@@ -400,7 +406,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetDoesNotHaveLatestLetterPage() throws Exception {
+    void testGetDoesNotHaveLatestLetterPage_WhenHaveUserToken_WillOk() throws Exception {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/not-have/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
@@ -413,7 +419,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetDoesNotHaveLetterPage() throws Exception {
+    void testGetDoesNotHaveLetterPage_WhenHaveUserToken_WillOk() throws Exception {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/not-have/3/9")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
@@ -426,7 +432,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetHaveLetterPage() throws Exception {
+    void testGetHaveLetterPage_WhenHaveUserToken_WillOk() throws Exception {
         // when - action or behaviour that we are going test
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/3/12")
             .contentType(MediaType.APPLICATION_JSON)
@@ -441,7 +447,7 @@ class LetterIntegrationTest {
     }
 
     @Test
-    void testGetHaveLatestLetterPage() throws Exception {
+    void testGetHaveLatestLetterPage_WhenHaveUserToken_WillOk() throws Exception {
 
         // when - action or behaviour that we are going test
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/3")
