@@ -16,4 +16,9 @@ public class IndexController {
     public String login() {
         return "/login";
     }
+
+    @GetMapping("/forbidden")
+    public String forbidden() {
+        return "/forbidden";
+    }
 }

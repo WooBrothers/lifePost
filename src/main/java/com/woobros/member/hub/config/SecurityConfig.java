@@ -81,7 +81,10 @@ public class SecurityConfig {
             // antMatchers 에서 지정되지 않은 나머지 url은
             .anyRequest()
             // 인증된 사용자들에게만 접근 허용 처리
-            .authenticated();
+            .authenticated()
+            .and()
+            .exceptionHandling()
+            .accessDeniedPage("/forbidden");
 
         http
             // oAuth2 로그인 기능에 대한 설정의 진입점
