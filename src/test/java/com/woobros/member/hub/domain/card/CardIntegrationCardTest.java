@@ -67,12 +67,13 @@ public class CardIntegrationCardTest {
     private String testAccessToken;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private Member member;
 
     @BeforeEach
     void beforeEach() {
 
         // given
-        Member member = memberRepository.findById(1L).orElseThrow(
+        member = memberRepository.findById(1L).orElseThrow(
             () -> new RuntimeException("member not found")
         );
         PageRequest pageRequest = PageRequest.of(0, 5);
@@ -103,6 +104,45 @@ public class CardIntegrationCardTest {
                     ).forEach(memberCardRepository::save);
             }
         );
+
+        MemberCustomCard memberCustomCard = MemberCustomCard.builder()
+            .member(member)
+            .contents("member custom card create1")
+            .title("test 1 is focus")
+            .build();
+        MemberCustomCard memberCustomCard2 = MemberCustomCard.builder()
+            .member(member)
+            .contents("member custom card create2")
+            .title("test 2")
+            .build();
+        MemberCustomCard memberCustomCard3 = MemberCustomCard.builder()
+            .member(member)
+            .contents("member custom card create3")
+            .title("test 3")
+            .build();
+
+        memberCustomCardRepository.save(memberCustomCard);
+        memberCustomCardRepository.save(memberCustomCard2);
+        memberCustomCardRepository.save(memberCustomCard3);
+
+        memberCardRepository.save(MemberCard.builder()
+            .memberCustomCard(memberCustomCard)
+            .member(member)
+            .type(CardTypeEnum.CUSTOM)
+            .focus(FocusTypeEnum.ATTENTION)
+            .build());
+        memberCardRepository.save(MemberCard.builder()
+            .memberCustomCard(memberCustomCard2)
+            .type(CardTypeEnum.CUSTOM)
+            .member(member)
+            .focus(FocusTypeEnum.NON)
+            .build());
+        memberCardRepository.save(MemberCard.builder()
+            .memberCustomCard(memberCustomCard3)
+            .type(CardTypeEnum.CUSTOM)
+            .member(member)
+            .focus(FocusTypeEnum.NON)
+            .build());
     }
 
     @Test
@@ -114,9 +154,6 @@ public class CardIntegrationCardTest {
     void testGetLatestMemberCards_WhenHaveUserToken_WillOk() throws Exception {
 
         // given
-        Member member = memberRepository.findById(1L).orElseThrow(
-            () -> new RuntimeException("member not found")
-        );
 
         MemberCustomCard memberCustomCard = memberCustomCardRepository
             .save(MemberCustomCard.builder()
@@ -156,30 +193,42 @@ public class CardIntegrationCardTest {
 
     @Test
     void testGetLatestMemberCustomCards() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/custom/{size}")
+
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/custom/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
         response.andDo(print())
             .andExpect(status().isOk());
-
     }
 
     @Test
     void testGetMemberCustomCards() throws Exception {
         ResultActions response = mockMvc
-            .perform(get("/api/v1/card/auth/custom/{size}/{memberCustomCardId}")
+            .perform(get("/api/v1/card/auth/custom/3/13")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(authorization, tokenType + testAccessToken));
 
         response.andDo(print())
             .andExpect(status().isOk());
-
     }
 
     @Test
     void testGetLatestFocusCards() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/{size}")
+        Page<MemberCard> memberCardPage = memberCardRepository
+            .findByMemberIdAndIdLessThanOrderByCreatedAtDesc(
+                member.getId(), 15L, PageRequest.of(0, 2));
+
+        memberCardPage
+            .forEach(card -> {
+                card.setFocus(FocusTypeEnum.ATTENTION);
+                memberCardRepository.save(card);
+            });
+
+        Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
+            .findByMemberIdOrderByCreatedAtDesc(member.getId(), PageRequest.of(0, 1));
+
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 

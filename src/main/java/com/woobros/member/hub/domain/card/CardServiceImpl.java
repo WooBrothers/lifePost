@@ -12,6 +12,7 @@ import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;
 import com.woobros.member.hub.model.card.memb_card.MemberCard;
 import com.woobros.member.hub.model.card.memb_card.MemberCardRepository;
+import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCard;
 import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCardRepository;
 import com.woobros.member.hub.model.letter.LetterRepository;
 import com.woobros.member.hub.model.member.Member;
@@ -19,6 +20,7 @@ import com.woobros.member.hub.model.member.MemberRepository;
 import com.woobros.member.hub.model.member_letter.MemberLetterRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -66,13 +68,14 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public Page<PageResponse> getMemberCards(int size, Long memberCardId, UserDetails userDetails) {
+
         PageRequest pageRequest = PageRequest.of(0, size);
 
         Member member = memberRepository.findByEmail(userDetails.getUsername())
             .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
 
         Page<MemberCard> memberCards = memberCardRepository
-            .findByMemberIdAndIdAfterOrderByCreatedAtDesc(member.getId(), memberCardId,
+            .findByMemberIdAndIdLessThanOrderByCreatedAtDesc(member.getId(), memberCardId,
                 pageRequest);
 
         List<PageResponse> pageResponses = separateMemberCardByType(memberCards);
@@ -80,51 +83,59 @@ public class CardServiceImpl implements CardService {
         return new PageImpl<>(pageResponses);
     }
 
-    /**
-     * 조회한 memberCard들을 type 별로 분류하여 알맞는 responseDto로 매핑하고 배열에 담아 리턴
-     *
-     * @param memberCards
-     * @return
-     */
-    private List<PageResponse> separateMemberCardByType(Page<MemberCard> memberCards) {
-
-        List<PageResponse> pageResponses = new ArrayList<>();
-
-        for (MemberCard memberCard : memberCards) {
-            if (memberCard.getType().equals(CardTypeEnum.AFFIRMATION)) {
-
-                PageResponse pageResponse = cardMapper
-                    .toMemberPageResponse(memberCard.getAffirmationCard())
-                    .setType(memberCard.getType());
-
-                pageResponses.add(pageResponse);
-
-            } else if (memberCard.getType().equals(CardTypeEnum.CUSTOM)) {
-
-                PageResponse pageResponse = cardMapper
-                    .toMemberPageResponse(memberCard.getMemberCustomCard())
-                    .setType(memberCard.getType());
-
-                pageResponses.add(pageResponse);
-            }
-        }
-        return pageResponses;
-    }
-
     @Override
     public Page<PageResponse> getLatestMemberCustomCards(int size, UserDetails userDetails) {
-        return null;
+
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        Member member = memberRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
+            .findByMemberIdOrderByCreatedAtDesc(
+                member.getId(), pageRequest);
+
+        return new PageImpl<>(
+            memberCustomCards.map(cardMapper::toMemberPageResponse)
+                .stream()
+                .map(response -> response.setType(CardTypeEnum.CUSTOM))
+                .collect(
+                    Collectors.toList()));
     }
 
     @Override
     public Page<PageResponse> getMemberCustomCards(int size, Long memberCustomCardId,
         UserDetails userDetails) {
-        return null;
+
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        Member member = memberRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
+            .findByMemberIdAndIdLessThanOrderByCreatedAtDesc(
+                member.getId(), memberCustomCardId, pageRequest);
+
+        return new PageImpl<>(
+            memberCustomCards.map(cardMapper::toMemberPageResponse)
+                .stream()
+                .map(response -> response.setType(CardTypeEnum.CUSTOM))
+                .collect(
+                    Collectors.toList()));
     }
 
     @Override
     public Page<PageResponse> getLatestFocusCards(int size, UserDetails userDetails) {
-        return null;
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        Member member = memberRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        Page<MemberCard> memberCardPage = memberCardRepository
+            .findByMemberIdAndFocusOrderByCreatedAtDesc(
+                member.getId(), FocusTypeEnum.ATTENTION, pageRequest);
+
+        return new PageImpl<>(separateMemberCardByType(memberCardPage));
     }
 
     @Override
@@ -160,4 +171,36 @@ public class CardServiceImpl implements CardService {
         // todo letter mapping
         return resultResponse;
     }
+
+    /**
+     * 조회한 memberCard들을 type 별로 분류하여 알맞는 responseDto로 매핑하고 배열에 담아 리턴
+     *
+     * @param memberCards
+     * @return
+     */
+    private List<PageResponse> separateMemberCardByType(Page<MemberCard> memberCards) {
+
+        List<PageResponse> pageResponses = new ArrayList<>();
+
+        for (MemberCard memberCard : memberCards) {
+            if (memberCard.getType().equals(CardTypeEnum.AFFIRMATION)) {
+
+                PageResponse pageResponse = cardMapper
+                    .toMemberPageResponse(memberCard.getAffirmationCard())
+                    .setType(memberCard.getType());
+
+                pageResponses.add(pageResponse);
+
+            } else if (memberCard.getType().equals(CardTypeEnum.CUSTOM)) {
+
+                PageResponse pageResponse = cardMapper
+                    .toMemberPageResponse(memberCard.getMemberCustomCard())
+                    .setType(memberCard.getType());
+
+                pageResponses.add(pageResponse);
+            }
+        }
+        return pageResponses;
+    }
+
 }

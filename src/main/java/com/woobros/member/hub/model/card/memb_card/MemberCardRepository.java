@@ -1,5 +1,6 @@
 package com.woobros.member.hub.model.card.memb_card;
 
+import com.woobros.member.hub.domain.card.FocusTypeEnum;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +13,10 @@ public interface MemberCardRepository extends
 
     Page<MemberCard> findByMemberIdOrderByCreatedAtDesc(Long memberId, PageRequest pageRequest);
 
-    Page<MemberCard> findByMemberIdAndIdAfterOrderByCreatedAtDesc(Long memberId, Long id,
+    Page<MemberCard> findByMemberIdAndIdLessThanOrderByCreatedAtDesc(Long memberId, Long id,
         PageRequest pageRequest);
+
+    Page<MemberCard> findByMemberIdAndFocusOrderByCreatedAtDesc(Long memberId,
+        FocusTypeEnum focusTypeEnum, PageRequest pageRequest);
 
 }
