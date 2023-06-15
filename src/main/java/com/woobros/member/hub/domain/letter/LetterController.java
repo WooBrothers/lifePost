@@ -1,5 +1,8 @@
 package com.woobros.member.hub.domain.letter;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +25,6 @@ public class LetterController {
 
     /* beans */
     private final LetterService letterService;
-
-    @PostMapping("/admin")
-    public ResponseEntity<LetterDto.ReadResponse> postLetter(
-        @Valid @RequestBody LetterDto.PostRequest letterReqDto) {
-
-        return ResponseEntity.ok().body(letterService.postLetter(letterReqDto));
-    }
 
     @GetMapping("/open/latest")
     public ResponseEntity<LetterDto.ReadResponse> getTodayLetter() {
@@ -92,5 +88,26 @@ public class LetterController {
         @AuthenticationPrincipal UserDetails userDetails) {
 
         return letterService.getDoesNotHaveLetterPage(letterId, size, userDetails);
+    }
+
+    /** backoffice */
+
+    /**
+     * @param letterReqDto
+     * @return
+     */
+    @PostMapping("/admin")
+    public ResponseEntity<Map<String, Object>> postLetter(
+        @Valid @RequestBody LetterDto.PostRequest letterReqDto) {
+
+        String url = "/api/v1/card/admin/affirmation";
+
+        LetterDto.ReadResponse readResponse = letterService.postLetter(letterReqDto);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("letter", readResponse);
+        responseMap.put("msg",
+            "letter is created. \nthis url is not resource url. card post url. \nso write card plz. ");
+        return ResponseEntity.created(URI.create(url)).body(responseMap);
     }
 }

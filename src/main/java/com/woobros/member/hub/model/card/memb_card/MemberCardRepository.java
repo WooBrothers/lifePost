@@ -1,6 +1,8 @@
 package com.woobros.member.hub.model.card.memb_card;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberCardRepository extends
@@ -8,5 +10,6 @@ public interface MemberCardRepository extends
 
     List<MemberCard> findByMemberLetterId(Long memberLetterId);
 
+    Page<MemberCard> findByMemberIdOrderByCreatedAtDesc(Long memberId, PageRequest pageRequest);
 
 }
