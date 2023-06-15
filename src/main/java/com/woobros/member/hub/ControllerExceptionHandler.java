@@ -74,6 +74,7 @@ public class ControllerExceptionHandler {
         /* JPA 데이터 중복 생성 실패 에러 처리 */
         DataIntegrityViolationException ex) {
 
+        ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Duplicate data exists");
     }
 
@@ -81,6 +82,7 @@ public class ControllerExceptionHandler {
     protected ResponseEntity<Object> handleAllException(Exception e) {
         Map<String, String> errorMap = new HashMap<>();
 
+        e.printStackTrace();
         errorMap.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMap);
     }

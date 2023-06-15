@@ -1,7 +1,8 @@
 package com.woobros.member.hub.domain.card;
 
 import com.woobros.member.hub.domain.card.CardDto.PageResponse;
-import com.woobros.member.hub.domain.card.CardDto.ReadResponse;
+import com.woobros.member.hub.model.card.CardTypeEnum;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
 
     private final CardService cardService;
+    private final String schema = "/api/v1/card/auth/";
 
     /**
      * 멤버가 소유한 최신 카드를 size 만큼 조회 (리스트 출력용)
@@ -36,7 +38,7 @@ public class CardController {
         @PathVariable int size,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return null;
+        return cardService.getLatestMemberCards(size, userDetails);
     }
 
     /**
@@ -53,7 +55,7 @@ public class CardController {
         @PathVariable Long memberCardId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return null;
+        return cardService.getMemberCards(size, memberCardId, userDetails);
     }
 
     /**
@@ -68,7 +70,7 @@ public class CardController {
         @PathVariable int size,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return null;
+        return cardService.getLatestMemberCustomCards(size, userDetails);
     }
 
     /**
@@ -85,7 +87,7 @@ public class CardController {
         @PathVariable Long memberCustomCardId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return null;
+        return cardService.getMemberCustomCards(size, memberCustomCardId, userDetails);
     }
 
     /**
@@ -100,7 +102,7 @@ public class CardController {
         @PathVariable int size,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return null;
+        return cardService.getLatestFocusCards(size, userDetails);
     }
 
     /**
@@ -117,7 +119,7 @@ public class CardController {
         @PathVariable Long focusCardId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return null;
+        return cardService.getFocusCards(size, focusCardId, userDetails);
     }
 
     /**
@@ -127,12 +129,13 @@ public class CardController {
      * @param userDetails
      * @return
      */
-    @GetMapping("/auth/{cardId}")
+    @GetMapping("/auth/{type}/{cardId}")
     public ResponseEntity<CardDto.ReadResponse> getCardContents(
+        @PathVariable CardTypeEnum cardTypeEnum,
         @PathVariable Long cardId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return null;
+        return ResponseEntity.ok(cardService.getCardContents(cardId, cardTypeEnum, userDetails));
     }
 
     /**
@@ -143,10 +146,15 @@ public class CardController {
      * @return
      */
     @PostMapping("/auth/member/custom")
-    public ResponseEntity<CardDto.ReadResponse> postMemberCustomCard(
+    public ResponseEntity<String> postMemberCustomCard(
         @RequestBody CardDto.PostRequest memberCardPostDto,
         @AuthenticationPrincipal UserDetails userDetails) {
-        return null;
+
+        CardDto.ReadResponse cardDto = cardService
+            .postMemberCustomCard(memberCardPostDto, userDetails);
+
+        String url = schema + cardDto.getType() + "/" + cardDto.getId();
+        return ResponseEntity.created(URI.create(url)).body("member custom card created.");
     }
 
     /**
@@ -157,10 +165,14 @@ public class CardController {
      * @return
      */
     @PostMapping("/auth/focus")
-    public ResponseEntity<CardDto.ReadResponse> postFocusCard(
+    public ResponseEntity<String> postFocusCard(
         @RequestBody CardDto.PostFocusRequest focusCardRequest,
         @AuthenticationPrincipal UserDetails userDetails) {
-        return null;
+
+        CardDto.ReadResponse cardDto = cardService.postFocusCard(focusCardRequest, userDetails);
+
+        String url = schema + cardDto.getType() + "/" + cardDto.getId();
+        return ResponseEntity.created(URI.create(url)).body("member focus card created.");
     }
 
     /**
@@ -172,10 +184,13 @@ public class CardController {
      */
 
     @PostMapping("/admin/affirmation")
-    public ResponseEntity<ReadResponse> postAffirmationCard(
+    public ResponseEntity<String> postAffirmationCard(
         @RequestBody CardDto.PostRequest cardPostReqDto,
         @AuthenticationPrincipal UserDetails userDetails) {
 
-        return ResponseEntity.ok(cardService.postCard(cardPostReqDto));
+        CardDto.ReadResponse cardDto = cardService.postAffirmationCard(cardPostReqDto, userDetails);
+
+        String url = schema + cardDto.getType() + "/" + cardDto.getId();
+        return ResponseEntity.created(URI.create(url)).body("affirmation card created.");
     }
 }

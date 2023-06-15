@@ -74,7 +74,7 @@ class LetterIntegrationTest {
 
 
     @BeforeEach
-    void beforeAll() {
+    void beforeEach() {
 
         // given
         Member member = memberRepository.findById(1L).orElseThrow(
@@ -134,10 +134,10 @@ class LetterIntegrationTest {
         );
 
         response.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.title", is(postRequest.getTitle())))
-            .andExpect(jsonPath("$.contents", is(postRequest.getContents())))
-            .andExpect(jsonPath("$.writer", is(postRequest.getWriter())));
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.letter.title", is(postRequest.getTitle())))
+            .andExpect(jsonPath("$.letter.contents", is(postRequest.getContents())))
+            .andExpect(jsonPath("$.letter.writer", is(postRequest.getWriter())));
     }
 
     @Test

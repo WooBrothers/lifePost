@@ -60,7 +60,7 @@ public class MemberCard {
     private Long id;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private Member member;
 
     @Enumerated(EnumType.STRING)

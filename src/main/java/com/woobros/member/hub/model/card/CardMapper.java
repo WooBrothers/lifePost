@@ -2,6 +2,8 @@ package com.woobros.member.hub.model.card;
 
 import com.woobros.member.hub.domain.card.CardDto;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
+import com.woobros.member.hub.model.card.memb_card.MemberCard;
+import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCard;
 import java.time.LocalDate;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -13,9 +15,11 @@ public interface CardMapper {
 
     AffirmationCard toEntity(CardDto.PostRequest postRequestDto);
 
-    CardDto.PageResponse toFocusPageResponse(AffirmationCard affirmationCard);
+    CardDto.PageResponse toMemberPageResponse(MemberCard memberCard);
 
     CardDto.PageResponse toMemberPageResponse(AffirmationCard affirmationCard);
+
+    CardDto.PageResponse toMemberPageResponse(MemberCustomCard memberCustomCard);
 
     CardDto.PageResponse toMemberLetterAffirmationPageResponse(AffirmationCard affirmationCard);
 

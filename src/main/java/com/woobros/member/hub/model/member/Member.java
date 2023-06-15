@@ -1,12 +1,17 @@
 package com.woobros.member.hub.model.member;
 
+import com.woobros.member.hub.model.card.memb_card.MemberCard;
+import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCard;
+import com.woobros.member.hub.model.member_letter.MemberLetter;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,6 +60,15 @@ public class Member {
 
     @Column(columnDefinition = "int default 0")
     private Integer stampCount;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<MemberLetter> memberLetters;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<MemberCard> memberCards;
+
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<MemberCustomCard> memberCustomCardList;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

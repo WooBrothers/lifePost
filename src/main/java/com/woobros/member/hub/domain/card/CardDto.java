@@ -82,12 +82,16 @@ public class CardDto {
     public static class PageResponse {
 
         private final Long id;
-        private final Letter letter;
+        private CardTypeEnum type;
         private final String title;
         private final String tag;
-        private final CardTypeEnum type;
         private final String createdDate;
         private final String createdAt;
         private final String updateAt;
+
+        public PageResponse setType(CardTypeEnum cardTypeEnum) {
+            this.type = cardTypeEnum;
+            return this;
+        }
     }
 }

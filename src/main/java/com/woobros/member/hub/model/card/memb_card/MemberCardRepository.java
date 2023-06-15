@@ -12,4 +12,7 @@ public interface MemberCardRepository extends
 
     Page<MemberCard> findByMemberIdOrderByCreatedAtDesc(Long memberId, PageRequest pageRequest);
 
+    Page<MemberCard> findByMemberIdAndIdAfterOrderByCreatedAtDesc(Long memberId, Long id,
+        PageRequest pageRequest);
+
 }

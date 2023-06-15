@@ -8,10 +8,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woobros.member.hub.domain.card.CardDto.PostFocusRequest;
 import com.woobros.member.hub.domain.card.CardDto.PostRequest;
+import com.woobros.member.hub.model.card.CardTypeEnum;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;
 import com.woobros.member.hub.model.card.memb_card.MemberCard;
 import com.woobros.member.hub.model.card.memb_card.MemberCardRepository;
+import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCard;
+import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCardRepository;
 import com.woobros.member.hub.model.letter.Letter;
 import com.woobros.member.hub.model.letter.LetterMapper;
 import com.woobros.member.hub.model.letter.LetterRepository;
@@ -52,6 +55,8 @@ public class CardIntegrationCardTest {
     @Autowired
     private MemberCardRepository memberCardRepository;
     @Autowired
+    private MemberCustomCardRepository memberCustomCardRepository;
+    @Autowired
     private AffirmationCardRepository affirmationCardRepository;
 
     private final String authorization = "Authorization";
@@ -64,7 +69,7 @@ public class CardIntegrationCardTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
-    void beforeAll() throws Exception {
+    void beforeEach() {
 
         // given
         Member member = memberRepository.findById(1L).orElseThrow(
@@ -85,12 +90,17 @@ public class CardIntegrationCardTest {
                 // 14 13 12 11 10 편지에 딸린 카드 memberCard 저장처리
                 List<AffirmationCard> cards = affirmationCardRepository.findByLetterId(letter.getId());
 
-                cards.forEach(card -> memberCardRepository.save(
-                    MemberCard.builder()
-                        .affirmationCard(card)
-                        .memberLetter(memberLetter)
-                        .build()
-                ));
+                // 14 13 12 11 까지만 memberCard 에 저장
+                cards.stream()
+                    .map(card ->
+                        MemberCard.builder()
+                            .member(member)
+                            .affirmationCard(card)
+                            .memberLetter(memberLetter)
+                            .focus(FocusTypeEnum.NON)
+                            .type(CardTypeEnum.AFFIRMATION)
+                            .build()
+                    ).forEach(memberCardRepository::save);
             }
         );
     }
@@ -101,8 +111,30 @@ public class CardIntegrationCardTest {
     }
 
     @Test
-    void testGetLatestMemberCards() throws Exception {
-        ResultActions response = mockMvc.perform(get("/auth/member/{size}")
+    void testGetLatestMemberCards_WhenHaveUserToken_WillOk() throws Exception {
+
+        // given
+        Member member = memberRepository.findById(1L).orElseThrow(
+            () -> new RuntimeException("member not found")
+        );
+
+        MemberCustomCard memberCustomCard = memberCustomCardRepository
+            .save(MemberCustomCard.builder()
+                .title("test custom")
+                .contents("test custom")
+                .member(member)
+                .build());
+
+        memberCardRepository.save(
+            MemberCard.builder()
+                .member(member)
+                .memberCustomCard(memberCustomCard)
+                .focus(FocusTypeEnum.NON)
+                .type(CardTypeEnum.CUSTOM)
+                .build()
+        );
+
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/member/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -111,10 +143,11 @@ public class CardIntegrationCardTest {
     }
 
     @Test
-    void testGetMemberCards() throws Exception {
-        ResultActions response = mockMvc.perform(get("/auth/member/{size}/{memberCardId}")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken));
+    void testGetMemberCards_WhenHaveUserToken_WillOk() throws Exception {
+        ResultActions response = mockMvc
+            .perform(get("/api/v1/card/auth/member/3/10")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(authorization, tokenType + testAccessToken));
 
         response.andDo(print())
             .andExpect(status().isOk());
@@ -123,7 +156,7 @@ public class CardIntegrationCardTest {
 
     @Test
     void testGetLatestMemberCustomCards() throws Exception {
-        ResultActions response = mockMvc.perform(get("/auth/custom/{size}")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/custom/{size}")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -135,7 +168,7 @@ public class CardIntegrationCardTest {
     @Test
     void testGetMemberCustomCards() throws Exception {
         ResultActions response = mockMvc
-            .perform(get("/auth/custom/{size}/{memberCustomCardId}")
+            .perform(get("/api/v1/card/auth/custom/{size}/{memberCustomCardId}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(authorization, tokenType + testAccessToken));
 
@@ -146,7 +179,7 @@ public class CardIntegrationCardTest {
 
     @Test
     void testGetLatestFocusCards() throws Exception {
-        ResultActions response = mockMvc.perform(get("/auth/focus/{size}")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/{size}")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -157,7 +190,7 @@ public class CardIntegrationCardTest {
 
     @Test
     void testGetFocusCards() throws Exception {
-        ResultActions response = mockMvc.perform(get("/auth/focus/{size}/{focusCardId}")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/{size}/{focusCardId}")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -168,7 +201,7 @@ public class CardIntegrationCardTest {
 
     @Test
     void testGetCardContents() throws Exception {
-        ResultActions response = mockMvc.perform(get("/auth/{cardId}")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/{cardId}")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -181,7 +214,7 @@ public class CardIntegrationCardTest {
     void testPostMemberCustomCard() throws Exception {
 
         CardDto.PostRequest PostRequest = new PostRequest();
-        ResultActions response = mockMvc.perform(post("/auth/member/custom")
+        ResultActions response = mockMvc.perform(post("/api/v1/card/auth/member/custom")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
             .content(objectMapper.writeValueAsString(PostRequest)));
@@ -194,7 +227,7 @@ public class CardIntegrationCardTest {
     void testPostFocusCard() throws Exception {
 
         CardDto.PostFocusRequest PostRequest = new PostFocusRequest();
-        ResultActions response = mockMvc.perform(post("/auth/focus")
+        ResultActions response = mockMvc.perform(post("/api/v1/card/auth/focus")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
             .content(objectMapper.writeValueAsString(PostRequest)));
@@ -207,7 +240,7 @@ public class CardIntegrationCardTest {
     void testPostAffirmationCard() throws Exception {
 
         CardDto.PostRequest PostRequest = new PostRequest();
-        ResultActions response = mockMvc.perform(post("/admin/affirmation")
+        ResultActions response = mockMvc.perform(post("/api/v1/card/admin/affirmation")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
             .content(objectMapper.writeValueAsString(PostRequest)));
