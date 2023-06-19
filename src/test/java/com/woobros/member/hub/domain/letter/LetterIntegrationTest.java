@@ -135,6 +135,7 @@ class LetterIntegrationTest {
 
         response.andDo(print())
             .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.letter.id", is(16)))
             .andExpect(jsonPath("$.letter.title", is(postRequest.getTitle())))
             .andExpect(jsonPath("$.letter.contents", is(postRequest.getContents())))
             .andExpect(jsonPath("$.letter.writer", is(postRequest.getWriter())));

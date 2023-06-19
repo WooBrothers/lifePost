@@ -107,7 +107,7 @@ public class LetterController {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("letter", readResponse);
         responseMap.put("msg",
-            "letter is created. \nthis url is not resource url. card post url. \nso write card plz. ");
+            "letter is created. this url is not resource url. card post url. so write card plz. ");
         return ResponseEntity.created(URI.create(url)).body(responseMap);
     }
 }
