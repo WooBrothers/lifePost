@@ -106,20 +106,23 @@ public class CardController {
     }
 
     /**
-     * 멤버가 focus 한 카드중 전달한 focusCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
+     * 멤버가 focus 한 카드중 전달한 memberCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
+     * <p>
+     * memberCard의 리스트 중 focus 상태인 것들만 조회하는 리스트 뷰에서 사용한다. 전달하는 memberCardId 이후에 focus 상태인 리스트 정보를
+     * 조회한다.
      *
      * @param size
-     * @param focusCardId
+     * @param memberCardId
      * @param userDetails
      * @return
      */
-    @GetMapping("/auth/focus/{size}/{focusCardId}")
+    @GetMapping("/auth/focus/{size}/{memberCardId}")
     public Page<PageResponse> getFocusCards(
         @PathVariable int size,
-        @PathVariable Long focusCardId,
+        @PathVariable Long memberCardId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cardService.getFocusCards(size, focusCardId, userDetails);
+        return cardService.getFocusCards(size, memberCardId, userDetails);
     }
 
     /**
@@ -129,7 +132,7 @@ public class CardController {
      * @param userDetails
      * @return
      */
-    @GetMapping("/auth/{type}/{cardId}")
+    @GetMapping("/auth/{cardTypeEnum}/{cardId}")
     public ResponseEntity<CardDto.ReadResponse> getCardContents(
         @PathVariable CardTypeEnum cardTypeEnum,
         @PathVariable Long cardId,

@@ -17,7 +17,7 @@ public interface CardService {
 
     Page<CardDto.PageResponse> getLatestFocusCards(int size, UserDetails userDetails);
 
-    Page<CardDto.PageResponse> getFocusCards(int size, Long focusCardId, UserDetails userDetails);
+    Page<CardDto.PageResponse> getFocusCards(int size, Long memberCardId, UserDetails userDetails);
 
     CardDto.ReadResponse getCardContents(Long cardId, CardTypeEnum cardTypeEnum,
         UserDetails userDetails);

@@ -155,22 +155,6 @@ public class CardIntegrationCardTest {
 
         // given
 
-        MemberCustomCard memberCustomCard = memberCustomCardRepository
-            .save(MemberCustomCard.builder()
-                .title("test custom")
-                .contents("test custom")
-                .member(member)
-                .build());
-
-        memberCardRepository.save(
-            MemberCard.builder()
-                .member(member)
-                .memberCustomCard(memberCustomCard)
-                .focus(FocusTypeEnum.NON)
-                .type(CardTypeEnum.CUSTOM)
-                .build()
-        );
-
         ResultActions response = mockMvc.perform(get("/api/v1/card/auth/member/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
@@ -182,7 +166,7 @@ public class CardIntegrationCardTest {
     @Test
     void testGetMemberCards_WhenHaveUserToken_WillOk() throws Exception {
         ResultActions response = mockMvc
-            .perform(get("/api/v1/card/auth/member/3/10")
+            .perform(get("/api/v1/card/auth/member/3/16")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(authorization, tokenType + testAccessToken));
 
@@ -217,16 +201,15 @@ public class CardIntegrationCardTest {
     void testGetLatestFocusCards() throws Exception {
         Page<MemberCard> memberCardPage = memberCardRepository
             .findByMemberIdAndIdLessThanOrderByCreatedAtDesc(
-                member.getId(), 15L, PageRequest.of(0, 2));
+                member.getId(), 15L, PageRequest.of(0, 5));
 
         memberCardPage
             .forEach(card -> {
-                card.setFocus(FocusTypeEnum.ATTENTION);
-                memberCardRepository.save(card);
+                if (card.getType().equals(CardTypeEnum.AFFIRMATION)) {
+                    card.setFocus(FocusTypeEnum.ATTENTION);
+                    memberCardRepository.save(card);
+                }
             });
-
-        Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
-            .findByMemberIdOrderByCreatedAtDesc(member.getId(), PageRequest.of(0, 1));
 
         ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/3")
             .contentType(MediaType.APPLICATION_JSON)
@@ -239,24 +222,29 @@ public class CardIntegrationCardTest {
 
     @Test
     void testGetFocusCards() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/{size}/{focusCardId}")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/3/15")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
         response.andDo(print())
             .andExpect(status().isOk());
-
     }
 
     @Test
     void testGetCardContents() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/{cardId}")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/AFFIRMATION/10")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
         response.andDo(print())
             .andExpect(status().isOk());
 
+        response = mockMvc.perform(get("/api/v1/card/auth/CUSTOM/13")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(authorization, tokenType + testAccessToken));
+
+        response.andDo(print())
+            .andExpect(status().isOk());
     }
 
     @Test

@@ -67,13 +67,18 @@ public class CardDto {
     public static class ReadResponse {
 
         private final Long id;
-        private final Letter letter;
+        private Long letterId;
         private final String title;
         private final String contents;
         private final CardTypeEnum type;
         private final String tag;
         private final String createdAt;
         private final String updateAt;
+
+        public ReadResponse setLetterId(Long letterId) {
+            this.letterId = letterId;
+            return this;
+        }
     }
 
     @Getter
@@ -81,7 +86,8 @@ public class CardDto {
     @Builder
     public static class PageResponse {
 
-        private final Long id;
+        private Long memberCardId;
+        private Long cardId;
         private CardTypeEnum type;
         private final String title;
         private final String tag;
@@ -91,6 +97,16 @@ public class CardDto {
 
         public PageResponse setType(CardTypeEnum cardTypeEnum) {
             this.type = cardTypeEnum;
+            return this;
+        }
+
+        public PageResponse setMemberCardId(Long memberCardId) {
+            this.memberCardId = memberCardId;
+            return this;
+        }
+
+        public PageResponse setCardId(Long cardId) {
+            this.cardId = cardId;
             return this;
         }
     }

@@ -24,4 +24,6 @@ public interface CardMapper {
     CardDto.PageResponse toMemberLetterAffirmationPageResponse(AffirmationCard affirmationCard);
 
     CardDto.ReadResponse toReadResponse(AffirmationCard affirmationCard);
+
+    CardDto.ReadResponse toReadResponse(MemberCustomCard memberCustomCard);
 }

@@ -55,8 +55,7 @@ public class CardServiceImpl implements CardService {
 
         PageRequest pageRequest = PageRequest.of(0, size);
 
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+        Member member = getMemberByUserDetail(userDetails);
 
         Page<MemberCard> memberCards = memberCardRepository.findByMemberIdOrderByCreatedAtDesc(
             member.getId(), pageRequest);
@@ -71,8 +70,7 @@ public class CardServiceImpl implements CardService {
 
         PageRequest pageRequest = PageRequest.of(0, size);
 
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+        Member member = getMemberByUserDetail(userDetails);
 
         Page<MemberCard> memberCards = memberCardRepository
             .findByMemberIdAndIdLessThanOrderByCreatedAtDesc(member.getId(), memberCardId,
@@ -88,15 +86,17 @@ public class CardServiceImpl implements CardService {
 
         PageRequest pageRequest = PageRequest.of(0, size);
 
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+        Member member = getMemberByUserDetail(userDetails);
 
         Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
             .findByMemberIdOrderByCreatedAtDesc(
                 member.getId(), pageRequest);
 
         return new PageImpl<>(
-            memberCustomCards.map(cardMapper::toMemberPageResponse)
+            memberCustomCards.map(card ->
+                cardMapper.toMemberPageResponse(card)
+                    .setCardId(card.getId())
+            )
                 .stream()
                 .map(response -> response.setType(CardTypeEnum.CUSTOM))
                 .collect(
@@ -109,16 +109,17 @@ public class CardServiceImpl implements CardService {
 
         PageRequest pageRequest = PageRequest.of(0, size);
 
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+        Member member = getMemberByUserDetail(userDetails);
 
         Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
             .findByMemberIdAndIdLessThanOrderByCreatedAtDesc(
                 member.getId(), memberCustomCardId, pageRequest);
 
         return new PageImpl<>(
-            memberCustomCards.map(cardMapper::toMemberPageResponse)
-                .stream()
+            memberCustomCards
+                .map(card -> cardMapper.toMemberPageResponse(card)
+                    .setCardId(card.getId())
+                ).stream()
                 .map(response -> response.setType(CardTypeEnum.CUSTOM))
                 .collect(
                     Collectors.toList()));
@@ -128,25 +129,61 @@ public class CardServiceImpl implements CardService {
     public Page<PageResponse> getLatestFocusCards(int size, UserDetails userDetails) {
         PageRequest pageRequest = PageRequest.of(0, size);
 
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+        Member member = getMemberByUserDetail(userDetails);
 
-        Page<MemberCard> memberCardPage = memberCardRepository
+        Page<MemberCard> memberCards = memberCardRepository
             .findByMemberIdAndFocusOrderByCreatedAtDesc(
                 member.getId(), FocusTypeEnum.ATTENTION, pageRequest);
 
-        return new PageImpl<>(separateMemberCardByType(memberCardPage));
+        return new PageImpl<>(separateMemberCardByType(memberCards));
     }
 
     @Override
-    public Page<PageResponse> getFocusCards(int size, Long focusCardId, UserDetails userDetails) {
-        return null;
+    public Page<PageResponse> getFocusCards(int size, Long memberCardId, UserDetails userDetails) {
+
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        Member member = getMemberByUserDetail(userDetails);
+
+        Page<MemberCard> memberCards = memberCardRepository
+            .findByMemberIdAndFocusAndIdLessThanOrderByCreatedAtDesc(
+                member.getId(), FocusTypeEnum.ATTENTION, memberCardId, pageRequest
+            );
+
+        return new PageImpl<>(separateMemberCardByType(memberCards));
     }
 
     @Override
     public ReadResponse getCardContents(Long cardId, CardTypeEnum cardTypeEnum,
         UserDetails userDetails) {
-        return null;
+
+        Member member = getMemberByUserDetail(userDetails);
+
+        CardDto.ReadResponse readResponse;
+
+        if (cardTypeEnum.equals(CardTypeEnum.AFFIRMATION)) {
+
+            MemberCard memberCard = memberCardRepository
+                .findByMemberIdAndAffirmationCardIdAndType(member.getId(), cardId, cardTypeEnum)
+                .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+            AffirmationCard affirmationCard = memberCard.getAffirmationCard();
+            readResponse = cardMapper.toReadResponse(affirmationCard);
+            readResponse.setLetterId(affirmationCard.getLetter().getId());
+
+        } else if (cardTypeEnum.equals(CardTypeEnum.CUSTOM)) {
+
+            MemberCard memberCard = memberCardRepository
+                .findByMemberIdAndMemberCustomCardIdAndType(member.getId(), cardId, cardTypeEnum)
+                .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+            readResponse = cardMapper.toReadResponse(memberCard.getMemberCustomCard());
+
+        } else {
+            throw new CommonException(ErrorEnum.CARD_TYPE_INVALID);
+        }
+
+        return readResponse;
     }
 
     @Override
@@ -184,23 +221,34 @@ public class CardServiceImpl implements CardService {
 
         for (MemberCard memberCard : memberCards) {
             if (memberCard.getType().equals(CardTypeEnum.AFFIRMATION)) {
+                AffirmationCard affirmationCard = memberCard.getAffirmationCard();
 
                 PageResponse pageResponse = cardMapper
-                    .toMemberPageResponse(memberCard.getAffirmationCard())
-                    .setType(memberCard.getType());
+                    .toMemberPageResponse(affirmationCard)
+                    .setType(memberCard.getType())
+                    .setCardId(affirmationCard.getId())
+                    .setMemberCardId(memberCard.getId());
 
                 pageResponses.add(pageResponse);
 
             } else if (memberCard.getType().equals(CardTypeEnum.CUSTOM)) {
 
+                MemberCustomCard memberCustomCard = memberCard.getMemberCustomCard();
                 PageResponse pageResponse = cardMapper
-                    .toMemberPageResponse(memberCard.getMemberCustomCard())
-                    .setType(memberCard.getType());
+                    .toMemberPageResponse(memberCustomCard)
+                    .setType(memberCard.getType())
+                    .setCardId(memberCustomCard.getId())
+                    .setMemberCardId(memberCard.getId());
 
                 pageResponses.add(pageResponse);
             }
         }
         return pageResponses;
+    }
+
+    private Member getMemberByUserDetail(UserDetails userDetails) {
+        return memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
+            new CommonException(ErrorEnum.NOT_FOUND));
     }
 
 }
