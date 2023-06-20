@@ -1,5 +1,6 @@
 package com.woobros.member.hub.domain.letter;
 
+import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +23,6 @@ public class LetterController {
 
     /* beans */
     private final LetterService letterService;
-
-    @PostMapping("/admin")
-    public ResponseEntity<LetterDto.ReadResponse> postLetter(
-        @Valid @RequestBody LetterDto.PostRequest letterReqDto) {
-
-        return ResponseEntity.ok().body(letterService.postLetter(letterReqDto));
-    }
 
     @GetMapping("/open/latest")
     public ResponseEntity<LetterDto.ReadResponse> getTodayLetter() {
@@ -77,7 +71,7 @@ public class LetterController {
         return letterService.getHaveLetterPage(letterId, size, userDetails);
     }
 
-    @GetMapping("/auth/page/not-have/{size}")
+    @GetMapping("/auth/page/no-have/{size}")
     public Page<LetterDto.PageResponse> getDoesNotHaveLatestLetterPage(
         @PathVariable int size,
         @AuthenticationPrincipal UserDetails userDetails) {
@@ -85,12 +79,28 @@ public class LetterController {
         return letterService.getDoesNotHaveLatestLetterPage(size, userDetails);
     }
 
-    @GetMapping("/auth/page/not-have/{size}/{letterId}")
+    @GetMapping("/auth/page/no-have/{size}/{letterId}")
     public Page<LetterDto.PageResponse> getDoesNotHaveLetterPage(
         @PathVariable int size,
         @PathVariable Long letterId,
         @AuthenticationPrincipal UserDetails userDetails) {
 
         return letterService.getDoesNotHaveLetterPage(letterId, size, userDetails);
+    }
+
+    /** backoffice */
+
+    /**
+     * @param letterReqDto
+     * @return
+     */
+    @PostMapping("/admin")
+    public ResponseEntity<String> postLetter(
+        @Valid @RequestBody LetterDto.PostRequest letterReqDto) {
+
+        LetterDto.ReadResponse readResponse = letterService.postLetter(letterReqDto);
+
+        String url = "/api/v1/letter/auth/" + readResponse.getId();
+        return ResponseEntity.created(URI.create(url)).body("letter is created.");
     }
 }

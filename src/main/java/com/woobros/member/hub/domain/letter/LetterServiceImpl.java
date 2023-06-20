@@ -2,7 +2,9 @@ package com.woobros.member.hub.domain.letter;
 
 import com.woobros.member.hub.common.exception.CommonException;
 import com.woobros.member.hub.common.exception.ErrorEnum;
+import com.woobros.member.hub.domain.card.FocusTypeEnum;
 import com.woobros.member.hub.domain.letter.LetterDto.PageResponse;
+import com.woobros.member.hub.model.card.CardTypeEnum;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;
 import com.woobros.member.hub.model.card.memb_card.MemberCard;
@@ -247,8 +249,11 @@ public class LetterServiceImpl implements LetterService {
             memberCardRepository
                 .save(
                     MemberCard.builder()
+                        .member(member)
                         .memberLetter(memberLetter)
                         .affirmationCard(affirmationCard)
+                        .focus(FocusTypeEnum.NON)
+                        .type(CardTypeEnum.AFFIRMATION)
                         .build()
                 );
         }
