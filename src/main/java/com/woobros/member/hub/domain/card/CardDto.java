@@ -49,13 +49,24 @@ public class CardDto {
 
     @Getter
     @Setter
+    public static class PostCustomRequest {
+
+        @NotBlank
+        @Size(min = 1, max = 200)
+        private String contents;
+
+        @NotBlank
+        private String title;
+
+        private String tag;
+    }
+
+    @Getter
+    @Setter
     public static class PostFocusRequest {
 
         @NotBlank
         private Long CardId;
-
-        @NotBlank
-        private Long letterId;
 
         @NotBlank
         private CardTypeEnum type;
@@ -67,16 +78,15 @@ public class CardDto {
     public static class ReadResponse {
 
         private final Long id;
-        private Long letterId;
         private final String title;
         private final String contents;
-        private final CardTypeEnum type;
+        private CardTypeEnum type;
         private final String tag;
         private final String createdAt;
         private final String updateAt;
 
-        public ReadResponse setLetterId(Long letterId) {
-            this.letterId = letterId;
+        public ReadResponse setType(CardTypeEnum type) {
+            this.type = type;
             return this;
         }
     }

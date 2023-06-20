@@ -15,6 +15,8 @@ public interface CardMapper {
 
     AffirmationCard toEntity(CardDto.PostRequest postRequestDto);
 
+    MemberCustomCard toMemberCustomCardEntity(CardDto.PostCustomRequest memberCustomCardPostDto);
+
     CardDto.PageResponse toMemberPageResponse(MemberCard memberCard);
 
     CardDto.PageResponse toMemberPageResponse(AffirmationCard affirmationCard);

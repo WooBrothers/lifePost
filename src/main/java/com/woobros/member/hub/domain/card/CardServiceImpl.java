@@ -3,6 +3,7 @@ package com.woobros.member.hub.domain.card;
 import com.woobros.member.hub.common.exception.CommonException;
 import com.woobros.member.hub.common.exception.ErrorEnum;
 import com.woobros.member.hub.domain.card.CardDto.PageResponse;
+import com.woobros.member.hub.domain.card.CardDto.PostCustomRequest;
 import com.woobros.member.hub.domain.card.CardDto.PostFocusRequest;
 import com.woobros.member.hub.domain.card.CardDto.PostRequest;
 import com.woobros.member.hub.domain.card.CardDto.ReadResponse;
@@ -169,7 +170,7 @@ public class CardServiceImpl implements CardService {
 
             AffirmationCard affirmationCard = memberCard.getAffirmationCard();
             readResponse = cardMapper.toReadResponse(affirmationCard);
-            readResponse.setLetterId(affirmationCard.getLetter().getId());
+            readResponse.setType(CardTypeEnum.AFFIRMATION);
 
         } else if (cardTypeEnum.equals(CardTypeEnum.CUSTOM)) {
 
@@ -178,6 +179,7 @@ public class CardServiceImpl implements CardService {
                 .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
 
             readResponse = cardMapper.toReadResponse(memberCard.getMemberCustomCard());
+            readResponse.setType(CardTypeEnum.CUSTOM);
 
         } else {
             throw new CommonException(ErrorEnum.CARD_TYPE_INVALID);
@@ -187,26 +189,92 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public ReadResponse postMemberCustomCard(PostRequest memberCardPostDto,
+    public ReadResponse postMemberCustomCard(PostCustomRequest memberCustomCardPostDto,
         UserDetails userDetails) {
-        return null;
+
+        Member member = getMemberByUserDetail(userDetails);
+
+        MemberCustomCard memberCustomCard = cardMapper
+            .toMemberCustomCardEntity(memberCustomCardPostDto);
+
+        memberCustomCard.setMember(member);
+
+        MemberCard memberCard = MemberCard.builder()
+            .member(member)
+            .memberCustomCard(memberCustomCard)
+            .focus(FocusTypeEnum.NON)
+            .type(CardTypeEnum.CUSTOM)
+            .build();
+
+        memberCustomCard = memberCustomCardRepository.save(memberCustomCard);
+        memberCardRepository.save(memberCard);
+
+        return cardMapper.toReadResponse(memberCustomCard).setType(CardTypeEnum.CUSTOM);
     }
 
     @Override
     public ReadResponse postFocusCard(PostFocusRequest focusCardRequest, UserDetails userDetails) {
-        return null;
+        Member member = getMemberByUserDetail(userDetails);
+
+        MemberCard memberCard;
+        ReadResponse response;
+
+        if (focusCardRequest.getType().equals(CardTypeEnum.AFFIRMATION)) {
+
+            memberCard = memberCardRepository.findByMemberIdAndAffirmationCardIdAndType(
+                member.getId(), focusCardRequest.getCardId(), focusCardRequest.getType())
+                .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+            response = cardMapper.toReadResponse(memberCard.getAffirmationCard());
+
+        } else if (focusCardRequest.getType().equals(CardTypeEnum.CUSTOM)) {
+
+            memberCard = memberCardRepository.findByMemberIdAndMemberCustomCardIdAndType(
+                member.getId(), focusCardRequest.getCardId(), focusCardRequest.getType())
+                .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+            response = cardMapper.toReadResponse(memberCard.getMemberCustomCard());
+
+        } else {
+            throw new CommonException(ErrorEnum.CARD_TYPE_INVALID);
+        }
+
+        memberCard.setFocus(FocusTypeEnum.ATTENTION);
+        memberCardRepository.save(memberCard);
+
+        return response;
     }
 
     @Override
     public ReadResponse postAffirmationCard(PostRequest cardPostReqDto, UserDetails userDetails) {
         AffirmationCard affirmationCard = cardMapper.toEntity(cardPostReqDto);
 
-        CardDto.ReadResponse resultResponse = cardMapper.toReadResponse(
+        return cardMapper.toReadResponse(
             affirmationCardRepository.save(affirmationCard)
         );
+    }
 
-        // todo letter mapping
-        return resultResponse;
+    @Override
+    public void deleteFocusCard(CardTypeEnum type, Long cardId, UserDetails userDetails) {
+        Member member = getMemberByUserDetail(userDetails);
+
+        MemberCard memberCard;
+
+        if (type.equals(CardTypeEnum.AFFIRMATION)) {
+            memberCard = memberCardRepository.findByMemberIdAndAffirmationCardIdAndType(
+                member.getId(), cardId, type)
+                .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        } else if (type.equals(CardTypeEnum.CUSTOM)) {
+            memberCard = memberCardRepository.findByMemberIdAndMemberCustomCardIdAndType(
+                member.getId(), cardId, type)
+                .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+        } else {
+            throw new CommonException(ErrorEnum.CARD_TYPE_INVALID);
+        }
+
+        memberCard.setFocus(FocusTypeEnum.NON);
+        memberCardRepository.save(memberCard);
     }
 
     /**
@@ -250,5 +318,4 @@ public class CardServiceImpl implements CardService {
         return memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
             new CommonException(ErrorEnum.NOT_FOUND));
     }
-
 }

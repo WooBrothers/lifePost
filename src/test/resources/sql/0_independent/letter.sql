@@ -27,6 +27,6 @@ values ('test1', 'test1', 'wk', 'TEST', CURDATE() - INTERVAL '14' DAY, now() - I
        ('test13', 'test13', 'wk', 'TEST', CURDATE() - INTERVAL '2' DAY,
         now() - INTERVAL '2' DAY, now() - INTERVAL '2' DAY),
        ('test14', 'test14', 'wk', 'TEST', CURDATE() - INTERVAL '1' DAY,
-        now() - INTERVAL '1' DAY, now() - INTERVAL '1' DAY),
-       ('test15', 'test15', 'wk', 'TEST', CURDATE(), now(), now());
+        now() - INTERVAL '1' DAY, now() - INTERVAL '1' DAY);
+--        ('test15', 'test15', 'wk', 'TEST', CURDATE(), now(), now());
 

@@ -73,7 +73,7 @@ public class LetterController {
         return letterService.getHaveLetterPage(letterId, size, userDetails);
     }
 
-    @GetMapping("/auth/page/not-have/{size}")
+    @GetMapping("/auth/page/no-have/{size}")
     public Page<LetterDto.PageResponse> getDoesNotHaveLatestLetterPage(
         @PathVariable int size,
         @AuthenticationPrincipal UserDetails userDetails) {
@@ -81,7 +81,7 @@ public class LetterController {
         return letterService.getDoesNotHaveLatestLetterPage(size, userDetails);
     }
 
-    @GetMapping("/auth/page/not-have/{size}/{letterId}")
+    @GetMapping("/auth/page/no-have/{size}/{letterId}")
     public Page<LetterDto.PageResponse> getDoesNotHaveLetterPage(
         @PathVariable int size,
         @PathVariable Long letterId,

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -144,19 +145,19 @@ public class CardController {
     /**
      * 멤버가 생성한 카드 내용 저장
      *
-     * @param memberCardPostDto
+     * @param memberCustomCardPostDto
      * @param userDetails
      * @return
      */
     @PostMapping("/auth/member/custom")
     public ResponseEntity<String> postMemberCustomCard(
-        @RequestBody CardDto.PostRequest memberCardPostDto,
+        @RequestBody CardDto.PostCustomRequest memberCustomCardPostDto,
         @AuthenticationPrincipal UserDetails userDetails) {
 
         CardDto.ReadResponse cardDto = cardService
-            .postMemberCustomCard(memberCardPostDto, userDetails);
+            .postMemberCustomCard(memberCustomCardPostDto, userDetails);
 
-        String url = schema + cardDto.getType() + "/" + cardDto.getId();
+        String url = schema + cardDto.getType().toString() + "/" + cardDto.getId();
         return ResponseEntity.created(URI.create(url)).body("member custom card created.");
     }
 
@@ -174,7 +175,8 @@ public class CardController {
 
         CardDto.ReadResponse cardDto = cardService.postFocusCard(focusCardRequest, userDetails);
 
-        String url = schema + cardDto.getType() + "/" + cardDto.getId();
+        String url =
+            schema + focusCardRequest.getType().toString() + "/" + cardDto.getId();
         return ResponseEntity.created(URI.create(url)).body("member focus card created.");
     }
 
@@ -195,5 +197,15 @@ public class CardController {
 
         String url = schema + cardDto.getType() + "/" + cardDto.getId();
         return ResponseEntity.created(URI.create(url)).body("affirmation card created.");
+    }
+
+    @DeleteMapping("/auth/focus/{type}/{cardId}")
+    public ResponseEntity<String> deleteFocusCard(
+        @PathVariable CardTypeEnum type, @PathVariable Long cardId,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        cardService.deleteFocusCard(type, cardId, userDetails);
+
+        return ResponseEntity.ok(type + ": " + cardId + " is not focus status.");
     }
 }

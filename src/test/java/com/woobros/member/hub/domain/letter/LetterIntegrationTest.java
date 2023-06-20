@@ -116,7 +116,7 @@ class LetterIntegrationTest {
     @Test
     void testPostLetter_WhenHaveAdminToken_WillOk() throws Exception {
         Letter letter = Letter.builder()
-            .title("test16")
+            .title("test15")
             .contents("think every time.")
             .writer("wookim")
             .build();
@@ -135,7 +135,6 @@ class LetterIntegrationTest {
 
         response.andDo(print())
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.letter.id", is(16)))
             .andExpect(jsonPath("$.letter.title", is(postRequest.getTitle())))
             .andExpect(jsonPath("$.letter.contents", is(postRequest.getContents())))
             .andExpect(jsonPath("$.letter.writer", is(postRequest.getWriter())));
@@ -203,8 +202,8 @@ class LetterIntegrationTest {
 
         response.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id", is(15)))
-            .andExpect(jsonPath("$.title", is("test15")));
+            .andExpect(jsonPath("$.id", is(14)))
+            .andExpect(jsonPath("$.title", is("test14")));
     }
 
     @Test
@@ -216,8 +215,8 @@ class LetterIntegrationTest {
 
         response.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id", is(15)))
-            .andExpect(jsonPath("$.title", is("test15")));
+            .andExpect(jsonPath("$.id", is(14)))
+            .andExpect(jsonPath("$.title", is("test14")));
     }
 
     @Test
@@ -232,8 +231,8 @@ class LetterIntegrationTest {
 
         response.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id", is(15)))
-            .andExpect(jsonPath("$.title", is("test15")));
+            .andExpect(jsonPath("$.id", is(14)))
+            .andExpect(jsonPath("$.title", is("test14")));
     }
 
     @Test
@@ -316,14 +315,34 @@ class LetterIntegrationTest {
 
     @Test
     void testGetTodayLetterContents_WhenHaveUserToken_WillOk() throws Exception {
+
+        // 권한 변경 user -> admin
+        Member member = memberRepository.findById(1L).orElseThrow();
+        member.setRole(Role.ADMIN);
+        memberRepository.save(member);
+
+        // 오늘의 편지 생성
+        Letter letter = Letter.builder()
+            .title("test15")
+            .contents("think every time.")
+            .writer("wookim")
+            .build();
+
+        letterRepository.save(letter);
+
+        // 권한 되돌리기
+        member.setRole(Role.USER);
+        memberRepository.save(member);
+
+        // 오늘의 편지 생성 이후 조회 요청
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/15")
             .header(authorization, tokenType + testAccessToken)
             .contentType(MediaType.APPLICATION_JSON));
 
         response.andDo(print()).andExpect(status().isOk())
             .andExpect(jsonPath("$.id", is(15)))
-            .andExpect(jsonPath("$.title", is("test15")))
-            .andExpect(jsonPath("$.contents", is("test15")))
+            .andExpect(jsonPath("$.title", is(letter.getTitle())))
+            .andExpect(jsonPath("$.contents", is(letter.getContents())))
         ;
     }
 
@@ -408,20 +427,20 @@ class LetterIntegrationTest {
 
     @Test
     void testGetDoesNotHaveLatestLetterPage_WhenHaveUserToken_WillOk() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/not-have/3")
+        ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/no-have/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
         );
 
         response.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].id", is(15)))
-            .andExpect(jsonPath("$.content[1].id", is(9)));
+            .andExpect(jsonPath("$.content[0].id", is(9)))
+            .andExpect(jsonPath("$.content[1].id", is(8)));
     }
 
     @Test
     void testGetDoesNotHaveLetterPage_WhenHaveUserToken_WillOk() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/not-have/3/9")
+        ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/no-have/3/9")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
         );

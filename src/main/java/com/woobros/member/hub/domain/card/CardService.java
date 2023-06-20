@@ -22,7 +22,7 @@ public interface CardService {
     CardDto.ReadResponse getCardContents(Long cardId, CardTypeEnum cardTypeEnum,
         UserDetails userDetails);
 
-    CardDto.ReadResponse postMemberCustomCard(CardDto.PostRequest memberCardPostDto,
+    CardDto.ReadResponse postMemberCustomCard(CardDto.PostCustomRequest memberCustomCardPostDto,
         UserDetails userDetails);
 
     CardDto.ReadResponse postFocusCard(CardDto.PostFocusRequest focusCardRequest,
@@ -30,6 +30,8 @@ public interface CardService {
 
     CardDto.ReadResponse postAffirmationCard(CardDto.PostRequest cardPostReqDto,
         UserDetails userDetails);
+
+    void deleteFocusCard(CardTypeEnum type, Long cardId, UserDetails userDetails);
 }
 
 

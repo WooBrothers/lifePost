@@ -14,6 +14,8 @@ public interface MemberCardRepository extends
 
     List<MemberCard> findByMemberLetterId(Long memberLetterId);
 
+    List<MemberCard> findByMemberId(Long memberId);
+
     Page<MemberCard> findByMemberIdOrderByCreatedAtDesc(Long memberId, PageRequest pageRequest);
 
     Page<MemberCard> findByMemberIdAndIdLessThanOrderByCreatedAtDesc(Long memberId, Long id,

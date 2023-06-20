@@ -1,5 +1,6 @@
 package com.woobros.member.hub.domain.card;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -7,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woobros.member.hub.domain.card.CardDto.PostFocusRequest;
-import com.woobros.member.hub.domain.card.CardDto.PostRequest;
+import com.woobros.member.hub.model.card.CardMapper;
 import com.woobros.member.hub.model.card.CardTypeEnum;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;
@@ -20,9 +21,13 @@ import com.woobros.member.hub.model.letter.LetterMapper;
 import com.woobros.member.hub.model.letter.LetterRepository;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
+import com.woobros.member.hub.model.member.Role;
 import com.woobros.member.hub.model.member_letter.MemberLetter;
 import com.woobros.member.hub.model.member_letter.MemberLetterRepository;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +41,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -58,10 +64,11 @@ public class CardIntegrationCardTest {
     private MemberCustomCardRepository memberCustomCardRepository;
     @Autowired
     private AffirmationCardRepository affirmationCardRepository;
+    @Autowired
+    private CardMapper cardMapper;
 
     private final String authorization = "Authorization";
     private final String tokenType = "Bearer ";
-    private final String loginRedirectUrl = "http://localhost/login/page";
 
     @Value("${test.accessToken}")
     private String testAccessToken;
@@ -153,8 +160,6 @@ public class CardIntegrationCardTest {
     @Test
     void testGetLatestMemberCards_WhenHaveUserToken_WillOk() throws Exception {
 
-        // given
-
         ResultActions response = mockMvc.perform(get("/api/v1/card/auth/member/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
@@ -166,7 +171,7 @@ public class CardIntegrationCardTest {
     @Test
     void testGetMemberCards_WhenHaveUserToken_WillOk() throws Exception {
         ResultActions response = mockMvc
-            .perform(get("/api/v1/card/auth/member/3/16")
+            .perform(get("/api/v1/card/auth/member/3/10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(authorization, tokenType + testAccessToken));
 
@@ -189,7 +194,7 @@ public class CardIntegrationCardTest {
     @Test
     void testGetMemberCustomCards() throws Exception {
         ResultActions response = mockMvc
-            .perform(get("/api/v1/card/auth/custom/3/13")
+            .perform(get("/api/v1/card/auth/custom/3/4")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(authorization, tokenType + testAccessToken));
 
@@ -217,7 +222,6 @@ public class CardIntegrationCardTest {
 
         response.andDo(print())
             .andExpect(status().isOk());
-
     }
 
     @Test
@@ -232,14 +236,33 @@ public class CardIntegrationCardTest {
 
     @Test
     void testGetCardContents() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/AFFIRMATION/10")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken));
+
+        List<MemberCard> memberCards = memberCardRepository.findByMemberId(member.getId());
+
+        String affirmationCardId = null;
+        String memberCustomCardId = null;
+        for (MemberCard memberCard : memberCards) {
+            if (memberCard.getType().equals(CardTypeEnum.AFFIRMATION)
+                && affirmationCardId == null) {
+                affirmationCardId = memberCard.getAffirmationCard().getId().toString();
+            }
+            if (memberCard.getType().equals(CardTypeEnum.CUSTOM) && memberCustomCardId == null) {
+                memberCustomCardId = memberCard.getMemberCustomCard().getId().toString();
+            }
+            if (affirmationCardId != null && memberCustomCardId != null) {
+                break;
+            }
+        }
+
+        ResultActions response = mockMvc
+            .perform(get("/api/v1/card/auth/AFFIRMATION/" + affirmationCardId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(authorization, tokenType + testAccessToken));
 
         response.andDo(print())
             .andExpect(status().isOk());
 
-        response = mockMvc.perform(get("/api/v1/card/auth/CUSTOM/13")
+        response = mockMvc.perform(get("/api/v1/card/auth/CUSTOM/" + memberCustomCardId)
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -250,39 +273,108 @@ public class CardIntegrationCardTest {
     @Test
     void testPostMemberCustomCard() throws Exception {
 
-        CardDto.PostRequest PostRequest = new PostRequest();
+        Map<String, String> memberCustomCardMap = new HashMap<>();
+        memberCustomCardMap.put("contents", "member custom card test create");
+        memberCustomCardMap.put("title", "member custom card test create");
+
         ResultActions response = mockMvc.perform(post("/api/v1/card/auth/member/custom")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
-            .content(objectMapper.writeValueAsString(PostRequest)));
+            .content(objectMapper.writeValueAsString(memberCustomCardMap)));
 
         response.andDo(print())
+            .andExpect(status().isCreated());
+    }
+
+    @Test
+    void testPostFocusCard_Affirmation() throws Exception {
+
+        CardDto.PostFocusRequest postAffrRequest = new PostFocusRequest();
+        postAffrRequest.setCardId(14L);
+        postAffrRequest.setType(CardTypeEnum.AFFIRMATION);
+
+        ResultActions response = mockMvc.perform(post("/api/v1/card/auth/focus")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(authorization, tokenType + testAccessToken)
+            .content(objectMapper.writeValueAsString(postAffrRequest)));
+
+        response.andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(MockMvcResultMatchers.header().exists("Location"));
+
+        String location = response.andReturn().getResponse().getHeader("Location");
+
+        ResultActions redirect = mockMvc.perform(get(location)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(authorization, tokenType + testAccessToken)
+        )
+            .andDo(print())
             .andExpect(status().isOk());
     }
 
     @Test
-    void testPostFocusCard() throws Exception {
+    void testPostFocusCard_MemberCustom() throws Exception {
 
-        CardDto.PostFocusRequest PostRequest = new PostFocusRequest();
+        List<MemberCard> memberCards = memberCardRepository.findByMemberId(member.getId());
+
+        memberCards = memberCards.stream()
+            .filter(card -> card.getType().equals(CardTypeEnum.CUSTOM)).collect(
+                Collectors.toList());
+
+        CardDto.PostFocusRequest postCustRequest = new PostFocusRequest();
+        postCustRequest.setCardId(memberCards.get(0).getMemberCustomCard().getId());
+        postCustRequest.setType(CardTypeEnum.CUSTOM);
+
         ResultActions response = mockMvc.perform(post("/api/v1/card/auth/focus")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
-            .content(objectMapper.writeValueAsString(PostRequest)));
+            .content(objectMapper.writeValueAsString(postCustRequest)));
 
         response.andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(MockMvcResultMatchers.header().exists("Location"));
+
+        String location = response.andReturn().getResponse().getHeader("Location");
+
+        ResultActions redirect = mockMvc.perform(get(location)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(authorization, tokenType + testAccessToken)
+        )
+            .andDo(print())
             .andExpect(status().isOk());
     }
 
     @Test
     void testPostAffirmationCard() throws Exception {
+        member.setRole(Role.ADMIN);
+        memberRepository.save(member);
 
-        CardDto.PostRequest PostRequest = new PostRequest();
+        Map<String, String> affirmationCardMap = new HashMap<>();
+        affirmationCardMap.put("contents", "affirmation card test create");
+        affirmationCardMap.put("title", "affirmation card test create");
+
         ResultActions response = mockMvc.perform(post("/api/v1/card/admin/affirmation")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken)
-            .content(objectMapper.writeValueAsString(PostRequest)));
+            .content(objectMapper.writeValueAsString(affirmationCardMap)));
 
         response.andDo(print())
+            .andExpect(status().isCreated());
+    }
+
+    @Test
+    void testDeleteFocusCard() throws Exception {
+
+        ResultActions response = mockMvc.perform(delete("/api/v1/card/auth/focus/AFFIRMATION/14")
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(authorization, tokenType + testAccessToken))
+            .andDo(print())
             .andExpect(status().isOk());
+
+        MemberCard memberCard = memberCardRepository.findByMemberIdAndAffirmationCardIdAndType(
+            member.getId(), 14L, CardTypeEnum.AFFIRMATION).orElseThrow();
+
+        assert memberCard.getFocus().equals(FocusTypeEnum.NON);
+
     }
 }

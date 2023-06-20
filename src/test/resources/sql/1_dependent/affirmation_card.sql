@@ -27,8 +27,8 @@ values (1, 1, 'affr card test1', 'awake anywhere, anytime.', null, now() - INTER
        (13, 13, 'affr card tes13t', 'awake anywhere, anytime.', null, now() - INTERVAL '2' DAY,
         now() - INTERVAL '2' DAY),
        (14, 14, 'affr card tes14t', 'awake anywhere, anytime.', null, now() - INTERVAL '1' DAY,
-        now() - INTERVAL '1' DAY),
-       (15, 15, 'affr card tes15t', 'awake anywhere, anytime.', null, now(), now());
+        now() - INTERVAL '1' DAY);
+--        (15, 15, 'affr card tes15t', 'awake anywhere, anytime.', null, now(), now());
 
 
 
