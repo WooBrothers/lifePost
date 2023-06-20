@@ -20,6 +20,7 @@ import com.woobros.member.hub.model.member.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class CardServiceImpl implements CardService {
 
