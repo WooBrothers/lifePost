@@ -1,8 +1,6 @@
 package com.woobros.member.hub.domain.letter;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,17 +95,12 @@ public class LetterController {
      * @return
      */
     @PostMapping("/admin")
-    public ResponseEntity<Map<String, Object>> postLetter(
+    public ResponseEntity<String> postLetter(
         @Valid @RequestBody LetterDto.PostRequest letterReqDto) {
-
-        String url = "/api/v1/card/admin/affirmation";
 
         LetterDto.ReadResponse readResponse = letterService.postLetter(letterReqDto);
 
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("letter", readResponse);
-        responseMap.put("msg",
-            "letter is created. this url is not resource url. card post url. so write card plz. ");
-        return ResponseEntity.created(URI.create(url)).body(responseMap);
+        String url = "/api/v1/letter/auth/" + readResponse.getId();
+        return ResponseEntity.created(URI.create(url)).body("letter is created.");
     }
 }
