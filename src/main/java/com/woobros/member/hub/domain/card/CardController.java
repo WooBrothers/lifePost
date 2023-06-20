@@ -24,14 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
 
     private final CardService cardService;
-    private final String schema = "/api/v1/card/auth/";
+    private static final String SCHEMA = "/api/v1/card/auth/";
 
     /**
      * 멤버가 소유한 최신 카드를 size 만큼 조회 (리스트 출력용)
      *
-     * @param size
-     * @param userDetails
-     * @return
+     * @param size        불러올 카드 사이즈
+     * @param userDetails security 멤버 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
 
     @GetMapping("/auth/member/{size}")
@@ -45,10 +45,10 @@ public class CardController {
     /**
      * 멤버가 소유한 카드중 전달한 memberCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
      *
-     * @param size
-     * @param memberCardId
-     * @param userDetails
-     * @return
+     * @param size         불러올 카드 사이즈
+     * @param memberCardId 멤버가 소유한 카드의 아이디
+     * @param userDetails  security 멤버 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @GetMapping("/auth/member/{size}/{memberCardId}")
     public Page<CardDto.PageResponse> getMemberCards(
@@ -62,9 +62,9 @@ public class CardController {
     /**
      * 멤버가 만든 최신 카드를 size 만큼 조회 (리스트 출력용)
      *
-     * @param size
-     * @param userDetails
-     * @return
+     * @param size        불러올 카드 사이즈
+     * @param userDetails security 유저 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @GetMapping("/auth/custom/{size}")
     public Page<PageResponse> getLatestMemberCustomCards(
@@ -77,10 +77,10 @@ public class CardController {
     /**
      * 멤버가 만든 카드중 전달한 memberCustomCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
      *
-     * @param size
-     * @param memberCustomCardId
-     * @param userDetails
-     * @return
+     * @param size               불러올 카드 사이즈
+     * @param memberCustomCardId 해당 멤버카드 id 이후의 카드 조회
+     * @param userDetails        security 유저 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @GetMapping("/auth/custom/{size}/{memberCustomCardId}")
     public Page<PageResponse> getMemberCustomCards(
@@ -94,9 +94,9 @@ public class CardController {
     /**
      * 유저의 최신 focus 카드 size 만큼 조회 (리스트 출력용)
      *
-     * @param size
-     * @param userDetails
-     * @return
+     * @param size        불러올 카드 사이즈
+     * @param userDetails security 유저 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @GetMapping("/auth/focus/{size}")
     public Page<PageResponse> getLatestFocusCards(
@@ -112,10 +112,10 @@ public class CardController {
      * memberCard의 리스트 중 focus 상태인 것들만 조회하는 리스트 뷰에서 사용한다. 전달하는 memberCardId 이후에 focus 상태인 리스트 정보를
      * 조회한다.
      *
-     * @param size
-     * @param memberCardId
-     * @param userDetails
-     * @return
+     * @param size         불러올 카드 사이즈
+     * @param memberCardId 멤버가 소유한 카드의 아이디
+     * @param userDetails  security 멤버 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @GetMapping("/auth/focus/{size}/{memberCardId}")
     public Page<PageResponse> getFocusCards(
@@ -129,9 +129,9 @@ public class CardController {
     /**
      * cardId의 내용 읽기
      *
-     * @param cardId
-     * @param userDetails
-     * @return
+     * @param cardId      읽을 카드의 아이디
+     * @param userDetails security 멤버 정보
+     * @return 카드 내용 전달 (컨텐츠 o)
      */
     @GetMapping("/auth/{cardTypeEnum}/{cardId}")
     public ResponseEntity<CardDto.ReadResponse> getCardContents(
@@ -145,9 +145,9 @@ public class CardController {
     /**
      * 멤버가 생성한 카드 내용 저장
      *
-     * @param memberCustomCardPostDto
-     * @param userDetails
-     * @return
+     * @param memberCustomCardPostDto 멤버가 생성할 카드의 정보를 담은 dto
+     * @param userDetails             security 멤버 정보
+     * @return 성공 msg 와 header > location: 생성한 리소스를 확인 가능한 url
      */
     @PostMapping("/auth/member/custom")
     public ResponseEntity<String> postMemberCustomCard(
@@ -157,16 +157,16 @@ public class CardController {
         CardDto.ReadResponse cardDto = cardService
             .postMemberCustomCard(memberCustomCardPostDto, userDetails);
 
-        String url = schema + cardDto.getType().toString() + "/" + cardDto.getId();
+        String url = SCHEMA + cardDto.getType().toString() + "/" + cardDto.getId();
         return ResponseEntity.created(URI.create(url)).body("member custom card created.");
     }
 
     /**
      * 멤버가 전달한 카드 focus 처리
      *
-     * @param focusCardRequest
-     * @param userDetails
-     * @return
+     * @param focusCardRequest focus할 카드의 정보를 담은 dto
+     * @param userDetails      security 멤버 정보
+     * @return 성공 msg 와 header > location: 생성한 리소스를 확인 가능한 url
      */
     @PostMapping("/auth/focus")
     public ResponseEntity<String> postFocusCard(
@@ -176,18 +176,17 @@ public class CardController {
         CardDto.ReadResponse cardDto = cardService.postFocusCard(focusCardRequest, userDetails);
 
         String url =
-            schema + focusCardRequest.getType().toString() + "/" + cardDto.getId();
+            SCHEMA + focusCardRequest.getType().toString() + "/" + cardDto.getId();
         return ResponseEntity.created(URI.create(url)).body("member focus card created.");
     }
 
     /**
      * backoffice 확언 카드 쓰기 기능
      *
-     * @param cardPostReqDto
-     * @param userDetails
-     * @return
+     * @param cardPostReqDto 확언 카드의 내용을 담은 dto
+     * @param userDetails    security 멤버 정보
+     * @return 성공 msg 와 header > location: 생성한 리소스를 확인 가능한 url
      */
-
     @PostMapping("/admin/affirmation")
     public ResponseEntity<String> postAffirmationCard(
         @RequestBody CardDto.PostRequest cardPostReqDto,
@@ -195,10 +194,16 @@ public class CardController {
 
         CardDto.ReadResponse cardDto = cardService.postAffirmationCard(cardPostReqDto, userDetails);
 
-        String url = schema + cardDto.getType() + "/" + cardDto.getId();
+        String url = SCHEMA + cardDto.getType() + "/" + cardDto.getId();
         return ResponseEntity.created(URI.create(url)).body("affirmation card created.");
     }
 
+    /**
+     * @param type        focus 해제할 카드의 타입
+     * @param cardId      focus 해제할 카드의 id
+     * @param userDetails security 멤버 정보
+     * @return focus 해제 성공 msg
+     */
     @DeleteMapping("/auth/focus/{type}/{cardId}")
     public ResponseEntity<String> deleteFocusCard(
         @PathVariable CardTypeEnum type, @PathVariable Long cardId,
