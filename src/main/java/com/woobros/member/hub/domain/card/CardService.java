@@ -31,7 +31,7 @@ public interface CardService {
     CardDto.ReadResponse postAffirmationCard(CardDto.PostRequest cardPostReqDto,
         UserDetails userDetails);
 
-    void deleteFocusCard(CardTypeEnum type, Long cardId, UserDetails userDetails);
+    void deleteFocusCard(CardTypeEnum cardTypeEnum, Long cardId, UserDetails userDetails);
 }
 
 

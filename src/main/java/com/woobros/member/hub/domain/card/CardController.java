@@ -199,18 +199,18 @@ public class CardController {
     }
 
     /**
-     * @param type        focus 해제할 카드의 타입
-     * @param cardId      focus 해제할 카드의 id
-     * @param userDetails security 멤버 정보
+     * @param cardTypeEnum focus 해제할 카드의 타입
+     * @param cardId       focus 해제할 카드의 id
+     * @param userDetails  security 멤버 정보
      * @return focus 해제 성공 msg
      */
-    @DeleteMapping("/auth/focus/{type}/{cardId}")
+    @DeleteMapping("/auth/focus/{cardTypeEnum}/{cardId}")
     public ResponseEntity<String> deleteFocusCard(
-        @PathVariable CardTypeEnum type, @PathVariable Long cardId,
+        @PathVariable CardTypeEnum cardTypeEnum, @PathVariable Long cardId,
         @AuthenticationPrincipal UserDetails userDetails) {
 
-        cardService.deleteFocusCard(type, cardId, userDetails);
+        cardService.deleteFocusCard(cardTypeEnum, cardId, userDetails);
 
-        return ResponseEntity.ok(type + ": " + cardId + " is not focus status.");
+        return ResponseEntity.ok(cardTypeEnum + ": " + cardId + " is not focus status.");
     }
 }

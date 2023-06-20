@@ -15,10 +15,8 @@ import com.woobros.member.hub.model.card.memb_card.MemberCard;
 import com.woobros.member.hub.model.card.memb_card.MemberCardRepository;
 import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCard;
 import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCardRepository;
-import com.woobros.member.hub.model.letter.LetterRepository;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
-import com.woobros.member.hub.model.member_letter.MemberLetterRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,21 +33,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class CardServiceImpl implements CardService {
 
+    /**
+     * beans
+     */
     private final AffirmationCardRepository affirmationCardRepository;
     private final MemberCardRepository memberCardRepository;
     private final MemberCustomCardRepository memberCustomCardRepository;
-    private final LetterRepository letterRepository;
     private final MemberRepository memberRepository;
-    private final MemberLetterRepository memberLetterRepository;
     private final CardMapper cardMapper;
-
 
     /**
      * 멤버가 소유한 카드중 가장 최신의 카드를 size 만큼 조회
      *
-     * @param size
-     * @param userDetails
-     * @return
+     * @param size        조회할 카드 수
+     * @param userDetails security 멤버 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @Override
     public Page<PageResponse> getLatestMemberCards(int size, UserDetails userDetails) {
@@ -66,6 +64,14 @@ public class CardServiceImpl implements CardService {
         return new PageImpl<>(pageResponses);
     }
 
+    /**
+     * 입력한 멤버 카드 이후의 최신의 카드를 size 만큼 멤버 카드 조회
+     *
+     * @param size         조회할 카드 수
+     * @param memberCardId 멤버가 소유한 카드 아이디
+     * @param userDetails  security 멤버 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
+     */
     @Override
     public Page<PageResponse> getMemberCards(int size, Long memberCardId, UserDetails userDetails) {
 
@@ -82,6 +88,13 @@ public class CardServiceImpl implements CardService {
         return new PageImpl<>(pageResponses);
     }
 
+    /**
+     * 멤버가 직접 생성한 최신의 카드를 size 만큼 조회
+     *
+     * @param size        조회할 카드 수
+     * @param userDetails security 멤버 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
+     */
     @Override
     public Page<PageResponse> getLatestMemberCustomCards(int size, UserDetails userDetails) {
 
@@ -104,6 +117,14 @@ public class CardServiceImpl implements CardService {
                     Collectors.toList()));
     }
 
+    /**
+     * 입력한 멤버 커스텀 카드 이후의 size 만큼 멤버 카드 조회
+     *
+     * @param size               조회할 카드 수
+     * @param memberCustomCardId 멤버가 생성한 카드 아이디
+     * @param userDetails        security 멤버 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
+     */
     @Override
     public Page<PageResponse> getMemberCustomCards(int size, Long memberCustomCardId,
         UserDetails userDetails) {
@@ -126,6 +147,13 @@ public class CardServiceImpl implements CardService {
                     Collectors.toList()));
     }
 
+    /**
+     * 멤버가 focus 한 최신의 카드를 size 만큼 조회
+     *
+     * @param size        조회할 카드 수
+     * @param userDetails security 멤버 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
+     */
     @Override
     public Page<PageResponse> getLatestFocusCards(int size, UserDetails userDetails) {
         PageRequest pageRequest = PageRequest.of(0, size);
@@ -139,6 +167,14 @@ public class CardServiceImpl implements CardService {
         return new PageImpl<>(separateMemberCardByType(memberCards));
     }
 
+    /**
+     * 입력한 멤버 focus 카드 이후의 size 만큼 focus 카드 조회
+     *
+     * @param size         조회할 카드 수
+     * @param memberCardId 멤버가 소유한 카드 아이디
+     * @param userDetails  security 멤버 정보
+     * @return Page 처리된 카드 정보 (컨텐츠 x)
+     */
     @Override
     public Page<PageResponse> getFocusCards(int size, Long memberCardId, UserDetails userDetails) {
 
@@ -154,6 +190,14 @@ public class CardServiceImpl implements CardService {
         return new PageImpl<>(separateMemberCardByType(memberCards));
     }
 
+    /**
+     * 입력한 카드 아이디와 타입으로 소지한 카드 내용 읽기
+     *
+     * @param cardId       memberCard or affirmationCard id
+     * @param cardTypeEnum 카드 타입
+     * @param userDetails  security 멤버 정보
+     * @return 카드 정보 (컨텐츠 o)
+     */
     @Override
     public ReadResponse getCardContents(Long cardId, CardTypeEnum cardTypeEnum,
         UserDetails userDetails) {
@@ -188,6 +232,13 @@ public class CardServiceImpl implements CardService {
         return readResponse;
     }
 
+    /**
+     * 멤버가 직접 카드 생성하기
+     *
+     * @param memberCustomCardPostDto 멤버가 직접 생성할 카드 정보
+     * @param userDetails             security 멤버 정보
+     * @return 생성한 카드의 정보
+     */
     @Override
     public ReadResponse postMemberCustomCard(PostCustomRequest memberCustomCardPostDto,
         UserDetails userDetails) {
@@ -212,6 +263,13 @@ public class CardServiceImpl implements CardService {
         return cardMapper.toReadResponse(memberCustomCard).setType(CardTypeEnum.CUSTOM);
     }
 
+    /**
+     * 멤버가 소유한 카드 중 자주 보고싶은 카드를 focus 처리
+     *
+     * @param focusCardRequest focus 처리를 위한 카드 정보
+     * @param userDetails      security 멤버 정보
+     * @return focus한 카드 정보
+     */
     @Override
     public ReadResponse postFocusCard(PostFocusRequest focusCardRequest, UserDetails userDetails) {
         Member member = getMemberByUserDetail(userDetails);
@@ -245,6 +303,13 @@ public class CardServiceImpl implements CardService {
         return response;
     }
 
+    /**
+     * 확언 카드 쓰기
+     *
+     * @param cardPostReqDto 확언 카드를 쓰기위한 카드 정보
+     * @param userDetails    security 멤버 정보
+     * @return 생성한 카드 정보
+     */
     @Override
     public ReadResponse postAffirmationCard(PostRequest cardPostReqDto, UserDetails userDetails) {
         AffirmationCard affirmationCard = cardMapper.toEntity(cardPostReqDto);
@@ -254,20 +319,27 @@ public class CardServiceImpl implements CardService {
         );
     }
 
+    /**
+     * 멤버가 소지한 카드 중 focus 한 멤버카드 focus 해제 처리
+     *
+     * @param cardTypeEnum 카드 타입
+     * @param cardId       memberCard or affirmationCard id
+     * @param userDetails  security 멤버 정보
+     */
     @Override
-    public void deleteFocusCard(CardTypeEnum type, Long cardId, UserDetails userDetails) {
+    public void deleteFocusCard(CardTypeEnum cardTypeEnum, Long cardId, UserDetails userDetails) {
         Member member = getMemberByUserDetail(userDetails);
 
         MemberCard memberCard;
 
-        if (type.equals(CardTypeEnum.AFFIRMATION)) {
+        if (cardTypeEnum.equals(CardTypeEnum.AFFIRMATION)) {
             memberCard = memberCardRepository.findByMemberIdAndAffirmationCardIdAndType(
-                member.getId(), cardId, type)
+                member.getId(), cardId, cardTypeEnum)
                 .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
 
-        } else if (type.equals(CardTypeEnum.CUSTOM)) {
+        } else if (cardTypeEnum.equals(CardTypeEnum.CUSTOM)) {
             memberCard = memberCardRepository.findByMemberIdAndMemberCustomCardIdAndType(
-                member.getId(), cardId, type)
+                member.getId(), cardId, cardTypeEnum)
                 .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
         } else {
             throw new CommonException(ErrorEnum.CARD_TYPE_INVALID);
@@ -280,8 +352,8 @@ public class CardServiceImpl implements CardService {
     /**
      * 조회한 memberCard들을 type 별로 분류하여 알맞는 responseDto로 매핑하고 배열에 담아 리턴
      *
-     * @param memberCards
-     * @return
+     * @param memberCards 분류할 멤버 카드
+     * @return pageResponse 를 담은 list
      */
     private List<PageResponse> separateMemberCardByType(Page<MemberCard> memberCards) {
 
@@ -314,6 +386,12 @@ public class CardServiceImpl implements CardService {
         return pageResponses;
     }
 
+    /**
+     * userDetail 을 이용해 유저 조회
+     *
+     * @param userDetails security 멤버 정보
+     * @return member entity
+     */
     private Member getMemberByUserDetail(UserDetails userDetails) {
         return memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
             new CommonException(ErrorEnum.NOT_FOUND));
