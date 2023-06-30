@@ -10,4 +10,3 @@ function clickTodayCard() {
     // 오늘의 편지 클릭 이벤트
     console.log("clicked today card.");
 }
-
