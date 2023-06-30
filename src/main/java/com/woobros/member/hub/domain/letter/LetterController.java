@@ -32,8 +32,8 @@ public class LetterController {
 
     @GetMapping("/open/page/{size}/{lastLetterId}")
     public Page<LetterDto.PageResponse> getLettersPage(
-        @PathVariable Long lastLetterId,
-        @PathVariable int size) {
+        @PathVariable int size,
+        @PathVariable Long lastLetterId) {
 
         return letterService.getLettersPage(lastLetterId, size);
     }

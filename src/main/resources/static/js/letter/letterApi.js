@@ -27,7 +27,7 @@ export class LetterApi {
         /* 입력받은 page id 이후의 편지 리스트 조회 */
 
         const url = LetterApi.LETTER_OPEN_API_URL + "/page/"
-            + pageId + "/" + LetterApi.LETTER_LOAD_SIZE;
+            + LetterApi.LETTER_LOAD_SIZE + "/" + pageId;
 
         return await fetch(url).then(response => {
             if (response.ok) {
