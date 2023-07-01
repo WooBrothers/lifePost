@@ -70,7 +70,8 @@ public class SecurityConfig {
             .authorizeRequests()
             // open url과 자원 요청은 권한 없이 허가
             .antMatchers("/", "/templates/**", "/css/**", "/js/**",
-                "/favicon.ico", "/h2/**", "/login/page", "/api/v1/**/open/**")
+                "/favicon.ico", "/h2/**", "/login/page", "/api/v1/**/open/**",
+                "/img/**")
             .permitAll()
             // 구독자만 접근 가능
             .antMatchers("/api/v1/**/auth/**")
