@@ -54,5 +54,7 @@ function isBottomOfScroll(element) {
 function clickTodayLetter() {
     // 오늘의 편지 클릭 이벤트
     console.log("click today letter.");
+    console.log(window.innerWidth);
+
 }
 

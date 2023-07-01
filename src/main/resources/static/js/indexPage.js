@@ -12,6 +12,10 @@ window.onload = async () => {
     bindEventToCardGrid();
 
     /* view 생성 */
+    // const todayLetterGrid = document.getElementById("today-letter-grid");
+    // await LetterGrid.createTodayLetterGrid(todayLetterGrid);
+
+    /* view 생성 */
     const todayLetterGrid = document.getElementById("today-letter-grid");
     await LetterGrid.createTodayLetterGrid(todayLetterGrid);
 
