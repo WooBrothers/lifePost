@@ -2,11 +2,14 @@ import {LetterGrid} from "./letterGrid.js"
 
 
 export function bindEventToLetterGrid() {
-    /* letter grid 의 이벤트 바인딩 */
 
     // 오늘의 편지 그리드 컨테이너를 담을 div -> 편지 보기 클릭 이벤트 바인딩
     const todayLetterGrid = document.getElementById("today-letter-grid");
     todayLetterGrid.addEventListener("click", clickTodayLetter);
+
+}
+
+export function bindEventToLetterGridContainer() {
 
     // 편지 그리드 컨네이너를 담을 div > 무한 스크롤 이벤트 바인딩
     const letterGridContainers = document.getElementById("letter-grid-containers");
