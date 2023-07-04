@@ -7,6 +7,20 @@ export class CardApi {
     static CARD_AUTH_API_URL = CardApi.CARD_API_URL + "/auth";
     static CARD_LOAD_SIZE = 3;
 
+    static async getFocusCards() {
+        const url = CardApi.CARD_AUTH_API_URL + "/focus";
+
+        return await fetch(url).then(response => {
+            debugger;
+            if (response.ok) {
+                return response.json();
+            }
+            return response.text().then(text => {
+                throw new Error(text);
+            });
+        });
+    }
+
     static async getLatestCard() {
         /* 가장 최신의 카드 조회 */
 

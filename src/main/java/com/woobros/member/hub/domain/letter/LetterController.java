@@ -30,7 +30,7 @@ public class LetterController {
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
 
-    @GetMapping("/open/page/{size}/{lastLetterId}")
+    @GetMapping("/open/page/{lastLetterId}/{size}")
     public Page<LetterDto.PageResponse> getLettersPage(
         @PathVariable int size,
         @PathVariable Long lastLetterId) {
