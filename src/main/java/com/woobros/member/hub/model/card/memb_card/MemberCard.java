@@ -1,13 +1,22 @@
 package com.woobros.member.hub.model.card.memb_card;
 
+import com.woobros.member.hub.domain.card.FocusTypeEnum;
+import com.woobros.member.hub.model.card.CardTypeEnum;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
+import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCard;
+import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member_letter.MemberLetter;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,8 +57,16 @@ public class MemberCard {
      */
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Member member;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CardTypeEnum type;
 
     @ManyToOne
     @JoinColumn
@@ -58,6 +75,17 @@ public class MemberCard {
     @ManyToOne
     @JoinColumn
     private AffirmationCard affirmationCard;
+
+    @OneToOne
+    @JoinColumn
+    private MemberCustomCard memberCustomCard;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FocusTypeEnum focus = FocusTypeEnum.NON;
+
+    @Column(columnDefinition = "int default 0")
+    private Long writeCount;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

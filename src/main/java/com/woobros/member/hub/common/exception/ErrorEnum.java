@@ -9,6 +9,7 @@ public enum ErrorEnum {
     // LETTER domain LTxxxx
     LETTER_REQUEST_INVALID("letter request is invalid.", "LT0001", 409),
     STAMP_NOT_ENOUGH("member doesn't have enough stamp.", "LT0002", 409),
+    CARD_TYPE_INVALID("card type is invalid.", "LT0003", 409),
     ;
 
     private String message;
