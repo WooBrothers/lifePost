@@ -1,5 +1,4 @@
 import {bindEventToCardGrid} from "./cardEvent.js"
-import {CardApi} from "./cardApi.js"
 import {addDivByDivInfosToParent, ButtonTag, DivTag} from "../common.js";
 
 export class CardGrid {
@@ -10,13 +9,14 @@ export class CardGrid {
 
     static async createFocusCardGrid(todayCardGrid) {
 
-        await CardApi.getFocusCards().then(res => {
-            CardGrid.setFocusCardsGrid(todayCardGrid, res);
-        });
+        // await CardApi.getFocusCards().then(res => {
+        //     CardGrid.setFocusCardsGrid(todayCardGrid, res);
+        // });
+
+        CardGrid.setFocusCardsGrid(todayCardGrid, null);
     }
 
     static setFocusCardsGrid(focusCardGrid, card) {
-        debugger
         const focusCardGridContainerTag = new DivTag()
             .setClassName(CardGrid.FOCUS_CARD_CONTAINER_CLASS_PREFIX)
             .getTag();
