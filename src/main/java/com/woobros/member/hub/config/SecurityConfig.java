@@ -2,6 +2,7 @@ package com.woobros.member.hub.config;
 
 import com.woobros.member.hub.config.jwt.JwtAuthenticationProcessingFilter;
 import com.woobros.member.hub.config.jwt.JwtService;
+import com.woobros.member.hub.config.jwt.handler.JwtAuthenticationEntryPoint;
 import com.woobros.member.hub.config.oauth.CustomOAuth2UserService;
 import com.woobros.member.hub.config.oauth.OAuth2LoginFailureHandler;
 import com.woobros.member.hub.config.oauth.OAuth2LoginSuccessHandler;
@@ -27,6 +28,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -84,7 +86,7 @@ public class SecurityConfig {
             // 인증된 사용자들에게만 접근 허용 처리
             .authenticated()
             .and()
-            .exceptionHandling()
+            .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .accessDeniedPage("/forbidden");
 
         http
