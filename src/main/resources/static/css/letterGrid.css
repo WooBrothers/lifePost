@@ -3,21 +3,12 @@
   height: 80vh;
 }
 
-.today-letter-grid-container {
-  display: grid;
-  align-items: stretch;
-  justify-items: stretch;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 10fr;
-  margin-bottom: 1vh;
-}
-
 #today-timer {
   width: 180px;
   margin-left: 5px;
 }
 
-@media screen and (min-width: 980px) {
+@media screen and (min-width: 991px) {
   .today-letter-grid-container {
     display: grid;
     align-items: stretch;
@@ -40,6 +31,11 @@
     font-size: 30px;
     text-align: center;
     background-color: #F4EFD6;
+  }
+
+  #today-empty {
+    grid-column: 4 / span 1;
+    opacity: 0;
   }
 
   .today-letter-item-info {
@@ -79,7 +75,7 @@
   }
 }
 
-@media screen and (max-width: 980px) {
+@media screen and (max-width: 991px) {
   .today-letter-grid-container {
     display: grid;
     align-items: stretch;
@@ -110,10 +106,14 @@
     opacity: 0;
   }
 
+  .today-letter-item-info {
+    align-items: center;
+    background-color: #F4EFD6;
+  }
+
   #today-info {
     grid-column: 1 / span 2;
     align-items: center;
-    background-color: #F4EFD6;
   }
 
   #today-comment {

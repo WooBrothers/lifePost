@@ -1,4 +1,4 @@
-import {addDivByDivInfosToParent, DivTag, HrTag, ImgTag, PTag} from "../common.js"
+import {addDivByDivInfosToParent, DivTag, HrTag, ImgTag, PTag} from "../common/tagUtil.js";
 import {LetterApi} from "./letterApi.js"
 import {bindEventToLetterGrid, bindEventToLetterGridContainer} from "./letterEvent.js";
 

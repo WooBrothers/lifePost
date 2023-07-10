@@ -8,7 +8,8 @@ window.onload = async () => {
     // 그리드 생성 관리 클래스 객체 생성
 
     /* cookie - token 확인 -> 토큰 있을 시 검증하고 만료 됬다면 refreshToken으로 재발급 */
-    await checkAndRefreshToken();
+    // server에서 쿠키에 새 토큰을 삽입하기 전까지 동기 처리가 필요함
+    checkAndRefreshToken();
 
     /* view 생성 */
     const todayLetterGrid = document.getElementById("today-letter-grid");

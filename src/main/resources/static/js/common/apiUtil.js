@@ -25,10 +25,12 @@ export async function authFetch(url, option) {
             } else if (response.status === 401) {
                 // 401 요청 실패 시 리프레쉬 토큰 저장 후 재요청
                 option.headers["Authorization-refresh"] = refreshToken;
-
+                console.log(getAccessToken())
+                console.log("401")
                 fetch(url, option).then(
                     response => {
                         if (response.ok || response.status === 201) {
+                            console.log(getAccessToken())
                             return response.json();
                         } else {
                             console.log("요청 실패");

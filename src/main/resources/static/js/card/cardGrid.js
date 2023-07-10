@@ -1,58 +1,126 @@
 import {bindEventToCardGrid} from "./cardEvent.js"
-import {addDivByDivInfosToParent, ButtonTag, DivTag} from "../common.js";
+import {CardApi} from "./cardApi.js";
+import {ButtonTag, DivTag} from "../common/tagUtil.js";
 
 export class CardGrid {
     /* later grid를 만드는 함수 */
 
-    static FOCUS_CARD_PREFIX = "focus-card";
-    static FOCUS_CARD_CONTAINER_CLASS_PREFIX = "focus-card-container";
+    static async createFocusCardGrid(focusCardGrid) {
 
-    static async createFocusCardGrid(todayCardGrid) {
-
-        // await CardApi.getFocusCards().then(res => {
-        //     CardGrid.setFocusCardsGrid(todayCardGrid, res);
-        // });
-
-        CardGrid.setFocusCardsGrid(todayCardGrid, null);
+        await CardApi.getFocusCards().then(response => {
+            CardGrid.setFocusCardsGrid(focusCardGrid, response);
+            bindEventToCardGrid();
+        });
     }
 
-    static setFocusCardsGrid(focusCardGrid, card) {
+    static setFocusCardsGrid(focusCardGrid, response) {
+
         const focusCardGridContainerTag = new DivTag()
-            .setClassName(CardGrid.FOCUS_CARD_CONTAINER_CLASS_PREFIX)
+            .setClassName("focus-card-container")
+            .setId("focus-card-container-div")
             .getTag();
 
-        let divInfos = [];
-        if (card) {
-            divInfos = CardGrid.getNonFocusCardDivInfos();
+        if (response && response.content.length > 0) {
+            CardGrid.getFocusCardDivInfos(response, focusCardGridContainerTag);
         } else {
-            divInfos = CardGrid.getNonFocusCardDivInfos();
+            CardGrid.getNonFocusCardDivInfos(focusCardGridContainerTag);
         }
 
-        addDivByDivInfosToParent(divInfos, focusCardGridContainerTag);
         focusCardGrid.appendChild(focusCardGridContainerTag);
     }
 
-    static getNonFocusCardDivInfos() {
-        return [
-            {
-                id: CardGrid.FOCUS_CARD_PREFIX + "title",
-                className: CardGrid.FOCUS_CARD_CONTAINER_CLASS_PREFIX,
-                innerHTML: "Focus Card"
-            }, {
-                id: CardGrid.FOCUS_CARD_PREFIX + "info",
-                className: CardGrid.FOCUS_CARD_CONTAINER_CLASS_PREFIX,
-                innerHTML: "편지를 읽고 얻은 카드 중<br/>마음에 새기고 싶은 카드를 골라보세요!"
-            }, {
-                id: CardGrid.FOCUS_CARD_PREFIX + "button",
-                className: CardGrid.FOCUS_CARD_CONTAINER_CLASS_PREFIX,
-                innerHTML: [new ButtonTag()]
-            }, {
-                id: CardGrid.FOCUS_CARD_PREFIX + "comment",
-                className: CardGrid.FOCUS_CARD_CONTAINER_CLASS_PREFIX,
-                innerHTML: "자주 일고 되뇌이다 보면<br/>당신이 원하는 모습이 되어 있을 거에요!"
-            }
-        ];
+    static getFocusCardDivInfos(response, focusCardGridContainerTag) {
 
+        const tile = new DivTag()
+            .setClassName("focus-card-container")
+            .setId("focus-card-title")
+            .setInnerHTML("Focus Card");
+
+        const focusCardDivs = CardGrid.getFocusCardListElementByResponse(response);
+
+        const cardContainer = new DivTag()
+            .setClassName("focus-card-container")
+            .setId("focus-card-box")
+            .setInnerHTML(focusCardDivs);
+
+        const buttonDiv = new DivTag()
+            .setClassName("focus-card-container")
+            .setId("focus-card-btn-div");
+
+        const nextBtn = new ButtonTag()
+            .setId("focus-card-next-btn")
+            .setInnerHTML("다음 >");
+
+        const previousBtn = new ButtonTag()
+            .setId("focus-card-previous-btn")
+            .setInnerHTML("< 이전");
+
+        buttonDiv.getTag().appendChild(previousBtn.getTag());
+        buttonDiv.getTag().appendChild(nextBtn.getTag());
+
+
+        focusCardGridContainerTag.appendChild(tile.getTag());
+        focusCardGridContainerTag.appendChild(cardContainer.getTag());
+        focusCardGridContainerTag.appendChild(buttonDiv.getTag());
+
+        return focusCardGridContainerTag;
+    }
+
+    static getNonFocusCardDivInfos(focusCardGridContainerTag) {
+
+        const title = new DivTag().setId("non-focus-card-title")
+            .setClassName("non-focus-card-container")
+            .setInnerHTML("Focus Card")
+            .getTag();
+        const empty = new DivTag().setId("non-focus-card-empty")
+            .setClassName("non-focus-card-container")
+            .setInnerHTML("")
+            .getTag();
+        const info = new DivTag().setId("non-focus-card-info")
+            .setClassName("non-focus-card-container")
+            .setInnerHTML("편지를 읽고 얻은 카드 중<br/>마음에 새기고 싶은 카드를 골라보세요!")
+            .getTag();
+        const buttonSpace = new DivTag().setId("non-focus-card-button-space")
+            .setClassName("non-focus-card-container")
+            .setInnerHTML([new ButtonTag()
+                .setInnerHTML("+")
+                .setId("non-focus-card-focus-button")])
+            .getTag();
+        const comment = new DivTag().setId("non-focus-card-comment")
+            .setClassName("non-focus-card-container")
+            .setInnerHTML("자주 일고 되뇌이다 보면<br/>당신이 원하는 모습이 되어 있을 거에요!")
+            .getTag();
+
+        focusCardGridContainerTag.appendChild(title);
+        focusCardGridContainerTag.appendChild(empty);
+        focusCardGridContainerTag.appendChild(info);
+        focusCardGridContainerTag.appendChild(buttonSpace);
+        focusCardGridContainerTag.appendChild(comment);
+    }
+
+
+    static getFocusCardListElementByResponse(response) {
+
+        const divList = [];
+        let zIdx = 1;
+        response.content.forEach(content => {
+            divList.push(new DivTag()
+                .setClassName("focus-card-container-contents")
+                .setId("focus-card-content-" + zIdx)
+                .setStyle([{"z-index": zIdx}])
+                .setInnerHTML(content.contents)
+                .setDataset(
+                    [{
+                        "memberCardId": content.memberCardId,
+                        "cardId": content.cardId,
+                        "type": content.type,
+                        "createdAt": content.createdAt,
+                        "updateAt": content.updateAt
+                    }]))
+            zIdx++;
+        });
+
+        return divList;
     }
 
     static createCardGridByPageIndex(todayCardGrid) {

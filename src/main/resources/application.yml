@@ -3,3 +3,4 @@ spring:
     active: ${profileActive}
 server:
   port: 8080
+  servlet.encoding.force-response: true
