@@ -26,10 +26,9 @@ values ('test1', 'test1', 'wk', 'TEST', CURDATE() - INTERVAL '14' DAY, now() - I
         now() - INTERVAL '3' DAY, now() - INTERVAL '3' DAY),
        ('test13', 'test13', 'wk', 'TEST', CURDATE() - INTERVAL '2' DAY,
         now() - INTERVAL '2' DAY, now() - INTERVAL '2' DAY),
-       (14, 'test14', 'test14', 'wk', 'TEST', CURDATE() - INTERVAL '1' DAY,
+       ('test14', 'test14', 'wk', 'TEST', CURDATE() - INTERVAL '1' DAY,
         now() - INTERVAL '1' DAY, now() - INTERVAL '1' DAY),
-       (15, '당신은 하루에 <br/>얼마나 깨어 있나요?', '일반적인 사람이 하루에 얼마나 의식적으로 살아가는지 아시나요?', 'wk', 'TEST',
-        CURDATE(),
-        now(), now());
+       ('당신은 하루에 <br/>얼마나 깨어 있나요?', '일반적인 사람이 하루에 얼마나 의식적으로 살아가는지 아시나요?', 'wk', 'TEST',
+        CURDATE(), now(), now());
 
 
