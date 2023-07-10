@@ -5,7 +5,6 @@ import com.woobros.member.hub.model.card.CardTypeEnum;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,16 +15,14 @@ public interface MemberCardRepository extends
 
     List<MemberCard> findByMemberId(Long memberId);
 
-    Page<MemberCard> findByMemberIdOrderByCreatedAtDesc(Long memberId, PageRequest pageRequest);
+    Page<MemberCard> findByMemberIdOrderByCreatedAtDesc(Long memberId, Pageable pageable);
 
     Page<MemberCard> findByMemberIdAndIdLessThanOrderByCreatedAtDesc(Long memberId, Long id,
-        PageRequest pageRequest);
+        Pageable pageable);
+
 
     Page<MemberCard> findByMemberIdAndFocusOrderByCreatedAtDesc(Long memberId,
-        FocusTypeEnum focusTypeEnum, PageRequest pageRequest);
-
-    Page<MemberCard> findByMemberIdAndFocusAndIdLessThanOrderByCreatedAtDesc(Long memberId,
-        FocusTypeEnum focus, Long id, Pageable pageable);
+        FocusTypeEnum focusTypeEnum, Pageable pageable);
 
     Optional<MemberCard> findByMemberIdAndAffirmationCardIdAndType(Long memberId,
         Long affirmationCardId,

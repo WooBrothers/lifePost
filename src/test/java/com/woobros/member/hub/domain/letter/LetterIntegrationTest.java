@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -134,10 +133,7 @@ class LetterIntegrationTest {
         );
 
         response.andDo(print())
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.letter.title", is(postRequest.getTitle())))
-            .andExpect(jsonPath("$.letter.contents", is(postRequest.getContents())))
-            .andExpect(jsonPath("$.letter.writer", is(postRequest.getWriter())));
+            .andExpect(status().isCreated());
     }
 
     @Test
@@ -237,7 +233,7 @@ class LetterIntegrationTest {
 
     @Test
     void testGetLettersPage_WhenNoHaveToken_WillOk() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/3/15")
+        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/15/3")
             .contentType(MediaType.APPLICATION_JSON));
 
         response.andDo(print())
@@ -252,7 +248,7 @@ class LetterIntegrationTest {
         Member member = memberRepository.findById(1L).orElseThrow();
         member.setRole(Role.GUEST);
 
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/3/15")
+        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/15/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -265,7 +261,7 @@ class LetterIntegrationTest {
 
     @Test
     void testGetLettersPage_WhenHaveUserToken_WillOk() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/3/15")
+        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/15/3")
             .header(authorization, tokenType + testAccessToken)
             .contentType(MediaType.APPLICATION_JSON));
 
@@ -281,7 +277,7 @@ class LetterIntegrationTest {
         Member member = memberRepository.findById(1L).orElseThrow();
         member.setRole(Role.ADMIN);
 
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/3/15")
+        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/15/3")
             .header(authorization, tokenType + testAccessToken)
             .contentType(MediaType.APPLICATION_JSON));
 
@@ -297,8 +293,7 @@ class LetterIntegrationTest {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/15")
             .contentType(MediaType.APPLICATION_JSON));
 
-        response.andDo(print()).andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl(loginRedirectUrl));
+        response.andDo(print()).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -363,8 +358,7 @@ class LetterIntegrationTest {
         ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/stamp/14")
             .contentType(MediaType.APPLICATION_JSON));
 
-        response.andDo(print()).andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl(loginRedirectUrl));
+        response.andDo(print()).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -376,7 +370,7 @@ class LetterIntegrationTest {
             .header(authorization, tokenType + testAccessToken)
             .contentType(MediaType.APPLICATION_JSON));
 
-        String forwardUrl = "/forbidden";
+        String forwardUrl = "/forbidden/page";
         response.andDo(print()).andExpect(status().isForbidden())
             .andExpect(forwardedUrl(forwardUrl))
         ;

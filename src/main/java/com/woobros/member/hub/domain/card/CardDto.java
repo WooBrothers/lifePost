@@ -23,7 +23,6 @@ public class CardDto {
 
         private final Long id;
         private final Letter letter;
-        private final String title;
         private final String tag;
         private final CardTypeEnum type;
         private final LocalDateTime createdAt;
@@ -41,9 +40,6 @@ public class CardDto {
         @NotBlank
         private Long letterId;
 
-        @NotBlank
-        private String title;
-
         private String tag;
     }
 
@@ -55,9 +51,6 @@ public class CardDto {
         @Size(min = 1, max = 200)
         private String contents;
 
-        @NotBlank
-        private String title;
-
         private String tag;
     }
 
@@ -66,7 +59,7 @@ public class CardDto {
     public static class PostFocusRequest {
 
         @NotBlank
-        private Long CardId;
+        private Long cardId;
 
         @NotBlank
         private CardTypeEnum type;
@@ -78,7 +71,6 @@ public class CardDto {
     public static class ReadResponse {
 
         private final Long id;
-        private final String title;
         private final String contents;
         private CardTypeEnum type;
         private final String tag;
@@ -99,7 +91,8 @@ public class CardDto {
         private Long memberCardId;
         private Long cardId;
         private CardTypeEnum type;
-        private final String title;
+        private FocusTypeEnum focus;
+        private final String contents;
         private final String tag;
         private final String createdDate;
         private final String createdAt;
@@ -107,6 +100,11 @@ public class CardDto {
 
         public PageResponse setType(CardTypeEnum cardTypeEnum) {
             this.type = cardTypeEnum;
+            return this;
+        }
+
+        public PageResponse setFocus(FocusTypeEnum focus) {
+            this.focus = focus;
             return this;
         }
 

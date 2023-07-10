@@ -26,85 +26,85 @@ public class CardController {
     private final CardService cardService;
     private static final String SCHEMA = "/api/v1/card/auth/";
 
-    /**
-     * 멤버가 소유한 최신 카드를 size 만큼 조회 (리스트 출력용)
-     *
-     * @param size        불러올 카드 사이즈
-     * @param userDetails security 멤버 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-
-    @GetMapping("/auth/member/{size}")
-    public Page<CardDto.PageResponse> getLatestMemberCards(
-        @PathVariable int size,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        return cardService.getLatestMemberCards(size, userDetails);
-    }
+//    /**
+//     * 멤버가 소유한 최신 카드를 size 만큼 조회 (리스트 출력용)
+//     *
+//     * @param size        불러올 카드 사이즈
+//     * @param userDetails security 멤버 정보
+//     * @return Page 처리된 카드 정보 (컨텐츠 x)
+//     */
+//
+//    @GetMapping("/auth/member/{size}")
+//    public Page<CardDto.PageResponse> getLatestMemberCards(
+//        @PathVariable int size,
+//        @AuthenticationPrincipal UserDetails userDetails
+//    ) {
+//        return cardService.getLatestMemberCards(size, userDetails);
+//    }
 
     /**
      * 멤버가 소유한 카드중 전달한 memberCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
      *
-     * @param size         불러올 카드 사이즈
-     * @param memberCardId 멤버가 소유한 카드의 아이디
-     * @param userDetails  security 멤버 정보
+     * @param size        불러올 카드 사이즈
+     * @param pageNo      조회할 페이지 번호
+     * @param userDetails security 멤버 정보
      * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
-    @GetMapping("/auth/member/{size}/{memberCardId}")
+    @GetMapping("/auth/member/{pageNo}/{size}")
     public Page<CardDto.PageResponse> getMemberCards(
+        @PathVariable int pageNo,
         @PathVariable int size,
-        @PathVariable Long memberCardId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cardService.getMemberCards(size, memberCardId, userDetails);
+        return cardService.getMemberCards(size, pageNo, userDetails);
     }
 
-    /**
-     * 멤버가 만든 최신 카드를 size 만큼 조회 (리스트 출력용)
-     *
-     * @param size        불러올 카드 사이즈
-     * @param userDetails security 유저 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-    @GetMapping("/auth/custom/{size}")
-    public Page<PageResponse> getLatestMemberCustomCards(
-        @PathVariable int size,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        return cardService.getLatestMemberCustomCards(size, userDetails);
-    }
+//    /**
+//     * 멤버가 만든 최신 카드를 size 만큼 조회 (리스트 출력용)
+//     *
+//     * @param size        불러올 카드 사이즈
+//     * @param userDetails security 유저 정보
+//     * @return Page 처리된 카드 정보 (컨텐츠 x)
+//     */
+//    @GetMapping("/auth/custom/{size}")
+//    public Page<PageResponse> getLatestMemberCustomCards(
+//        @PathVariable int size,
+//        @AuthenticationPrincipal UserDetails userDetails
+//    ) {
+//        return cardService.getLatestMemberCustomCards(size, userDetails);
+//    }
 
     /**
      * 멤버가 만든 카드중 전달한 memberCustomCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
      *
-     * @param size               불러올 카드 사이즈
-     * @param memberCustomCardId 해당 멤버카드 id 이후의 카드 조회
-     * @param userDetails        security 유저 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-    @GetMapping("/auth/custom/{size}/{memberCustomCardId}")
-    public Page<PageResponse> getMemberCustomCards(
-        @PathVariable int size,
-        @PathVariable Long memberCustomCardId,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        return cardService.getMemberCustomCards(size, memberCustomCardId, userDetails);
-    }
-
-    /**
-     * 유저의 최신 focus 카드 size 만큼 조회 (리스트 출력용)
-     *
      * @param size        불러올 카드 사이즈
+     * @param pageNo      조회할 페이지 번호
      * @param userDetails security 유저 정보
      * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
-    @GetMapping("/auth/focus/{size}")
-    public Page<PageResponse> getLatestFocusCards(
+    @GetMapping("/auth/custom/{pageNo}/{size}")
+    public Page<PageResponse> getMemberCustomCards(
+        @PathVariable int pageNo,
         @PathVariable int size,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cardService.getLatestFocusCards(size, userDetails);
+        return cardService.getMemberCustomCards(size, pageNo, userDetails);
     }
+
+//    /**
+//     * 유저의 최신 focus 카드 size 만큼 조회 (리스트 출력용)
+//     *
+//     * @param size        불러올 카드 사이즈
+//     * @param userDetails security 유저 정보
+//     * @return Page 처리된 카드 정보 (컨텐츠 x)
+//     */
+//    @GetMapping("/auth/focus/{size}")
+//    public Page<PageResponse> getLatestFocusCards(
+//        @PathVariable int size,
+//        @AuthenticationPrincipal UserDetails userDetails
+//    ) {
+//        return cardService.getLatestFocusCards(size, userDetails);
+//    }
 
     /**
      * 멤버가 focus 한 카드중 전달한 memberCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
@@ -112,18 +112,18 @@ public class CardController {
      * memberCard의 리스트 중 focus 상태인 것들만 조회하는 리스트 뷰에서 사용한다. 전달하는 memberCardId 이후에 focus 상태인 리스트 정보를
      * 조회한다.
      *
-     * @param size         불러올 카드 사이즈
-     * @param memberCardId 멤버가 소유한 카드의 아이디
-     * @param userDetails  security 멤버 정보
+     * @param size        불러올 카드 사이즈
+     * @param pageNo      멤버가 소유한 카드의 아이디
+     * @param userDetails security 멤버 정보
      * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
-    @GetMapping("/auth/focus/{size}/{memberCardId}")
+    @GetMapping("/auth/focus/{pageNo}/{size}")
     public Page<PageResponse> getFocusCards(
+        @PathVariable int pageNo,
         @PathVariable int size,
-        @PathVariable Long memberCardId,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cardService.getFocusCards(size, memberCardId, userDetails);
+        return cardService.getFocusCards(size, pageNo, userDetails);
     }
 
     /**

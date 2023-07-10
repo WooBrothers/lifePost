@@ -22,9 +22,14 @@ public class IndexController {
         return "/login";
     }
 
-    @GetMapping("/forbidden")
+    @GetMapping("/forbidden/page")
     public String forbidden() {
         return "/forbidden";
+    }
+
+    @GetMapping("/card/list/page")
+    public String getCardListPage() {
+        return "/contents/card/cardList";
     }
 
     @GetMapping("/auth/new/token")
@@ -46,8 +51,11 @@ public class IndexController {
          * 8. 이후 api call 시 401 문제 안나도록 세팅
          * */
         log.debug("getVerifiedToken called.");
+
         Map<String, String> result = new HashMap<>();
         result.put("result", "ok");
+
         return ResponseEntity.ok(result);
     }
+
 }

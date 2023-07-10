@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -45,151 +46,85 @@ public class CardServiceImpl implements CardService {
     private final CardMapper cardMapper;
 
     /**
-     * 멤버가 소유한 카드중 가장 최신의 카드를 size 만큼 조회
+     * 입력한 멤버 카드 이후의 최신의 카드를 size 만큼 멤버 카드 조회
      *
      * @param size        조회할 카드 수
      * @param userDetails security 멤버 정보
      * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @Override
-    public Page<PageResponse> getLatestMemberCards(int size, UserDetails userDetails) {
+    public Page<PageResponse> getMemberCards(int size, int pageNo, UserDetails userDetails) {
 
-        PageRequest pageRequest = PageRequest.of(0, size);
+        pageNo = verifyPageNo(pageNo);
 
-        Member member = getMemberByUserDetail(userDetails);
-
-        Page<MemberCard> memberCards = memberCardRepository.findByMemberIdOrderByCreatedAtDesc(
-            member.getId(), pageRequest);
-
-        List<PageResponse> pageResponses = separateMemberCardByType(memberCards);
-
-        return new PageImpl<>(pageResponses);
-    }
-
-    /**
-     * 입력한 멤버 카드 이후의 최신의 카드를 size 만큼 멤버 카드 조회
-     *
-     * @param size         조회할 카드 수
-     * @param memberCardId 멤버가 소유한 카드 아이디
-     * @param userDetails  security 멤버 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-    @Override
-    public Page<PageResponse> getMemberCards(int size, Long memberCardId, UserDetails userDetails) {
-
-        PageRequest pageRequest = PageRequest.of(0, size);
+        Pageable pageable = PageRequest.of(pageNo, size);
 
         Member member = getMemberByUserDetail(userDetails);
 
         Page<MemberCard> memberCards = memberCardRepository
-            .findByMemberIdAndIdLessThanOrderByCreatedAtDesc(member.getId(), memberCardId,
-                pageRequest);
+            .findByMemberIdOrderByCreatedAtDesc(member.getId(), pageable);
 
         List<PageResponse> pageResponses = separateMemberCardByType(memberCards);
 
-        return new PageImpl<>(pageResponses);
-    }
-
-    /**
-     * 멤버가 직접 생성한 최신의 카드를 size 만큼 조회
-     *
-     * @param size        조회할 카드 수
-     * @param userDetails security 멤버 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-    @Override
-    public Page<PageResponse> getLatestMemberCustomCards(int size, UserDetails userDetails) {
-
-        PageRequest pageRequest = PageRequest.of(0, size);
-
-        Member member = getMemberByUserDetail(userDetails);
-
-        Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
-            .findByMemberIdOrderByCreatedAtDesc(
-                member.getId(), pageRequest);
-
-        return new PageImpl<>(
-            memberCustomCards.map(card ->
-                cardMapper.toMemberPageResponse(card)
-                    .setCardId(card.getId())
-            )
-                .stream()
-                .map(response -> response.setType(CardTypeEnum.CUSTOM))
-                .collect(
-                    Collectors.toList()));
+        return new PageImpl<>(pageResponses, pageable, memberCards.getTotalElements());
     }
 
     /**
      * 입력한 멤버 커스텀 카드 이후의 size 만큼 멤버 카드 조회
      *
-     * @param size               조회할 카드 수
-     * @param memberCustomCardId 멤버가 생성한 카드 아이디
-     * @param userDetails        security 멤버 정보
+     * @param size        조회할 카드 수
+     * @param userDetails security 멤버 정보
      * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @Override
-    public Page<PageResponse> getMemberCustomCards(int size, Long memberCustomCardId,
+    public Page<CardDto.PageResponse> getMemberCustomCards(int size, int pageNo,
         UserDetails userDetails) {
 
-        PageRequest pageRequest = PageRequest.of(0, size);
+        pageNo = verifyPageNo(pageNo);
+
+        Pageable pageable = PageRequest.of(pageNo, size);
 
         Member member = getMemberByUserDetail(userDetails);
 
         Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
-            .findByMemberIdAndIdLessThanOrderByCreatedAtDesc(
-                member.getId(), memberCustomCardId, pageRequest);
+            .findByMemberIdOrderByCreatedAtDesc(
+                member.getId(), pageable);
 
-        return new PageImpl<>(
-            memberCustomCards
-                .map(card -> cardMapper.toMemberPageResponse(card)
-                    .setCardId(card.getId())
-                ).stream()
-                .map(response -> response.setType(CardTypeEnum.CUSTOM))
-                .collect(
-                    Collectors.toList()));
+        List<CardDto.PageResponse> pageResponse = memberCustomCards
+            .map(card -> cardMapper.toMemberPageResponse(card)
+                .setCardId(card.getId())
+            ).stream()
+            .map(response -> response.setType(CardTypeEnum.CUSTOM))
+            .collect(
+                Collectors.toList());
+
+        return new PageImpl<>(pageResponse, pageable, memberCustomCards.getTotalElements());
+
     }
 
     /**
-     * 멤버가 focus 한 최신의 카드를 size 만큼 조회
+     * 입력한 멤버 focus 카드 이후의 size 만큼 focus 카드 조회
      *
      * @param size        조회할 카드 수
      * @param userDetails security 멤버 정보
      * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @Override
-    public Page<PageResponse> getLatestFocusCards(int size, UserDetails userDetails) {
-        PageRequest pageRequest = PageRequest.of(0, size);
+    public Page<PageResponse> getFocusCards(int size, int pageNo, UserDetails userDetails) {
+
+        pageNo = verifyPageNo(pageNo);
+
+        Pageable pageable = PageRequest.of(pageNo, size);
 
         Member member = getMemberByUserDetail(userDetails);
 
         Page<MemberCard> memberCards = memberCardRepository
             .findByMemberIdAndFocusOrderByCreatedAtDesc(
-                member.getId(), FocusTypeEnum.ATTENTION, pageRequest);
-
-        return new PageImpl<>(separateMemberCardByType(memberCards));
-    }
-
-    /**
-     * 입력한 멤버 focus 카드 이후의 size 만큼 focus 카드 조회
-     *
-     * @param size         조회할 카드 수
-     * @param memberCardId 멤버가 소유한 카드 아이디
-     * @param userDetails  security 멤버 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-    @Override
-    public Page<PageResponse> getFocusCards(int size, Long memberCardId, UserDetails userDetails) {
-
-        PageRequest pageRequest = PageRequest.of(0, size);
-
-        Member member = getMemberByUserDetail(userDetails);
-
-        Page<MemberCard> memberCards = memberCardRepository
-            .findByMemberIdAndFocusAndIdLessThanOrderByCreatedAtDesc(
-                member.getId(), FocusTypeEnum.ATTENTION, memberCardId, pageRequest
+                member.getId(), FocusTypeEnum.ATTENTION, pageable
             );
 
-        return new PageImpl<>(separateMemberCardByType(memberCards));
+        return new PageImpl<>(separateMemberCardByType(memberCards), pageable,
+            memberCards.getTotalElements());
     }
 
     /**
@@ -368,6 +303,7 @@ public class CardServiceImpl implements CardService {
                 PageResponse pageResponse = cardMapper
                     .toMemberPageResponse(affirmationCard)
                     .setType(memberCard.getType())
+                    .setFocus(memberCard.getFocus())
                     .setCardId(affirmationCard.getId())
                     .setMemberCardId(memberCard.getId());
 
@@ -397,5 +333,14 @@ public class CardServiceImpl implements CardService {
     private Member getMemberByUserDetail(UserDetails userDetails) {
         return memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
             new CommonException(ErrorEnum.NOT_FOUND));
+    }
+
+    private int verifyPageNo(int pageNo) {
+        if (pageNo > 0) {
+            pageNo--;
+        } else if (pageNo < 0) {
+            throw new CommonException(ErrorEnum.PAGE_NO_INVALID);
+        }
+        return pageNo;
     }
 }
