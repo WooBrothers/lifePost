@@ -72,8 +72,8 @@ public class SecurityConfig {
             .authorizeRequests()
             // open url과 자원 요청은 권한 없이 허가
             .antMatchers("/", "/templates/**", "/css/**", "/js/**",
-                "/favicon.ico", "/h2/**", "/login/page", "/api/v1/**/open/**",
-                "/img/**")
+                "/favicon.ico", "/h2/**", "/api/v1/**/open/**",
+                "/img/**", "/auth/new/token", "/**/page/**")
             .permitAll()
             // 구독자만 접근 가능
             .antMatchers("/api/v1/**/auth/**")
@@ -87,7 +87,7 @@ public class SecurityConfig {
             .authenticated()
             .and()
             .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-            .accessDeniedPage("/forbidden");
+            .accessDeniedPage("/forbidden/page");
 
         http
             // oAuth2 로그인 기능에 대한 설정의 진입점
