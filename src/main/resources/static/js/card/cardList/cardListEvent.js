@@ -1,6 +1,14 @@
+import {authFetch} from "../../common/apiUtil.js";
+import {findParentWithClass} from "../../common/utilTool.js";
+
 export function bindEventToCardListGrid() {
     const filerBtn = document.getElementById("filter-btn");
     filerBtn.addEventListener("click", clickFilterBtn);
+
+    const focusBtnList = document.querySelectorAll(".focus-btn");
+    focusBtnList.forEach(btn => {
+        btn.addEventListener("click", clickBookmarkBtn);
+    })
 }
 
 function clickFilterBtn() {
@@ -16,4 +24,34 @@ function clickFilterBtn() {
             filterBtnSpace.style.border = "none";
         }
     });
+}
+
+export async function clickBookmarkBtn() {
+
+    const parentCardSpace = findParentWithClass(this, "card-space");
+    const url = "/api/v1/card/auth/focus";
+    const body = {
+        cardId: parentCardSpace.dataset.cardId,
+        type: parentCardSpace.dataset.type
+    };
+
+    let option = {
+        body: JSON.stringify(body)
+    }
+
+    let imgUrl, focus;
+    if (this.dataset.focus !== "true") {
+        option.method = "POST";
+        imgUrl = "url('/img/focus-mark-on.png')";
+        focus = "true";
+    } else {
+        option.method = "DELETE";
+        imgUrl = "url('/img/focus-mark-off.png')";
+        focus = "false";
+    }
+
+    await authFetch(url, option).then(response => {
+        this.style.backgroundImage = imgUrl;
+        this.dataset.focus = focus;
+    })
 }

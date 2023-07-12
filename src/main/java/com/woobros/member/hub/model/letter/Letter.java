@@ -2,6 +2,7 @@ package com.woobros.member.hub.model.letter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -57,4 +58,15 @@ public class Letter {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    public String getPreviewLetterContent() {
+        return getContents().substring(0, 100) + "...";
+    }
+
+    public String getTitleByText() {
+        String strPattern = "(<[a-zA-Z/]*>)*";
+        Pattern pattern = Pattern.compile(strPattern);
+
+        return pattern.matcher(this.getTitle()).replaceAll("");
+
+    }
 }

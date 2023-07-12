@@ -1,9 +1,11 @@
 package com.woobros.member.hub.domain.card;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.woobros.member.hub.model.card.CardTypeEnum;
 import com.woobros.member.hub.model.letter.Letter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -92,11 +94,15 @@ public class CardDto {
         private Long cardId;
         private CardTypeEnum type;
         private FocusTypeEnum focus;
+        private String letterTitle;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate createdDate;
         private final String contents;
         private final String tag;
-        private final String createdDate;
-        private final String createdAt;
-        private final String updateAt;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private final LocalDateTime createdAt;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private final LocalDateTime updateAt;
 
         public PageResponse setType(CardTypeEnum cardTypeEnum) {
             this.type = cardTypeEnum;
@@ -115,6 +121,16 @@ public class CardDto {
 
         public PageResponse setCardId(Long cardId) {
             this.cardId = cardId;
+            return this;
+        }
+
+        public PageResponse setLetterTitle(String letterTitle) {
+            this.letterTitle = letterTitle;
+            return this;
+        }
+
+        public PageResponse setCreatedDate(LocalDate createdDate) {
+            this.createdDate = createdDate;
             return this;
         }
     }

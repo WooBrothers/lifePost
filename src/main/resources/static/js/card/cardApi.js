@@ -10,9 +10,9 @@ export class CardApi {
     static CARD_AUTH_API_URL = CardApi.CARD_API_URL + "/auth";
     static CARD_LOAD_SIZE = 3;
 
-    static async getFocusCards() {
+    static async getFocusCards(pageNo) {
 
-        const url = CardApi.CARD_AUTH_API_URL + "/focus/10";
+        const url = CardApi.CARD_AUTH_API_URL + `/focus/${pageNo}/10`;
 
         let option = {
             method: 'GET'

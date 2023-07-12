@@ -7,7 +7,7 @@ export class CardGrid {
 
     static async createFocusCardGrid(focusCardGrid) {
 
-        await CardApi.getFocusCards().then(response => {
+        await CardApi.getFocusCards(1).then(response => {
             CardGrid.setFocusCardsGrid(focusCardGrid, response);
             bindEventToCardGrid();
         });

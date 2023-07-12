@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @Slf4j
 @SpringBootTest(properties = {
-    "jwt.access.expiration=999999999",
+//    "jwt.access.expiration=999999999",
+    "jwt.access.expiration=1000",
     "jwt.refresh.expiration=999999999",
 })
 class JwtServiceTest {

@@ -181,6 +181,20 @@ public class CardController {
     }
 
     /**
+     * @param userDetails security 멤버 정보
+     * @return focus 해제 성공 msg
+     */
+    @DeleteMapping("/auth/focus")
+    public ResponseEntity<String> deleteFocusCard(
+        @RequestBody CardDto.PostFocusRequest focusCardRequest,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        cardService.deleteFocusCard(focusCardRequest, userDetails);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * backoffice 확언 카드 쓰기 기능
      *
      * @param cardPostReqDto 확언 카드의 내용을 담은 dto
@@ -198,19 +212,5 @@ public class CardController {
         return ResponseEntity.created(URI.create(url)).body("affirmation card created.");
     }
 
-    /**
-     * @param cardTypeEnum focus 해제할 카드의 타입
-     * @param cardId       focus 해제할 카드의 id
-     * @param userDetails  security 멤버 정보
-     * @return focus 해제 성공 msg
-     */
-    @DeleteMapping("/auth/focus/{cardTypeEnum}/{cardId}")
-    public ResponseEntity<String> deleteFocusCard(
-        @PathVariable CardTypeEnum cardTypeEnum, @PathVariable Long cardId,
-        @AuthenticationPrincipal UserDetails userDetails) {
 
-        cardService.deleteFocusCard(cardTypeEnum, cardId, userDetails);
-
-        return ResponseEntity.ok(cardTypeEnum + ": " + cardId + " is not focus status.");
-    }
 }

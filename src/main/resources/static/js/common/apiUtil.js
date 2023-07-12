@@ -1,10 +1,12 @@
 export async function checkAndRefreshToken() {
 
-    const url = "/auth/new/token";
-    let option = {
-        method: "GET"
+    if (getAccessToken()) {
+        const url = "/auth/new/token";
+        let option = {
+            method: "GET"
+        }
+        await authFetch(url, option);
     }
-    await authFetch(url, option);
 }
 
 export async function authFetch(url, option) {
@@ -18,23 +20,37 @@ export async function authFetch(url, option) {
         option.headers = {"Authorization": accessToken};
     }
 
+    option.headers["Content-Type"] = "application/json";
+
     return await fetch(url, option).then(
         response => {
-            if (response.ok || response.status === 201) {
+            if (option.method === "GET" && response.status === 200) {
                 return response.json();
+            } else if (option.method === "POST" && response.status === 201) {
+                return response.text;
+            } else if (option.method === "DELETE" && response.status === 204) {
+                return response.text;
             } else if (response.status === 401) {
                 // 401 요청 실패 시 리프레쉬 토큰 저장 후 재요청
                 option.headers["Authorization-refresh"] = refreshToken;
-                console.log(getAccessToken())
-                console.log("401")
                 fetch(url, option).then(
                     response => {
                         if (response.ok || response.status === 201) {
-                            console.log(getAccessToken())
-                            return response.json();
+
+                            option.headers = {"Authorization": getAccessToken()};
+
+                            fetch(url, option).then(
+                                response => {
+                                    if (response.ok || response.status === 201) {
+                                        return response.json();
+                                    } else {
+                                        throw new Error("요청 실패");
+                                    }
+                                }
+                            )
                         } else {
-                            console.log("요청 실패");
-                            throw new Error("요청 실패");
+                            console.log("토큰 만료 실패");
+                            window.location.href = "/login/page";
                         }
                     }
                 );

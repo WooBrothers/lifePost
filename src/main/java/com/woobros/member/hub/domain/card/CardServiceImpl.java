@@ -15,6 +15,7 @@ import com.woobros.member.hub.model.card.memb_card.MemberCard;
 import com.woobros.member.hub.model.card.memb_card.MemberCardRepository;
 import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCard;
 import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCardRepository;
+import com.woobros.member.hub.model.letter.Letter;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
 import java.util.ArrayList;
@@ -259,12 +260,15 @@ public class CardServiceImpl implements CardService {
     /**
      * 멤버가 소지한 카드 중 focus 한 멤버카드 focus 해제 처리
      *
-     * @param cardTypeEnum 카드 타입
-     * @param cardId       memberCard or affirmationCard id
-     * @param userDetails  security 멤버 정보
+     * @param focusCardRequest focus 취소 처리 위한 카드 정보
+     * @param userDetails      security 멤버 정보
      */
     @Override
-    public void deleteFocusCard(CardTypeEnum cardTypeEnum, Long cardId, UserDetails userDetails) {
+    public void deleteFocusCard(CardDto.PostFocusRequest focusCardRequest,
+        UserDetails userDetails) {
+
+        CardTypeEnum cardTypeEnum = focusCardRequest.getType();
+        Long cardId = focusCardRequest.getCardId();
         Member member = getMemberByUserDetail(userDetails);
 
         MemberCard memberCard;
@@ -299,13 +303,16 @@ public class CardServiceImpl implements CardService {
         for (MemberCard memberCard : memberCards) {
             if (memberCard.getType().equals(CardTypeEnum.AFFIRMATION)) {
                 AffirmationCard affirmationCard = memberCard.getAffirmationCard();
+                Letter letter = affirmationCard.getLetter();
 
                 PageResponse pageResponse = cardMapper
                     .toMemberPageResponse(affirmationCard)
                     .setType(memberCard.getType())
                     .setFocus(memberCard.getFocus())
                     .setCardId(affirmationCard.getId())
-                    .setMemberCardId(memberCard.getId());
+                    .setMemberCardId(memberCard.getId())
+                    .setLetterTitle(letter.getTitleByText())
+                    .setCreatedDate(letter.getCreatedDate());
 
                 pageResponses.add(pageResponse);
 

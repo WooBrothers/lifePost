@@ -177,7 +177,6 @@ export class UlTag extends Tag {
 
     setLiList(liList) {
         liList.forEach(li => {
-            debugger
             this.tag.appendChild(li.tag);
         });
         return this;
