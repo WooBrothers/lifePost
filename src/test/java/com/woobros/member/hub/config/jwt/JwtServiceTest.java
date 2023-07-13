@@ -30,5 +30,9 @@ class JwtServiceTest {
         System.out.println(jwtService.createAccessToken(member));
         System.out.println("\n" + "[create Long term access token]");
         System.out.println(jwtService.createRefreshToken());
+
+        for (int i = 101; i < 201; i++) {
+            System.out.println(i);
+        }
     }
 }

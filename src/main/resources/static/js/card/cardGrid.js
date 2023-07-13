@@ -18,6 +18,7 @@ export class CardGrid {
         const focusCardGridContainerTag = new DivTag()
             .setClassName("focus-card-container")
             .setId("focus-card-container-div")
+            .setStyle([{zIndex: 0}])
             .getTag();
 
         if (response && response.content.length > 0) {

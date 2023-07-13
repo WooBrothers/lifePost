@@ -1,28 +1,20 @@
 import {CardListApi} from "./cardListApi.js";
 import {ButtonTag, DivTag, PTag} from "../../common/tagUtil.js";
-import {bindEventToCardListGrid} from "./cardListEvent.js";
 import {getColorHexInFiveTypeList} from "../../common/utilTool.js";
 
 export class CardListGrid {
 
-    static cardListBtnClass = "card-list-btn";
-    static filterClass = "filter";
     static cardSpaceClass = "card-space";
-    static cardSpaceBtnClass = "card-space-btn";
-    static paginationBtnClass = "pagination-btn"
 
-    static async createCardListSpace(cardListSpace) {
-        // api call -> 카드 리스트 조회
-        // card 생성
-        // card space에 카드 추
+    static async createCardListSpace(cardListSpace, page, event) {
 
-        let result;
-        await CardListApi.getCardList(1).then(response => {
+        let result = null;
+        await CardListApi.getCardList(page).then(response => {
             CardListGrid.createCard(response, cardListSpace);
             result = response;
         });
-        bindEventToCardListGrid();
 
+        event();
         return result
     }
 
@@ -47,8 +39,6 @@ export class CardListGrid {
 
             cardListSpace.appendChild(cardSpace);
         });
-
-        // CardListGrid.setCardListPagination(response, cardListSpace);
     }
 
     static getFocusImgByContent(content) {
@@ -124,24 +114,24 @@ export class CardListGrid {
         cardSpace.appendChild(actionBtnSpace.getTag());
     }
 
-    static setCardListPagination(response, cardListPaginationSpace) {
+    static setCardListPagination(response, cardListPaginationSpace, event) {
         const currentPageNo = response.pageable.pageNumber + 1;
         const totalPageCount = response.totalPages;
+
+        const pageSection = Math.floor(currentPageNo / 5);
+        const pageBtnClassName = "card-list-page-btn";
+        let lastPageNo = 0;
+        let firstPageNo = pageSection * 5 + 1;
 
         const pageBtnSpace = new DivTag()
             .setId("page-btn-space")
             .getTag();
 
-        const pageSection = Math.floor(currentPageNo / 5);
-        const pageBtnClassName = "card-list-page-btn";
-        let lastPageNo = 0;
-
-        for (let pageNo = pageSection * 5 + 1; pageNo < totalPageCount && pageNo < pageSection * 5 + 6; pageNo++) {
+        for (let pageNo = pageSection * 5 + 1; pageNo <= totalPageCount && pageNo < pageSection * 5 + 6; pageNo++) {
             let selectedPage = pageNo === currentPageNo ? " current-page" : "";
 
             const pageBtn = new ButtonTag()
                 .setClassName(pageBtnClassName + selectedPage)
-                .setId(`card-list-page-btn-${pageNo}}`)
                 .setDataset([{pageNo: pageNo}])
                 .setInnerHTML(pageNo)
                 .getTag();
@@ -154,12 +144,23 @@ export class CardListGrid {
         if (lastPageNo < totalPageCount) {
             const nextPageBtn = new ButtonTag()
                 .setClassName(pageBtnClassName + " next-btn")
-                .setId(`card-list-next-page-btn`)
-                .setDataset([{pageNo: lastPageNo}])
+                .setDataset([{pageNo: lastPageNo + 1}])
                 .setInnerHTML(">")
                 .getTag();
             pageBtnSpace.appendChild(nextPageBtn);
         }
+
+        // 5보다 큰 섹션이라면 이전 버튼 추가
+        if (pageSection > 0) {
+            const nextPageBtn = new ButtonTag()
+                .setClassName(pageBtnClassName + " before-btn")
+                .setDataset([{pageNo: firstPageNo - 5}])
+                .setInnerHTML("<")
+                .getTag();
+            pageBtnSpace.insertBefore(nextPageBtn, pageBtnSpace.firstChild);
+        }
+
         cardListPaginationSpace.appendChild(pageBtnSpace);
+        event();
     }
 }

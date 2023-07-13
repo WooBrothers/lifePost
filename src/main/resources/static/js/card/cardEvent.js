@@ -28,13 +28,16 @@ function clickNextFocusCard() {
 
     // 카드의 순서를 바꾸는 로직
     for (const card of focusCardBox.children) {
-        card.style.zIndex++;
-        if (maxIndex < card.style.zIndex) {
-            maxIndex = card.style.zIndex;
+        const zIndex = parseInt(card.style.zIndex);
+        card.style.zIndex = `${zIndex + 1}`;
+        if (maxIndex < zIndex) {
+            console.log(`maxIndex: ${maxIndex} < zIndex: ${zIndex}`)
+            maxIndex = zIndex;
             maxCardId = card.id;
         }
     }
-
+    console.log("maxCardId: " + maxCardId);
+    console.log("maxIndex: " + maxIndex);
     // 현재 카드를 뒤로 넘기는 애니메이션
     let targetCard = document.getElementById(maxCardId);
     targetCard.style.animationName = "flip-over-card";
@@ -62,9 +65,8 @@ function clickPreviousFocusCard() {
     let minCardId = null;
 
     for (const card of focusCardBox.children) {
-
-        card.style.zIndex--;
-
+        const zIndex = parseInt(card.style.zIndex);
+        card.style.zIndex = `${zIndex - 1}`;
         if (minIndex > card.style.zIndex) {
             minIndex = card.style.zIndex;
             minCardId = card.id;

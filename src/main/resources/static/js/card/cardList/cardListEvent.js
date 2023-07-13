@@ -1,5 +1,6 @@
 import {authFetch} from "../../common/apiUtil.js";
 import {findParentWithClass} from "../../common/utilTool.js";
+import {CardListGrid} from "./cardListGrid.js";
 
 export function bindEventToCardListGrid() {
     const filerBtn = document.getElementById("filter-btn");
@@ -8,7 +9,7 @@ export function bindEventToCardListGrid() {
     const focusBtnList = document.querySelectorAll(".focus-btn");
     focusBtnList.forEach(btn => {
         btn.addEventListener("click", clickBookmarkBtn);
-    })
+    });
 }
 
 function clickFilterBtn() {
@@ -18,7 +19,6 @@ function clickFilterBtn() {
     filterClassBtnList.forEach(filterBtn => {
         if (filterBtn.style.display === "none") {
             filterBtn.style.display = "block";
-            filterBtnSpace.style.border = "1px solid black";
         } else {
             filterBtn.style.display = "none";
             filterBtnSpace.style.border = "none";
@@ -26,7 +26,7 @@ function clickFilterBtn() {
     });
 }
 
-export async function clickBookmarkBtn() {
+async function clickBookmarkBtn() {
 
     const parentCardSpace = findParentWithClass(this, "card-space");
     const url = "/api/v1/card/auth/focus";
@@ -53,5 +53,42 @@ export async function clickBookmarkBtn() {
     await authFetch(url, option).then(response => {
         this.style.backgroundImage = imgUrl;
         this.dataset.focus = focus;
-    })
+    });
 }
+
+export function bindPaginationBtnEvent() {
+    const pageBtnSpace = document.getElementById("page-btn-space");
+    const paginationBtnList = pageBtnSpace.childNodes;
+    paginationBtnList.forEach(btn => {
+        btn.addEventListener("click", clickPaginationBtn);
+    });
+}
+
+async function clickPaginationBtn() {
+    const currentPage = document.querySelector(".current-page");
+    if (this === currentPage) {
+        return;
+    }
+
+    const cardListSpace = document.getElementById("card-list-space");
+    const cardSpace = document.querySelectorAll(".card-space");
+
+    cardSpace.forEach(card => {
+        cardListSpace.removeChild(card);
+    })
+
+    const pageNo = this.dataset.pageNo;
+    const response = await CardListGrid.createCardListSpace(cardListSpace, pageNo, bindEventToCardListGrid);
+
+    currentPage.classList.remove("current-page");
+    this.dataset.pageNo = response.pageable.pageNumber + 1;
+    this.classList.add("current-page");
+
+    const cardListPaginationSpace = document.getElementById("card-list-pagination-space");
+
+    if (this.classList.contains("next-btn") || this.classList.contains("before-btn")) {
+        cardListPaginationSpace.replaceChildren();
+        CardListGrid.setCardListPagination(response, cardListPaginationSpace, bindPaginationBtnEvent);
+    }
+}
+
