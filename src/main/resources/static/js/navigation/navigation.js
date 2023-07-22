@@ -23,11 +23,11 @@ export async function setMembership() {
 }
 
 function setLogoutMembership() {
-    const logoutMembership = document.querySelector(".logout.membership");
-    const loginMembership = document.querySelector(".login.membership");
+    const logoutMembership = document.querySelector("#logout-membership");
+    const loginMembership = document.querySelector("#login-membership");
 
     logoutMembership.classList.remove("off");
-    logoutMembership.classList.add("on");
+    logoutMembership.classList.add("navi-on");
     loginMembership.classList.remove("navi-on");
     loginMembership.classList.add("off");
 }
