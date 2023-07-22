@@ -35,9 +35,6 @@ public class AffirmationCard {
     @JoinColumn
     private Letter letter;
 
-    @Column(unique = true, nullable = false)
-    private String title;
-
     @Column(nullable = false)
     private String contents;
 

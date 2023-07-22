@@ -1,20 +1,25 @@
 <!DOCTYPE HTML>
-
-<html lang="ko">
+<html>
 <head>
-  <title>card list</title>
-  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
-  <link rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <!--  <link rel="stylesheet" type="text/css" href="/css/letterGrid.css">-->
+  <title>Typing Challenge</title>
+  <link rel="stylesheet" type="text/css" href="/css/cardWrite.css">
 </head>
 <body>
-
-
-<!--<script type="module" src="/js/indexPage.js"></script>-->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<div id="card-write-space">
+  <div id="modal-header-space">
+    <label for="card-write-content" id="card-write-label">확언 쓰기</label>
+    <div id="create-card-empty-space"></div>
+    <button id="modal-close-btn">X</button>
+  </div>
+  <div id="text-container">
+    <div>
+      <div id="card-content-answer"></div>
+      <div id="write-count"></div>
+      <div id="display-output"></div>
+      <textarea id="card-write-content"></textarea>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
-

@@ -1,3 +1,5 @@
+import {authFetch} from "../common/apiUtil.js";
+
 export class LetterApi {
     /* letter 관련 API class */
 
@@ -21,6 +23,23 @@ export class LetterApi {
                 throw new Error(text);
             });
         });
+    }
+
+    static async getLatestContentById(letterId) {
+        const url = LetterApi.LETTER_AUTH_API_URL + `/${letterId}`;
+        let option = {
+            method: "GET"
+        }
+        return await authFetch(url, option);
+    }
+
+    static async getLetterContentById(letterId) {
+        const url = LetterApi.LETTER_AUTH_API_URL + `/stamp/${letterId}`;
+        let option = {
+            method: "GET"
+        }
+        return await authFetch(url, option);
+
     }
 
     static async getNextLettersByPageId(pageId) {

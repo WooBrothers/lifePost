@@ -1,0 +1,112 @@
+#card-list-space {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card-list-btn {
+  text-align: center;
+  background-color: #FFCD82;
+  border: none;
+  padding: 5px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 4px 2px;
+  border-radius: 8px;
+}
+
+#create-card-btn {
+  width: 110px;
+  height: 40px;
+  font-size: 14px;
+}
+
+.filter {
+  display: none;
+}
+
+.card-list-btn.filter {
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+#filter-btn-space {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+#filter-btn {
+  width: 50px;
+  height: 40px;
+  font-size: 14px;
+}
+
+.card-action-btn {
+  background-color: white;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  margin-left: 10px;
+}
+
+.card-space {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 70%;
+  margin: 10px 10px 10px 15px;
+  padding: 5px;
+  max-width: 300px;
+  min-height: 400px;
+  max-height: 400px;
+}
+
+.focus-space {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.focus-btn {
+  width: 36px;
+  height: 44px;
+  border: none;
+  background-color: transparent;
+}
+
+.spacer {
+  align-self: stretch; /* 높이를 최대한 늘려서 parent의 높이를 넘지 않음 */
+  flex: 1;
+}
+
+#card-list-btn-space {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-right: 70px;
+  margin-left: 70px;
+}
+
+#card-list-btn-space-empty {
+  width: 100%;
+}
+
+#card-list-pagination-space {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.card-list-page-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 3px;
+  margin-left: 10px;
+  background-color: darkorange;
+  border: none;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-on {
+  background-color: lightgoldenrodyellow;
+  border: 2px solid darkorange;
+}

@@ -1,9 +1,11 @@
 package com.woobros.member.hub.domain.card;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.woobros.member.hub.model.card.CardTypeEnum;
 import com.woobros.member.hub.model.letter.Letter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -23,7 +25,6 @@ public class CardDto {
 
         private final Long id;
         private final Letter letter;
-        private final String title;
         private final String tag;
         private final CardTypeEnum type;
         private final LocalDateTime createdAt;
@@ -41,9 +42,6 @@ public class CardDto {
         @NotBlank
         private Long letterId;
 
-        @NotBlank
-        private String title;
-
         private String tag;
     }
 
@@ -51,12 +49,9 @@ public class CardDto {
     @Setter
     public static class PostCustomRequest {
 
-        @NotBlank
-        @Size(min = 1, max = 200)
+        //        @NotBlank
+//        @Size(min = 1, max = 200)
         private String contents;
-
-        @NotBlank
-        private String title;
 
         private String tag;
     }
@@ -66,10 +61,20 @@ public class CardDto {
     public static class PostFocusRequest {
 
         @NotBlank
-        private Long CardId;
+        private Long cardId;
 
         @NotBlank
         private CardTypeEnum type;
+    }
+
+    @Getter
+    @Setter
+    public static class PostWriteRequest {
+
+        @NotBlank
+        private Long memberCardId;
+
+        private int count = 1;
     }
 
     @Getter
@@ -78,7 +83,6 @@ public class CardDto {
     public static class ReadResponse {
 
         private final Long id;
-        private final String title;
         private final String contents;
         private CardTypeEnum type;
         private final String tag;
@@ -99,14 +103,25 @@ public class CardDto {
         private Long memberCardId;
         private Long cardId;
         private CardTypeEnum type;
-        private final String title;
+        private FocusTypeEnum focus;
+        private String letterTitle;
+        private Long letterId;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate createdDate;
+        private final String contents;
         private final String tag;
-        private final String createdDate;
-        private final String createdAt;
-        private final String updateAt;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private final LocalDateTime createdAt;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private final LocalDateTime updateAt;
 
         public PageResponse setType(CardTypeEnum cardTypeEnum) {
             this.type = cardTypeEnum;
+            return this;
+        }
+
+        public PageResponse setFocus(FocusTypeEnum focus) {
+            this.focus = focus;
             return this;
         }
 
@@ -117,6 +132,21 @@ public class CardDto {
 
         public PageResponse setCardId(Long cardId) {
             this.cardId = cardId;
+            return this;
+        }
+
+        public PageResponse setLetterId(Long letterId) {
+            this.letterId = letterId;
+            return this;
+        }
+
+        public PageResponse setLetterTitle(String letterTitle) {
+            this.letterTitle = letterTitle;
+            return this;
+        }
+
+        public PageResponse setCreatedDate(LocalDate createdDate) {
+            this.createdDate = createdDate;
             return this;
         }
     }

@@ -26,6 +26,12 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Value("${jwt.access.header}")
     private String accessHeader;
 
+    @Value("${jwt.access.expiration}")
+    private int accessTokenExpirationPeriod;
+
+    @Value("${jwt.refresh.expiration}")
+    private int refreshTokenExpirationPeriod;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException, ServletException {
@@ -33,13 +39,14 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         try {
             CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-            loginSuccess(response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
+            loginSuccess(request, response, oAuth2User); // 로그인에 성공한 경우 access, refresh 토큰 생성
         } catch (Exception e) {
             throw e;
         }
     }
 
-    private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User)
+    private void loginSuccess(HttpServletRequest request, HttpServletResponse response,
+        CustomOAuth2User oAuth2User)
         throws IOException {
 
         Member member = Member.builder()
@@ -50,14 +57,19 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.createAccessToken(member);
         String refreshToken = jwtService.createRefreshToken();
 
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtService.sendAccessAndRefreshToken(request, response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
 
-        Cookie cookie = new Cookie("accessToken", accessToken);
-        cookie.setHttpOnly(true);
-        // cookie.setSecure(true); // TODO HTTPS에서만 전송
-        cookie.setPath("/"); // 전역적으로 접근 가능하도록 설정
-        response.addCookie(cookie);
+        // cookie에 access, refresh token 세팅
+        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(accessTokenExpirationPeriod);
+        response.addCookie(accessTokenCookie);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(refreshTokenExpirationPeriod);
+        response.addCookie(refreshTokenCookie);
 
         response.sendRedirect("/");
     }

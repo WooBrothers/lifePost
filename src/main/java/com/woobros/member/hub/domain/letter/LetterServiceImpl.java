@@ -71,8 +71,11 @@ public class LetterServiceImpl implements LetterService {
         Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc().orElseThrow(
             () -> new CommonException(ErrorEnum.NOT_FOUND)
         );
+        StringBuilder sb = new StringBuilder(latestLetter.getContents());
+        sb.setLength(80);
 
-        return letterMapper.toResponseDto(latestLetter);
+        LetterDto.ReadResponse response = letterMapper.toResponseDto(latestLetter);
+        return response.setContents(sb.toString());
     }
 
     /**
@@ -188,7 +191,6 @@ public class LetterServiceImpl implements LetterService {
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
 
         if (doesNotHaveLetterForMember(member.getId(), latestLetter.getId())) {
-
             saveLetterAndCardToMember(member, latestLetter);
         }
 
@@ -209,11 +211,13 @@ public class LetterServiceImpl implements LetterService {
             .orElseThrow(() -> new CommonException(ErrorEnum.STAMP_NOT_ENOUGH));
 
         Letter letter = letterRepository.findById(letterId)
-            .filter(let -> !let.getCreatedDate().equals(LocalDate.now()))
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
 
         if (doesNotHaveLetterForMember(member.getId(), letter.getId())) {
-            if (member.getStampCount() > 0) {
+            if (letter.getCreatedDate().equals(LocalDate.now())) {
+                saveLetterAndCardToMember(member, letter);
+                saveMemberStampUsed(member, letter);
+            } else if (member.getStampCount() > 0) {
                 memberRepository.save(member.useStamp());
                 saveLetterAndCardToMember(member, letter);
                 saveMemberStampUsed(member, letter);
@@ -221,7 +225,6 @@ public class LetterServiceImpl implements LetterService {
                 throw new CommonException(ErrorEnum.LETTER_REQUEST_INVALID);
             }
         }
-
         return letterMapper.toResponseDto(letter);
     }
 

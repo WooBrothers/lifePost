@@ -35,9 +35,6 @@ public class MemberCustomCard {
     private Member member;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
     private String contents;
 
     private String tag;

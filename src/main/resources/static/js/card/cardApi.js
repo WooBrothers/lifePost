@@ -1,3 +1,6 @@
+import {authFetch, getAccessToken} from "../common/apiUtil.js";
+
+
 export class CardApi {
     /* card 관련 API class */
 
@@ -7,18 +10,19 @@ export class CardApi {
     static CARD_AUTH_API_URL = CardApi.CARD_API_URL + "/auth";
     static CARD_LOAD_SIZE = 3;
 
-    static async getFocusCards() {
-        const url = CardApi.CARD_AUTH_API_URL + "/focus";
+    static async getFocusCards(pageNo) {
 
-        return await fetch(url).then(response => {
-            debugger;
-            if (response.ok) {
-                return response.json();
-            }
-            return response.text().then(text => {
-                throw new Error(text);
-            });
-        });
+        const url = CardApi.CARD_AUTH_API_URL + `/focus/${pageNo}/10`;
+
+        let option = {
+            method: 'GET'
+        };
+
+        if (getAccessToken()) {
+            return await authFetch(url, option);
+        } else {
+            return null;
+        }
     }
 
     static async getLatestCard() {

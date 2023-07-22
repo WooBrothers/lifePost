@@ -6,6 +6,7 @@ import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
 import java.util.Date;
 import java.util.Optional;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -87,12 +88,16 @@ public class JwtService {
     /**
      * AccessToken + RefreshToken 헤더에 실어서 보내기
      */
-    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken,
+    public void sendAccessAndRefreshToken(HttpServletRequest request, HttpServletResponse response,
+        String accessToken,
         String refreshToken) {
         response.setStatus(HttpServletResponse.SC_OK);
 
         setAccessTokenHeader(response, accessToken);
+        setAccessTokenToCookie(request, response, accessToken);
+
         setRefreshTokenHeader(response, refreshToken);
+        setRefreshTokenToCookie(request, response, refreshToken);
         log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 
@@ -160,6 +165,40 @@ public class JwtService {
      */
     public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
         response.setHeader(refreshHeader, "Bearer " + refreshToken);
+    }
+
+    /**
+     * 브라우저 쿠키의 accessToken 변경
+     */
+    private void setAccessTokenToCookie(HttpServletRequest request, HttpServletResponse response,
+        String accessToken) {
+
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals("accessToken")) {
+                cookie.setValue(accessToken);
+                cookie.setPath("/");
+                cookie.setMaxAge(Math.toIntExact(accessTokenExpirationPeriod));
+                response.addCookie(cookie);
+                break;
+            }
+        }
+    }
+
+    /**
+     * 브라우저 쿠키의 refreshToken 변경
+     */
+    private void setRefreshTokenToCookie(HttpServletRequest request, HttpServletResponse response,
+        String refreshToken) {
+
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals("refreshToken")) {
+                cookie.setValue(refreshToken);
+                cookie.setPath("/");
+                cookie.setMaxAge(Math.toIntExact(refreshTokenExpirationPeriod));
+                response.addCookie(cookie);
+                break;
+            }
+        }
     }
 
     /**

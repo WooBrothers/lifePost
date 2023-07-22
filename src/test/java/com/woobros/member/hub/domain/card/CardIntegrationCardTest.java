@@ -115,17 +115,14 @@ public class CardIntegrationCardTest {
         MemberCustomCard memberCustomCard = MemberCustomCard.builder()
             .member(member)
             .contents("member custom card create1")
-            .title("test 1 is focus")
             .build();
         MemberCustomCard memberCustomCard2 = MemberCustomCard.builder()
             .member(member)
             .contents("member custom card create2")
-            .title("test 2")
             .build();
         MemberCustomCard memberCustomCard3 = MemberCustomCard.builder()
             .member(member)
             .contents("member custom card create3")
-            .title("test 3")
             .build();
 
         memberCustomCardRepository.save(memberCustomCard);
@@ -160,7 +157,7 @@ public class CardIntegrationCardTest {
     @Test
     void testGetLatestMemberCards_WhenHaveUserToken_WillOk() throws Exception {
 
-        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/member/3")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/member/3/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -171,7 +168,7 @@ public class CardIntegrationCardTest {
     @Test
     void testGetMemberCards_WhenHaveUserToken_WillOk() throws Exception {
         ResultActions response = mockMvc
-            .perform(get("/api/v1/card/auth/member/3/10")
+            .perform(get("/api/v1/card/auth/member/10/3")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(authorization, tokenType + testAccessToken));
 
@@ -183,7 +180,7 @@ public class CardIntegrationCardTest {
     @Test
     void testGetLatestMemberCustomCards() throws Exception {
 
-        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/custom/3")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/custom/1/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -194,7 +191,7 @@ public class CardIntegrationCardTest {
     @Test
     void testGetMemberCustomCards() throws Exception {
         ResultActions response = mockMvc
-            .perform(get("/api/v1/card/auth/custom/3/4")
+            .perform(get("/api/v1/card/auth/custom/4/3")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(authorization, tokenType + testAccessToken));
 
@@ -216,7 +213,7 @@ public class CardIntegrationCardTest {
                 }
             });
 
-        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/3")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/1/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -226,7 +223,7 @@ public class CardIntegrationCardTest {
 
     @Test
     void testGetFocusCards() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/3/15")
+        ResultActions response = mockMvc.perform(get("/api/v1/card/auth/focus/1/3")
             .contentType(MediaType.APPLICATION_JSON)
             .header(authorization, tokenType + testAccessToken));
 
@@ -275,7 +272,6 @@ public class CardIntegrationCardTest {
 
         Map<String, String> memberCustomCardMap = new HashMap<>();
         memberCustomCardMap.put("contents", "member custom card test create");
-        memberCustomCardMap.put("title", "member custom card test create");
 
         ResultActions response = mockMvc.perform(post("/api/v1/card/auth/member/custom")
             .contentType(MediaType.APPLICATION_JSON)
@@ -351,7 +347,6 @@ public class CardIntegrationCardTest {
 
         Map<String, String> affirmationCardMap = new HashMap<>();
         affirmationCardMap.put("contents", "affirmation card test create");
-        affirmationCardMap.put("title", "affirmation card test create");
 
         ResultActions response = mockMvc.perform(post("/api/v1/card/admin/affirmation")
             .contentType(MediaType.APPLICATION_JSON)

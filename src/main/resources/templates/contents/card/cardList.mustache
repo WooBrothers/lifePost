@@ -6,12 +6,31 @@
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
   <link rel="stylesheet"
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <!--  <link rel="stylesheet" type="text/css" href="/css/letterGrid.css">-->
+  <link rel="stylesheet" type="text/css" href="/css/cardListGrid.css">
 </head>
 <body>
+{{> layout/navigation}}
+<div id="card-list-space">
+  <div id="card-list-btn-space">
+    <button class="card-list-btn" id="filter-btn">필터</button>
+    <button class="card-list-btn" id="create-card-btn">카드 만들기</button>
+    <div id="card-list-btn-space-empty"></div>
+    <div id="filter-btn-space">
+      <button class="card-list-btn filter" id="affirmation-filter-btn" data-on-off="false">확언
+        카드
+      </button>
+      <button class="card-list-btn filter" id="custom-filter-btn" data-on-off="false">내가 만든 카드
+      </button>
+      <button class="card-list-btn filter" id="focus-filter-btn" data-on-off="false">focus한 카드
+      </button>
+    </div>
+  </div>
 
+</div>
+<div id="card-list-pagination-space">
+</div>
 
-<!--<script type="module" src="/js/indexPage.js"></script>-->
+<script type="module" src="/js/cardListPage.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 

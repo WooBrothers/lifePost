@@ -5,8 +5,8 @@ export function bindEventToLetterGrid() {
 
     // 오늘의 편지 그리드 컨테이너를 담을 div -> 편지 보기 클릭 이벤트 바인딩
     const todayLetterGrid = document.getElementById("today-letter-grid");
+    setLetterIdToLocalStorage();
     todayLetterGrid.addEventListener("click", clickTodayLetter);
-
 }
 
 export function bindEventToLetterGridContainer() {
@@ -54,10 +54,12 @@ function isBottomOfScroll(element) {
     return letterGridViewHeight + currentGridHeight + margin >= letterGridTotalHeight;
 }
 
-function clickTodayLetter() {
-    // 오늘의 편지 클릭 이벤트
-    console.log("click today letter.");
-    console.log(window.innerWidth);
-
+function setLetterIdToLocalStorage() {
+    const todayLetterGridContainer = document.getElementsByClassName("today-letter-grid-container")[0];
+    localStorage.setItem("letterId", todayLetterGridContainer.dataset.id);
 }
 
+function clickTodayLetter() {
+    // 오늘의 편지 클릭 이벤트
+    window.location = "/letter/read/page";
+}
