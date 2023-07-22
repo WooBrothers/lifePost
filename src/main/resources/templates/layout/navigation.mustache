@@ -9,23 +9,36 @@
 <body>
 <nav>
   <div id="nav-space">
-    <div id="logout-membership" class="logout">LifePost 멤버쉽 가입하기</div>
-    <div id="login-membership" class="login">아름다운 그대에게 편지를 보내요.</div>
+    <div class="logout membership" id="logout-membership">LifePost 멤버쉽 가입하기</div>
+    <div class="login membership" id="login-membership">아름다운 그대에게 편지를 보내요.</div>
     <div id="navigation">
       <div id="nav-home"><a id="nav-home-link" href="/">Life Post</a></div>
       <div id="nav-empty"></div>
-      <div class="logout" id="logout-nav-menu">
-        <ul>
-          <li><a href="/login/page">로그인/회원가입</a></li>
-          <li><a href="">멤버쉽 가입하기</a></li>
-          <li><a href="">편지 리스트</a></li>
+      <div class="logout wide nav-menu" id="logout-nav-menu">
+        <ul class="nav-menu ul">
+          <li class="nav-menu li"><a href="/login/page">로그인/회원가입</a></li>
+          <li class="nav-menu li"><a href="">멤버쉽 가입하기</a></li>
+          <li class="nav-menu li"><a href="">편지 리스트</a></li>
         </ul>
       </div>
-      <div class="login" id="login-nav-menu">
-        <ul>
-          <li><a href="">편지 리스트</a></li>
-          <li><a href="/card/list/page">카드 리스트</a></li>
-          <li><a href="">마이페이지</a></li>
+      <div class="login wide nav-menu" id="login-nav-menu">
+        <ul class="nav-menu ul">
+          <li class="nav-menu li"><a href="">편지 리스트</a></li>
+          <li class="nav-menu li"><a href="/card/list/page">카드 리스트</a></li>
+          <li class="nav-menu li"><a href="">마이페이지</a></li>
+        </ul>
+      </div>
+      <div class="mobile menu-space" id="nav-mobile-menu-btn-space">
+        <button class="mobile" id="nav-mobile-menu-btn"></button>
+        <ul class="mobile logout ul off" id="login-drop-menu">
+          <li class="mobile logout li off"><a href="/login/page">로그인/회원가입</a></li>
+          <li class="mobile logout li off"><a href="">멤버쉽 가입하기</a></li>
+          <li class="mobile logout li off"><a href="">편지 리스트</a></li>
+        </ul>
+        <ul class="mobile login ul off" id="logout-drop-menu">
+          <li class="mobile login li off"><a href="">편지 리스트</a></li>
+          <li class="mobile login li off"><a href="/card/list/page">카드 리스트</a></li>
+          <li class="mobile login li off"><a href="">마이페이지</a></li>
         </ul>
       </div>
     </div>

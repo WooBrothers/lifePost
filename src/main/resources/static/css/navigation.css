@@ -1,5 +1,6 @@
 #nav-empty {
   height: 100px;
+  flex: 1;
 }
 
 #nav-space {
@@ -15,7 +16,6 @@
 
 #logout-membership {
   height: 45%;
-  display: flex;
   padding-left: 5px;
   font-size: 20px;
   font-weight: bold;
@@ -27,7 +27,6 @@
 
 #login-membership {
   height: 45%;
-  display: flex;
   padding-left: 5px;
   font-size: 20px;
   color: white;
@@ -51,28 +50,85 @@
   font-weight: bold;
 }
 
-#nav-empty {
-  flex: 1;
+@media screen and (min-width: 991px) {
+
+  #nav-menu {
+    background-color: black;
+    width: 50px;
+    height: 100%;
+  }
+
+  #logout-nav-menu {
+    align-items: center;
+    height: 100%;
+    padding: 0;
+  }
+
+  #login-nav-menu {
+    align-items: center;
+    height: 100%;
+    padding: 0;
+  }
+
+  #nav-mobile-menu-btn-space {
+    display: none;
+  }
 }
 
-#nav-menu {
-  background-color: black;
-  width: 50px;
-  height: 100%;
+@media screen and (max-width: 991px) {
+  /* mobile */
+  #logout-nav-menu {
+    display: none;
+  }
+
+  #login-nav-menu {
+    display: none;
+  }
+
+  #nav-mobile-menu-btn {
+    top: 55px;
+    right: 5px;
+    position: absolute;
+    appearance: none;
+    border: none;
+    background-color: transparent;
+    width: 42px;
+    height: 31px;
+    margin-right: 5px;
+    background-image: url("../img/nav-btn.png");
+  }
+
+  #nav-mobile-menu-btn:hover {
+    cursor: pointer;
+  }
+
+  .drop-menu.ul {
+    top: 55px;
+    right: 10px;
+    font-size: 35px;
+    background-color: coral;
+    list-style: none;
+    position: absolute;
+    flex-direction: column;
+    justify-items: left;
+    justify-content: center;
+    padding: 5px 5px 0px 5px;
+  }
+
+  .drop-menu.li {
+    margin-bottom: 5px;
+    border-bottom: 1px solid white;
+  }
+
+  /* mobile */
 }
 
-#logout-nav-menu {
+.navi-on {
   display: flex;
-  align-items: center;
-  height: 100%;
-  padding: 0;
 }
 
-#login-nav-menu {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: 0;
+.off {
+  display: none;
 }
 
 a {
@@ -80,13 +136,13 @@ a {
   color: black;
 }
 
-ul {
+.nav-menu.ul {
   list-style: none;
   padding: 0;
   height: 10px;
 }
 
-li {
+.nav-menu.li {
   display: inline-block;
   margin-left: 5px;
   margin-right: 5px;;

@@ -101,9 +101,9 @@ async function clickPaginationBtn() {
     const pageNo = this.dataset.pageNo;
     const response = await CardListGrid.createCardListSpace(cardListSpace, pageNo, bindEventToCardListGrid);
 
-    currentPage.classList.remove("on");
+    currentPage.classList.remove("btn-on");
     this.dataset.pageNo = response.pageable.pageNumber + 1;
-    this.classList.add("on");
+    this.classList.add("btn-on");
 
     const cardListPaginationSpace = document.getElementById("card-list-pagination-space");
 
@@ -117,10 +117,10 @@ async function filterBtnClick() {
 
     if (this.dataset.onOff === "true") {
         this.dataset.onOff = "false";
-        this.classList.remove("on");
+        this.classList.remove("btn-on");
     } else {
         this.dataset.onOff = "true"
-        this.classList.add("on");
+        this.classList.add("btn-on");
     }
     const cardListSpace = document.getElementById("card-list-space");
     const cardList = document.getElementsByClassName("card-space");

@@ -19,3 +19,7 @@ export function findParentWithClass(element, className) {
 
     return null; // 부모 요소를 찾지 못한 경우 null 반환
 }
+
+export function isScreenWide() {
+    return window.innerWidth >= 991;
+}
