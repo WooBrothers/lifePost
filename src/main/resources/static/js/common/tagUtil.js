@@ -195,3 +195,56 @@ export class LiTag extends Tag {
         return this;
     }
 }
+
+export class ModalTag extends Tag {
+    constructor() {
+        super("div");
+        this.innerHTML = null;
+        this.tag.classList.add("modal");
+        this.tag.style.height = "100%";
+        this.tag.style.display = "block";
+        this.tag.style.width = "100%";
+        this.tag.style.position = "fixed";
+        this.tag.style.zIndex = 999;
+        this.zIndex = 999;
+        const blind = new DivTag()
+            .setId("modal-blind")
+            .setClassName("modal blind")
+            .setStyle([{
+                height: "100%",
+                width: "100%",
+                display: "block",
+                backgroundColor: "grey",
+                opacity: 0.4,
+            }]).getTag()
+
+        this.innerHTML = blind;
+        this.tag.appendChild(
+            blind
+        );
+    }
+
+    addInnerHTML(innerHTML) {
+        if (Array.isArray(innerHTML)) {
+            innerHTML.forEach(html => {
+                this.tag.appendChild(html.getTag());
+            })
+        } else {
+            this.tag.appendChild(innerHTML.getTag());
+        }
+
+        this.innerHTML = this.tag.childNodes;
+
+        let zIndex = this.zIndex + 1;
+        this.tag.childNodes.forEach(node => {
+            if (node.style.zIndex && parseInt(node.style.zIndex) < zIndex) {
+                node.style.zIndex = zIndex;
+            } else if (!node.style.zIndex) {
+                node.style.zIndex = zIndex;
+            }
+            zIndex++;
+        })
+
+        return this;
+    }
+}

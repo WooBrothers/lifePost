@@ -49,8 +49,8 @@ public class CardDto {
     @Setter
     public static class PostCustomRequest {
 
-        @NotBlank
-        @Size(min = 1, max = 200)
+        //        @NotBlank
+//        @Size(min = 1, max = 200)
         private String contents;
 
         private String tag;
@@ -65,6 +65,16 @@ public class CardDto {
 
         @NotBlank
         private CardTypeEnum type;
+    }
+
+    @Getter
+    @Setter
+    public static class PostWriteRequest {
+
+        @NotBlank
+        private Long memberCardId;
+
+        private int count = 1;
     }
 
     @Getter
@@ -95,6 +105,7 @@ public class CardDto {
         private CardTypeEnum type;
         private FocusTypeEnum focus;
         private String letterTitle;
+        private Long letterId;
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate createdDate;
         private final String contents;
@@ -121,6 +132,11 @@ public class CardDto {
 
         public PageResponse setCardId(Long cardId) {
             this.cardId = cardId;
+            return this;
+        }
+
+        public PageResponse setLetterId(Long letterId) {
+            this.letterId = letterId;
             return this;
         }
 

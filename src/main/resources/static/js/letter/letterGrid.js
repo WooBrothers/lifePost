@@ -9,15 +9,13 @@ export class LetterGrid {
     static CLASS_TODAY_INFO = LetterGrid.ID_TODAY_PREFIX + "letter-item-info";
     static TODAY_LETTER_GRID_CONTAINER_CLASS_NAME = LetterGrid.ID_TODAY_PREFIX + "letter-grid-container";
 
-
     static async createTodayLetterGrid(todayLetterGrid) {
         /* 최신 편지 그리드 생성 */
 
         await LetterApi.getLatestLetter().then(res => {
             LetterGrid.setTodayLetterGridTag(todayLetterGrid, res);
+            bindEventToLetterGrid();
         });
-
-        bindEventToLetterGrid();
     }
 
     static setTodayLetterGridTag(todayLetterGrid, letter) {
@@ -68,7 +66,7 @@ export class LetterGrid {
             }, {
                 id: LetterGrid.ID_TODAY_PREFIX + "letter-contents-part",
                 className: LetterGrid.CLASS_TODAY_INFO,
-                innerHTML: letter.contents
+                innerHTML: letter.contents.slice(0, 75) + "..."
             },
         ];
 

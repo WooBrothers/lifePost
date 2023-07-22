@@ -8,14 +8,38 @@ export class CardListGrid {
 
     static async createCardListSpace(cardListSpace, page, event) {
 
-        let result = null;
-        await CardListApi.getCardList(page).then(response => {
+        const type = CardListGrid.getCardType();
+        const focus = CardListGrid.getIsFocus();
+
+        let resultResponse = null;
+        await CardListApi.getCardList(page, type, focus).then(response => {
             CardListGrid.createCard(response, cardListSpace);
-            result = response;
+            resultResponse = response;
         });
 
         event();
-        return result
+        return resultResponse
+    }
+
+    static getCardType() {
+        const isAffirmationOn = document.getElementById("affirmation-filter-btn").dataset.onOff;
+        const isCustomBtnOn = document.getElementById("custom-filter-btn").dataset.onOff;
+
+        let resultType = [];
+        if (isAffirmationOn === "true") {
+            resultType.push("AFFIRMATION");
+        }
+        if (isCustomBtnOn === "true") {
+            resultType.push("CUSTOM");
+        }
+
+        return resultType ? resultType : null;
+    }
+
+    static getIsFocus() {
+        const isFocusBtnOn = document.getElementById("focus-filter-btn").dataset.onOff;
+
+        return isFocusBtnOn === "true" ? "ATTENTION" : null;
     }
 
     static createCard(response, cardListSpace) {
@@ -70,6 +94,7 @@ export class CardListGrid {
                             .setBackground(focusInfo.focusImgUrl)
                     ]),
                 new PTag()
+                    .setId("card-content-" + content.cardId)
                     .setInnerHTML(content.contents)
                     .setStyle([{
                         fontSize: "20px",
@@ -77,44 +102,65 @@ export class CardListGrid {
                         alignSelf: "flex-start"
                     }])
             ])
+        cardSpace.appendChild(headerSpace.getTag());
 
         const spacer = new DivTag()
             .setClassName("spacer");
+        cardSpace.appendChild(spacer.getTag());
 
-        const letterInfoSpace = new DivTag()
+        const letterInfoSpace = CardListGrid.createLetterInfoSpace(content);
+        cardSpace.appendChild(letterInfoSpace.getTag());
+
+        const actionBtnSpace = CardListGrid.createActionBtnSpace(content);
+        cardSpace.appendChild(actionBtnSpace.getTag());
+    }
+
+    static createLetterInfoSpace(content) {
+
+        let innerHtmlList = [
+            new DivTag()
+                .setStyle([{borderTop: "1px solid gray"}]),
+        ]
+
+        if (content.type !== "CUSTOM") {
+            innerHtmlList.push(new PTag()
+                .setInnerHTML(content.createdDate + "<br/><b>Letter</b> " + content.letterTitle)
+            );
+        } else {
+            innerHtmlList.push(new PTag()
+                .setInnerHTML(content.createdDate + "<br/><b>Custom</b> " + "내가 만든 카드")
+            );
+        }
+
+        return new DivTag()
             .setStyle([{
                 display: "flex",
                 flexDirection: "column",
                 alignSelf: "stretch",
-            }])
-            .setInnerHTML([
-                new DivTag()
-                    .setStyle([{borderTop: "1px solid gray"}]),
-                new PTag()
-                    .setInnerHTML(content.createdDate + "<br/><b>Letter</b> " + content.letterTitle)
-            ]);
-
-        const actionBtnSpace = new DivTag()
-            .setStyle([{display: "flex", alignSelf: "stretch", margin: "auto"}])
-            .setInnerHTML([
-                new ButtonTag()
-                    .setClassName("card-list-btn card-action-btn")
-                    .setId("card-space-read-letter-btn")
-                    .setInnerHTML("편지 읽기"),
-                new ButtonTag()
-                    .setClassName("card-list-btn card-action-btn")
-                    .setStyle([{marginLeft: "10px"}])
-                    .setId("card-space-write-card-btn")
-                    .setInnerHTML("확언 쓰기")
-            ]);
-
-        cardSpace.appendChild(headerSpace.getTag());
-        cardSpace.appendChild(spacer.getTag());
-        cardSpace.appendChild(letterInfoSpace.getTag());
-        cardSpace.appendChild(actionBtnSpace.getTag());
+            }]).setInnerHTML(innerHtmlList);
     }
 
-    static setCardListPagination(response, cardListPaginationSpace, event) {
+    static createActionBtnSpace(content) {
+        let cardActionBtnList = [new ButtonTag()
+            .setClassName("card-list-btn card-action-btn card-write-btn")
+            .setId("card-space-write-card-btn")
+            .setInnerHTML("확언 쓰기")
+        ];
+
+        if (content.type !== "CUSTOM") {
+            cardActionBtnList.push(new ButtonTag()
+                .setClassName("card-list-btn card-action-btn letter-read-btn")
+                .setDataset([{letterId: content.letterId}])
+                .setId("card-space-read-letter-btn")
+                .setInnerHTML("편지 읽기"));
+        }
+
+        return new DivTag()
+            .setStyle([{display: "flex", alignSelf: "stretch", margin: "auto"}])
+            .setInnerHTML(cardActionBtnList);
+    }
+
+    static createCardListPagination(response, cardListPaginationSpace, event) {
         const currentPageNo = response.pageable.pageNumber + 1;
         const totalPageCount = response.totalPages;
 
@@ -127,19 +173,35 @@ export class CardListGrid {
             .setId("page-btn-space")
             .getTag();
 
-        for (let pageNo = pageSection * 5 + 1; pageNo <= totalPageCount && pageNo < pageSection * 5 + 6; pageNo++) {
-            let selectedPage = pageNo === currentPageNo ? " current-page" : "";
-
-            const pageBtn = new ButtonTag()
-                .setClassName(pageBtnClassName + selectedPage)
-                .setDataset([{pageNo: pageNo}])
-                .setInnerHTML(pageNo)
-                .getTag();
-
-            pageBtnSpace.appendChild(pageBtn);
+        for (let pageNo = pageSection * 5 + 1; CardListGrid.isTurnedTotalPage(pageNo, totalPageCount, pageSection); pageNo++) {
+            CardListGrid.createPageBtn(pageNo, currentPageNo, pageBtnClassName, pageBtnSpace);
             lastPageNo = pageNo;
         }
 
+        CardListGrid.createNextPageBtn(lastPageNo, totalPageCount, pageBtnClassName, pageBtnSpace);
+        CardListGrid.createPreviousBtn(pageSection, firstPageNo, pageBtnClassName, pageBtnSpace);
+
+        cardListPaginationSpace.appendChild(pageBtnSpace);
+        event();
+    }
+
+    static isTurnedTotalPage(pageNo, totalPageCount, pageSection) {
+        return pageNo <= totalPageCount && pageNo < pageSection * 5 + 6;
+    }
+
+    static createPageBtn(pageNo, currentPageNo, pageBtnClassName, pageBtnSpace) {
+        let selectedPage = pageNo === currentPageNo ? " on" : "";
+
+        const pageBtn = new ButtonTag()
+            .setClassName(pageBtnClassName + selectedPage)
+            .setDataset([{pageNo: pageNo}])
+            .setInnerHTML(pageNo)
+            .getTag();
+
+        pageBtnSpace.appendChild(pageBtn);
+    }
+
+    static createNextPageBtn(lastPageNo, totalPageCount, pageBtnClassName, pageBtnSpace) {
         // 즉 현재 페이지 섹션의 마지막 페이지 번호가 페이지 토탈보다 작으면 넥스트 버튼 출력
         if (lastPageNo < totalPageCount) {
             const nextPageBtn = new ButtonTag()
@@ -149,7 +211,9 @@ export class CardListGrid {
                 .getTag();
             pageBtnSpace.appendChild(nextPageBtn);
         }
+    }
 
+    static createPreviousBtn(pageSection, firstPageNo, pageBtnClassName, pageBtnSpace) {
         // 5보다 큰 섹션이라면 이전 버튼 추가
         if (pageSection > 0) {
             const nextPageBtn = new ButtonTag()
@@ -159,8 +223,5 @@ export class CardListGrid {
                 .getTag();
             pageBtnSpace.insertBefore(nextPageBtn, pageBtnSpace.firstChild);
         }
-
-        cardListPaginationSpace.appendChild(pageBtnSpace);
-        event();
     }
 }

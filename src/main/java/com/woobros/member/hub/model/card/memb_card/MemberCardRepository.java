@@ -17,6 +17,9 @@ public interface MemberCardRepository extends
 
     Page<MemberCard> findByMemberIdOrderByCreatedAtDesc(Long memberId, Pageable pageable);
 
+    Page<MemberCard> findByMemberIdAndTypeInAndFocusInOrderByCreatedAtDesc(Long memberId,
+        List<CardTypeEnum> type, List<FocusTypeEnum> focus, Pageable pageable);
+
     Page<MemberCard> findByMemberIdAndIdLessThanOrderByCreatedAtDesc(Long memberId, Long id,
         Pageable pageable);
 
@@ -31,5 +34,7 @@ public interface MemberCardRepository extends
     Optional<MemberCard> findByMemberIdAndMemberCustomCardIdAndType(Long memberId,
         Long memberCustomCardId,
         CardTypeEnum cardTypeEnum);
+
+    Optional<MemberCard> findByMemberIdAndId(Long memberId, Long memberCardId);
 
 }

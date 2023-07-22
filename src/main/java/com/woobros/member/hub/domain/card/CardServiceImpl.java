@@ -19,7 +19,9 @@ import com.woobros.member.hub.model.letter.Letter;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -51,10 +53,13 @@ public class CardServiceImpl implements CardService {
      *
      * @param size        조회할 카드 수
      * @param userDetails security 멤버 정보
+     * @param focus       focus 여부
+     * @param type        card type
      * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @Override
-    public Page<PageResponse> getMemberCards(int size, int pageNo, UserDetails userDetails) {
+    public Page<PageResponse> getMemberCards(int size, int pageNo,
+        Optional<FocusTypeEnum> focus, List<CardTypeEnum> type, UserDetails userDetails) {
 
         pageNo = verifyPageNo(pageNo);
 
@@ -62,8 +67,16 @@ public class CardServiceImpl implements CardService {
 
         Member member = getMemberByUserDetail(userDetails);
 
+        List<FocusTypeEnum> focusList = focus.map(Collections::singletonList)
+            .orElseGet(() -> List.of(FocusTypeEnum.ATTENTION, FocusTypeEnum.NON));
+
+        if (type == null || type.isEmpty()) {
+            type = List.of(CardTypeEnum.AFFIRMATION, CardTypeEnum.CUSTOM);
+        }
+
         Page<MemberCard> memberCards = memberCardRepository
-            .findByMemberIdOrderByCreatedAtDesc(member.getId(), pageable);
+            .findByMemberIdAndTypeInAndFocusInOrderByCreatedAtDesc(member.getId(), type,
+                focusList, pageable);
 
         List<PageResponse> pageResponses = separateMemberCardByType(memberCards);
 
@@ -290,6 +303,22 @@ public class CardServiceImpl implements CardService {
         memberCardRepository.save(memberCard);
     }
 
+    @Override
+    public Long postWriteCardCount(CardDto.PostWriteRequest cardWriteReqDto,
+        UserDetails userDetails) {
+
+        Member member = getMemberByUserDetail(userDetails);
+        MemberCard memberCard = memberCardRepository
+            .findByMemberIdAndId(member.getId(), cardWriteReqDto.getMemberCardId())
+            .orElseThrow(
+                () -> new CommonException(ErrorEnum.NOT_FOUND)
+            );
+
+        memberCard.setWriteCount(memberCard.getWriteCount() + cardWriteReqDto.getCount());
+        memberCardRepository.save(memberCard);
+        return memberCard.getWriteCount();
+    }
+
     /**
      * 조회한 memberCard들을 type 별로 분류하여 알맞는 responseDto로 매핑하고 배열에 담아 리턴
      *
@@ -311,6 +340,7 @@ public class CardServiceImpl implements CardService {
                     .setFocus(memberCard.getFocus())
                     .setCardId(affirmationCard.getId())
                     .setMemberCardId(memberCard.getId())
+                    .setLetterId(letter.getId())
                     .setLetterTitle(letter.getTitleByText())
                     .setCreatedDate(letter.getCreatedDate());
 
@@ -322,8 +352,10 @@ public class CardServiceImpl implements CardService {
                 PageResponse pageResponse = cardMapper
                     .toMemberPageResponse(memberCustomCard)
                     .setType(memberCard.getType())
+                    .setFocus(memberCard.getFocus())
                     .setCardId(memberCustomCard.getId())
-                    .setMemberCardId(memberCard.getId());
+                    .setMemberCardId(memberCard.getId())
+                    .setCreatedDate(memberCard.getCreatedAt().toLocalDate());
 
                 pageResponses.add(pageResponse);
             }

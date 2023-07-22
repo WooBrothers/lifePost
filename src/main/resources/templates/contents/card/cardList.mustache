@@ -9,16 +9,20 @@
   <link rel="stylesheet" type="text/css" href="/css/cardListGrid.css">
 </head>
 <body>
-
+{{> layout/navigation}}
 <div id="card-list-space">
   <div id="card-list-btn-space">
     <button class="card-list-btn" id="filter-btn">필터</button>
     <button class="card-list-btn" id="create-card-btn">카드 만들기</button>
     <div id="card-list-btn-space-empty"></div>
     <div id="filter-btn-space">
-      <button class="card-list-btn filter">확언 카드</button>
-      <button class="card-list-btn filter">내가 만든 카드</button>
-      <button class="card-list-btn filter">focus한 카드</button>
+      <button class="card-list-btn filter" id="affirmation-filter-btn" data-on-off="false">확언
+        카드
+      </button>
+      <button class="card-list-btn filter" id="custom-filter-btn" data-on-off="false">내가 만든 카드
+      </button>
+      <button class="card-list-btn filter" id="focus-filter-btn" data-on-off="false">focus한 카드
+      </button>
     </div>
   </div>
 

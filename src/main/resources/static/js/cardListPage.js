@@ -10,5 +10,5 @@ window.onload = async () => {
     const response = await CardListGrid.createCardListSpace(cardListSpace, 1, bindEventToCardListGrid);
 
     const cardListPaginationSpace = document.getElementById("card-list-pagination-space");
-    await CardListGrid.setCardListPagination(response, cardListPaginationSpace, bindPaginationBtnEvent);
+    await CardListGrid.createCardListPagination(response, cardListPaginationSpace, bindPaginationBtnEvent);
 }

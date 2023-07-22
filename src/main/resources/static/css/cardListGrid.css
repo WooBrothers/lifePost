@@ -46,6 +46,7 @@
 .card-action-btn {
   background-color: white;
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  margin-left: 10px;
 }
 
 .card-space {
@@ -105,7 +106,7 @@
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-.card-list-page-btn.current-page {
+.on {
   background-color: lightgoldenrodyellow;
-  border: 2px solid gold;
+  border: 2px solid darkorange;
 }

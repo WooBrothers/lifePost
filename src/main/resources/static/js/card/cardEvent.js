@@ -1,7 +1,6 @@
 export function bindEventToCardGrid() {
     /* card grid 의 이벤트 바인딩 */
 
-
     // 오늘의 카드 그리드 컨테이너를 담을 div -> 카드 보기 클릭 이벤트 바인딩
     const nextBtn = document.getElementById("focus-card-next-btn");
     if (nextBtn) {

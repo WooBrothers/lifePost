@@ -3,6 +3,8 @@ package com.woobros.member.hub.domain.card;
 import com.woobros.member.hub.domain.card.CardDto.PageResponse;
 import com.woobros.member.hub.model.card.CardTypeEnum;
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,10 +13,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -26,53 +30,26 @@ public class CardController {
     private final CardService cardService;
     private static final String SCHEMA = "/api/v1/card/auth/";
 
-//    /**
-//     * 멤버가 소유한 최신 카드를 size 만큼 조회 (리스트 출력용)
-//     *
-//     * @param size        불러올 카드 사이즈
-//     * @param userDetails security 멤버 정보
-//     * @return Page 처리된 카드 정보 (컨텐츠 x)
-//     */
-//
-//    @GetMapping("/auth/member/{size}")
-//    public Page<CardDto.PageResponse> getLatestMemberCards(
-//        @PathVariable int size,
-//        @AuthenticationPrincipal UserDetails userDetails
-//    ) {
-//        return cardService.getLatestMemberCards(size, userDetails);
-//    }
-
     /**
-     * 멤버가 소유한 카드중 전달한 memberCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
+     * 멤버가 소유한 카드중 전달한 페이비 번호 이후의 카드를 size 만큼 조회 (리스트 출력용)
      *
      * @param size        불러올 카드 사이즈
      * @param pageNo      조회할 페이지 번호
      * @param userDetails security 멤버 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
+     * @param focus       focus 한 정보 조회
+     * @param type        카드 종류
+     * @return Page 처리된 카드 정보
      */
     @GetMapping("/auth/member/{pageNo}/{size}")
     public Page<CardDto.PageResponse> getMemberCards(
         @PathVariable int pageNo,
         @PathVariable int size,
+        @RequestParam(value = "focus", required = false) Optional<FocusTypeEnum> focus,
+        @RequestParam(value = "type", required = false) List<CardTypeEnum> type,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return cardService.getMemberCards(size, pageNo, userDetails);
+        return cardService.getMemberCards(size, pageNo, focus, type, userDetails);
     }
-
-//    /**
-//     * 멤버가 만든 최신 카드를 size 만큼 조회 (리스트 출력용)
-//     *
-//     * @param size        불러올 카드 사이즈
-//     * @param userDetails security 유저 정보
-//     * @return Page 처리된 카드 정보 (컨텐츠 x)
-//     */
-//    @GetMapping("/auth/custom/{size}")
-//    public Page<PageResponse> getLatestMemberCustomCards(
-//        @PathVariable int size,
-//        @AuthenticationPrincipal UserDetails userDetails
-//    ) {
-//        return cardService.getLatestMemberCustomCards(size, userDetails);
-//    }
 
     /**
      * 멤버가 만든 카드중 전달한 memberCustomCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
@@ -90,21 +67,6 @@ public class CardController {
     ) {
         return cardService.getMemberCustomCards(size, pageNo, userDetails);
     }
-
-//    /**
-//     * 유저의 최신 focus 카드 size 만큼 조회 (리스트 출력용)
-//     *
-//     * @param size        불러올 카드 사이즈
-//     * @param userDetails security 유저 정보
-//     * @return Page 처리된 카드 정보 (컨텐츠 x)
-//     */
-//    @GetMapping("/auth/focus/{size}")
-//    public Page<PageResponse> getLatestFocusCards(
-//        @PathVariable int size,
-//        @AuthenticationPrincipal UserDetails userDetails
-//    ) {
-//        return cardService.getLatestFocusCards(size, userDetails);
-//    }
 
     /**
      * 멤버가 focus 한 카드중 전달한 memberCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
@@ -210,6 +172,16 @@ public class CardController {
 
         String url = SCHEMA + cardDto.getType() + "/" + cardDto.getId();
         return ResponseEntity.created(URI.create(url)).body("affirmation card created.");
+    }
+
+    @PatchMapping("/auth/write/count")
+    public ResponseEntity<String> postCardWriteCount(
+        @RequestBody CardDto.PostWriteRequest cardWriteReqDto,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        Long count = cardService.postWriteCardCount(cardWriteReqDto, userDetails);
+
+        return ResponseEntity.ok(Long.toString(count));
     }
 
 

@@ -32,6 +32,21 @@ public class IndexController {
         return "/contents/card/cardList";
     }
 
+    @GetMapping("/card/custom/page")
+    public String getCardCustomPage() {
+        return "/contents/card/cardCreate";
+    }
+
+    @GetMapping("/card/write/page")
+    public String getCardWritePage() {
+        return "/contents/card/cardWrite";
+    }
+
+    @GetMapping("/letter/read/page")
+    public String getLetterReadPage() {
+        return "contents/letter/letterRead";
+    }
+
     @GetMapping("/auth/new/token")
     public ResponseEntity<Map<String, String>> getVerifiedToken() {
         /**

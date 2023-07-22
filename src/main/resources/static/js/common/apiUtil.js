@@ -5,7 +5,7 @@ export async function checkAndRefreshToken() {
         let option = {
             method: "GET"
         }
-        await authFetch(url, option);
+        return await authFetch(url, option);
     }
 }
 
@@ -25,10 +25,17 @@ export async function authFetch(url, option) {
     return await fetch(url, option).then(
         response => {
             if (option.method === "GET" && response.status === 200) {
-                return response.json();
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    return response.json();
+                } else {
+                    return response.text();
+                }
             } else if (option.method === "POST" && response.status === 201) {
                 return response.text;
             } else if (option.method === "DELETE" && response.status === 204) {
+                return response.text;
+            } else if (option.method === "PATCH" && response.status === 200) {
                 return response.text;
             } else if (response.status === 401) {
                 // 401 요청 실패 시 리프레쉬 토큰 저장 후 재요청

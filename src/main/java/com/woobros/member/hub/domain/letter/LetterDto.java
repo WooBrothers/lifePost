@@ -1,8 +1,10 @@
 package com.woobros.member.hub.domain.letter;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.woobros.member.hub.model.letter.LetterTagEnum;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -61,9 +63,16 @@ public class LetterDto {
         private final String title;
         private final String letterImage;
         private final String postStampImage;
-        private final String contents;
+        private String contents;
         private final String writer;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private final LocalDate createdDate;
         private final LetterTagEnum tag;
+
+        public ReadResponse setContents(String contents) {
+            this.contents = contents;
+            return this;
+        }
     }
 
     @Getter
@@ -77,6 +86,7 @@ public class LetterDto {
         private final String postStampImage;
         private final String writer;
         private final LetterTagEnum tag;
-        private final String createdDate;
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private final LocalDate createdDate;
     }
 }
