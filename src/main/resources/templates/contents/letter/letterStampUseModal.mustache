@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="/css/letterStampUseModal.css">
+</head>
+<body>
+<div id="letter-stamp-info-space">
+  <div id="modal-header-space">
+    <p id="modal-header-text">놓친 편지 읽기</p>
+    <div id="empty-space"></div>
+    <button id="modal-close-btn">X</button>
+  </div>
+  <div id="info-space" data-stamp={{stamp}}>
+    <br/>
+    <span id="email">
+      {{email}}
+    </span>
+    님이 <br/>보유한 스탬프는
+    <span id="stamp">
+      {{stamp}}
+    </span>
+    개 입니다.
+    <p>스탬프를 사용하여 편지를 읽으시겠습니까?</p>
+    <br/>
+    <p id="stamp-get-info">스탬프는 하루에 한번 확언을 목표치 까지 쓰시면 얻으실 수 있습니다.<br/>
+      오늘의 편지는 스탬프를 사용하지 않습니다.
+    </p>
+    <div class="row-div-flex">
+      <button class="btn" id="go-to-card-list-btn">카드 목록 보기</button>
+      <button class="btn" id="letter-read-btn">편지 읽기</button>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html>

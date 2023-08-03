@@ -1,16 +1,27 @@
 package com.woobros.member.hub.domain.index;
 
+import com.woobros.member.hub.common.exception.CommonException;
+import com.woobros.member.hub.common.exception.ErrorEnum;
+import com.woobros.member.hub.model.member.Member;
+import com.woobros.member.hub.model.member.MemberRepository;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
+@RequiredArgsConstructor
 @Controller
 public class IndexController {
 
+    /* beans */
+    private final MemberRepository memberRepository;
 
     @GetMapping("/")
     public String index() {
@@ -42,9 +53,30 @@ public class IndexController {
         return "/contents/card/cardWrite";
     }
 
+    @GetMapping("/letter/list/page")
+    public String getLetterListPage() {
+        return "contents/letter/letterList";
+    }
+
     @GetMapping("/letter/read/page")
     public String getLetterReadPage() {
         return "contents/letter/letterRead";
+    }
+
+    @GetMapping("/api/v1/letter/auth/stamp/popup")
+    public String getStampUsePopUpPage(Model model,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        Member member = memberRepository
+            .findByEmail(userDetails.getUsername())
+            .orElseThrow(() ->
+                new CommonException(ErrorEnum.NOT_FOUND)
+            );
+
+        model.addAttribute("email", member.getEmail());
+        model.addAttribute("stamp", member.getStampCount());
+
+        return "contents/letter/letterStampUseModal";
     }
 
     @GetMapping("/auth/new/token")
@@ -65,7 +97,7 @@ public class IndexController {
          * 7. 만료 되었을 경우 refresh token을 이용해 accessToken 최신화
          * 8. 이후 api call 시 401 문제 안나도록 세팅
          * */
-        log.debug("getVerifiedToken called.");
+        log.info("getVerifiedToken called.");
 
         Map<String, String> result = new HashMap<>();
         result.put("result", "ok");

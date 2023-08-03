@@ -4,6 +4,8 @@ import {CardListGrid} from "./cardListGrid.js";
 import {DivTag, ModalTag} from "../../common/tagUtil.js";
 import {bindEventToCardCreatePage} from "../cardCreate/cardCreateEvent.js";
 import {bindInputEventTextarea} from "../cardWrite/cardWriteEvent.js";
+import {createPagination} from "../../pagination/pagination.js";
+import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
 
 export function bindEventToCardListGrid() {
     const filerBtn = document.getElementById("filter-btn");
@@ -77,42 +79,6 @@ async function clickBookmarkBtn() {
     });
 }
 
-export function bindPaginationBtnEvent() {
-    const pageBtnSpace = document.getElementById("page-btn-space");
-    const paginationBtnList = pageBtnSpace.childNodes;
-    paginationBtnList.forEach(btn => {
-        btn.addEventListener("click", clickPaginationBtn);
-    });
-}
-
-async function clickPaginationBtn() {
-    const currentPage = document.querySelector(".card-list-page-btn.on");
-    if (this === currentPage) {
-        return;
-    }
-
-    const cardListSpace = document.getElementById("card-list-space");
-    const cardSpace = document.querySelectorAll(".card-space");
-
-    cardSpace.forEach(card => {
-        cardListSpace.removeChild(card);
-    })
-
-    const pageNo = this.dataset.pageNo;
-    const response = await CardListGrid.createCardListSpace(cardListSpace, pageNo, bindEventToCardListGrid);
-
-    currentPage.classList.remove("btn-on");
-    this.dataset.pageNo = response.pageable.pageNumber + 1;
-    this.classList.add("btn-on");
-
-    const cardListPaginationSpace = document.getElementById("card-list-pagination-space");
-
-    if (this.classList.contains("next-btn") || this.classList.contains("before-btn")) {
-        cardListPaginationSpace.replaceChildren();
-        CardListGrid.createCardListPagination(response, cardListPaginationSpace, bindPaginationBtnEvent);
-    }
-}
-
 async function filterBtnClick() {
 
     if (this.dataset.onOff === "true") {
@@ -128,9 +94,10 @@ async function filterBtnClick() {
 
     const response = await CardListGrid.createCardListSpace(cardListSpace, 1, bindEventToCardListGrid);
 
-    const cardListPaginationSpace = document.getElementById("card-list-pagination-space");
+    const cardListPaginationSpace = document.getElementById("pagination-space");
     cardListPaginationSpace.replaceChildren();
-    await CardListGrid.createCardListPagination(response, cardListPaginationSpace, bindPaginationBtnEvent);
+    await createPagination(response, cardListPaginationSpace);
+    bindPaginationBtnEvent("card-list-space", "card-space", CardListGrid.createCardListSpace, bindEventToCardListGrid);
 }
 
 async function createCardBtnClick() {
@@ -139,17 +106,24 @@ async function createCardBtnClick() {
 
     const modal = new ModalTag()
         .setId("modal-parent")
+        .setStyle([{
+            position: "fixed",
+            top: 0,
+            left: 0,
+        }])
         .addInnerHTML(
             new DivTag()
                 .setId("modal-content")
                 .setClassName("modal")
                 .setStyle([{
-                    height: "96%",
+                    height: "90%",
                     width: "60%",
                     display: "block",
                     backgroundColor: "white",
                     zIndex: 1001,
-                    margin: "1% 20% 1% 20%"
+                    margin: "1% 20% 1% 20%",
+                    position: "fixed",
+                    top: "5%",
                 }])
         ).getTag();
 
@@ -177,17 +151,24 @@ async function writeCardBtnClick() {
 
     const modal = new ModalTag()
         .setId("modal-parent")
+        .setStyle([{
+            position: "fixed",
+            top: 0,
+            left: 0,
+        }])
         .addInnerHTML(
             new DivTag()
                 .setId("modal-content")
                 .setClassName("modal")
                 .setStyle([{
-                    height: "96%",
+                    height: "90%",
                     width: "60%",
                     display: "block",
                     backgroundColor: "white",
                     zIndex: 1001,
-                    margin: "1% 20% 1% 20%"
+                    margin: "1% 20% 1% 20%",
+                    position: "fixed",
+                    top: "5%",
                 }])
         ).getTag();
 
@@ -208,7 +189,7 @@ async function writeCardBtnClick() {
             modal.dataset.memberCardId = cardParent.dataset.memberCardId;
 
             bindInputEventTextarea();
-        })
+        });
 }
 
 function clickReadLetter() {

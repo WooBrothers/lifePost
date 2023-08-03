@@ -1,6 +1,11 @@
 package com.woobros.member.hub.domain.letter;
 
+import com.woobros.member.hub.common.exception.CommonException;
+import com.woobros.member.hub.common.exception.ErrorEnum;
+import com.woobros.member.hub.domain.card.FocusTypeEnum;
+import com.woobros.member.hub.domain.letter.LetterDto.PageResponse;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -30,12 +36,28 @@ public class LetterController {
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
 
-    @GetMapping("/open/page/{lastLetterId}/{size}")
-    public Page<LetterDto.PageResponse> getLettersPage(
+    @GetMapping("/auth/member/{pageNo}/{size}")
+    public Page<LetterDto.PageResponse> getLetters(
+        @PathVariable int pageNo,
         @PathVariable int size,
-        @PathVariable Long lastLetterId) {
-
-        return letterService.getLettersPage(lastLetterId, size);
+        @RequestParam(value = "type") List<LetterTypeEnum> type,
+        @RequestParam(value = "focusType") List<FocusTypeEnum> focusTypeList,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        Page<PageResponse> responses;
+        // 소지 목록 조회 이거나 focus한 편지 조회시 getMyLetterList
+        if ((type.size() == 1 && type.contains(LetterTypeEnum.MY_LETTER)) || (
+            focusTypeList.size() == 1 && focusTypeList.contains(FocusTypeEnum.ATTENTION))) {
+            responses = letterService.getMyLetterList(pageNo, size, focusTypeList, userDetails);
+        } else if (type.size() == 1 && type.contains(LetterTypeEnum.MISS)) {
+            responses = letterService.getMissLetterList(pageNo, size, userDetails);
+        } else if (type.size() == 2 && type.contains(LetterTypeEnum.MY_LETTER) && type
+            .contains(LetterTypeEnum.MISS) && focusTypeList.size() == 2) {
+            responses = letterService.getAllLetterList(pageNo, size, userDetails);
+        } else {
+            throw new CommonException(ErrorEnum.LETTER_REQUEST_INVALID);
+        }
+        return responses;
     }
 
     @GetMapping("/auth/{letterId}")
@@ -55,39 +77,6 @@ public class LetterController {
         return ResponseEntity.ok(letterService.getLetterContentsByLetterId(letterId, userDetails));
     }
 
-    @GetMapping("/auth/page/{size}")
-    public Page<LetterDto.PageResponse> getHaveLatestLetterPage(
-        @PathVariable int size,
-        @AuthenticationPrincipal UserDetails userDetails) {
-
-        return letterService.getHaveLatestLetterPage(size, userDetails);
-    }
-
-    @GetMapping("/auth/page/{size}/{letterId}")
-    public Page<LetterDto.PageResponse> getHaveLetterPage(
-        @PathVariable Long letterId, @PathVariable int size,
-        @AuthenticationPrincipal UserDetails userDetails) {
-
-        return letterService.getHaveLetterPage(letterId, size, userDetails);
-    }
-
-    @GetMapping("/auth/page/no-have/{size}")
-    public Page<LetterDto.PageResponse> getDoesNotHaveLatestLetterPage(
-        @PathVariable int size,
-        @AuthenticationPrincipal UserDetails userDetails) {
-
-        return letterService.getDoesNotHaveLatestLetterPage(size, userDetails);
-    }
-
-    @GetMapping("/auth/page/no-have/{size}/{letterId}")
-    public Page<LetterDto.PageResponse> getDoesNotHaveLetterPage(
-        @PathVariable int size,
-        @PathVariable Long letterId,
-        @AuthenticationPrincipal UserDetails userDetails) {
-
-        return letterService.getDoesNotHaveLetterPage(letterId, size, userDetails);
-    }
-
     /** backoffice */
 
     /**
@@ -103,4 +92,16 @@ public class LetterController {
         String url = "/api/v1/letter/auth/" + readResponse.getId();
         return ResponseEntity.created(URI.create(url)).body("letter is created.");
     }
+
+    @PostMapping("/auth/focus")
+    public ResponseEntity<String> postFocusMemberLetter(
+        @Valid @RequestBody LetterDto.PostFocusRequest letterReqDto,
+        @AuthenticationPrincipal UserDetails userDetails) {
+        letterService.postFocusLetter(letterReqDto, userDetails);
+
+        return ResponseEntity
+            .created(URI.create("/api/v1/letter/auth/" + letterReqDto.getLetterId()))
+            .body("member letter is focus request success.");
+    }
+
 }

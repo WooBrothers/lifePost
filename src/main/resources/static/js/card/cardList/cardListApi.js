@@ -22,4 +22,8 @@ export class CardListApi {
 
         return await authFetch(url, option);
     }
+
+    static async postFocusLetter() {
+        
+    }
 }

@@ -23,7 +23,7 @@ export async function authFetch(url, option) {
     option.headers["Content-Type"] = "application/json";
 
     return await fetch(url, option).then(
-        response => {
+        async response => {
             if (option.method === "GET" && response.status === 200) {
                 const contentType = response.headers.get("content-type");
                 if (contentType && contentType.includes("application/json")) {
@@ -39,14 +39,12 @@ export async function authFetch(url, option) {
                 return response.text;
             } else if (response.status === 401) {
                 // 401 요청 실패 시 리프레쉬 토큰 저장 후 재요청
-                option.headers["Authorization-refresh"] = refreshToken;
-                fetch(url, option).then(
-                    response => {
+                option.headers = {"Authorization-refresh": refreshToken};
+                await fetch(url, option).then(
+                    async response => {
                         if (response.ok || response.status === 201) {
-
-                            option.headers = {"Authorization": getAccessToken()};
-
-                            fetch(url, option).then(
+                            option.headers = {"Authorization": tokenPrefix + getAccessToken()};
+                            await fetch(url, option).then(
                                 response => {
                                     if (response.ok || response.status === 201) {
                                         return response.json();

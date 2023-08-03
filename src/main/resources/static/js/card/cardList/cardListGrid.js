@@ -44,6 +44,20 @@ export class CardListGrid {
 
     static createCard(response, cardListSpace) {
 
+        const preEmptyContentDiv = document.querySelector(".empty-content");
+        if (preEmptyContentDiv) {
+            preEmptyContentDiv.remove();
+        }
+
+        if (response.content.length === 0) {
+            const emptyContentDiv = new DivTag()
+                .setClassName("empty-content")
+                .setStyle()
+                .setInnerHTML("카드가 없습니다. 편지을 읽거나 직접 만들어 보세요!")
+            cardListSpace.appendChild(emptyContentDiv.getTag());
+            return;
+        }
+
         response.content.forEach(content => {
             const cardSpace = new DivTag()
                 .setClassName(CardListGrid.cardSpaceClass)
@@ -158,70 +172,5 @@ export class CardListGrid {
         return new DivTag()
             .setStyle([{display: "flex", alignSelf: "stretch", margin: "auto"}])
             .setInnerHTML(cardActionBtnList);
-    }
-
-    static createCardListPagination(response, cardListPaginationSpace, event) {
-        const currentPageNo = response.pageable.pageNumber + 1;
-        const totalPageCount = response.totalPages;
-
-        const pageSection = Math.floor(currentPageNo / 5);
-        const pageBtnClassName = "card-list-page-btn";
-        let lastPageNo = 0;
-        let firstPageNo = pageSection * 5 + 1;
-
-        const pageBtnSpace = new DivTag()
-            .setId("page-btn-space")
-            .getTag();
-
-        for (let pageNo = pageSection * 5 + 1; CardListGrid.isTurnedTotalPage(pageNo, totalPageCount, pageSection); pageNo++) {
-            CardListGrid.createPageBtn(pageNo, currentPageNo, pageBtnClassName, pageBtnSpace);
-            lastPageNo = pageNo;
-        }
-
-        CardListGrid.createNextPageBtn(lastPageNo, totalPageCount, pageBtnClassName, pageBtnSpace);
-        CardListGrid.createPreviousBtn(pageSection, firstPageNo, pageBtnClassName, pageBtnSpace);
-
-        cardListPaginationSpace.appendChild(pageBtnSpace);
-        event();
-    }
-
-    static isTurnedTotalPage(pageNo, totalPageCount, pageSection) {
-        return pageNo <= totalPageCount && pageNo < pageSection * 5 + 6;
-    }
-
-    static createPageBtn(pageNo, currentPageNo, pageBtnClassName, pageBtnSpace) {
-        let selectedPage = pageNo === currentPageNo ? " on" : "";
-
-        const pageBtn = new ButtonTag()
-            .setClassName(pageBtnClassName + selectedPage)
-            .setDataset([{pageNo: pageNo}])
-            .setInnerHTML(pageNo)
-            .getTag();
-
-        pageBtnSpace.appendChild(pageBtn);
-    }
-
-    static createNextPageBtn(lastPageNo, totalPageCount, pageBtnClassName, pageBtnSpace) {
-        // 즉 현재 페이지 섹션의 마지막 페이지 번호가 페이지 토탈보다 작으면 넥스트 버튼 출력
-        if (lastPageNo < totalPageCount) {
-            const nextPageBtn = new ButtonTag()
-                .setClassName(pageBtnClassName + " next-btn")
-                .setDataset([{pageNo: lastPageNo + 1}])
-                .setInnerHTML(">")
-                .getTag();
-            pageBtnSpace.appendChild(nextPageBtn);
-        }
-    }
-
-    static createPreviousBtn(pageSection, firstPageNo, pageBtnClassName, pageBtnSpace) {
-        // 5보다 큰 섹션이라면 이전 버튼 추가
-        if (pageSection > 0) {
-            const nextPageBtn = new ButtonTag()
-                .setClassName(pageBtnClassName + " before-btn")
-                .setDataset([{pageNo: firstPageNo - 5}])
-                .setInnerHTML("<")
-                .getTag();
-            pageBtnSpace.insertBefore(nextPageBtn, pageBtnSpace.firstChild);
-        }
     }
 }

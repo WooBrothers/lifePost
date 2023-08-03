@@ -27,10 +27,10 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private String accessHeader;
 
     @Value("${jwt.access.expiration}")
-    private int accessTokenExpirationPeriod;
+    private Long accessTokenExpirationPeriod;
 
     @Value("${jwt.refresh.expiration}")
-    private int refreshTokenExpirationPeriod;
+    private Long refreshTokenExpirationPeriod;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -63,12 +63,12 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         // cookie에 access, refresh token 세팅
         Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
         accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(accessTokenExpirationPeriod);
+        accessTokenCookie.setMaxAge(Math.toIntExact(accessTokenExpirationPeriod));
         response.addCookie(accessTokenCookie);
 
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(refreshTokenExpirationPeriod);
+        refreshTokenCookie.setMaxAge(Math.toIntExact(refreshTokenExpirationPeriod));
         response.addCookie(refreshTokenCookie);
 
         response.sendRedirect("/");

@@ -1,9 +1,11 @@
 package com.woobros.member.hub.domain.letter;
 
+import com.woobros.member.hub.common.Common;
 import com.woobros.member.hub.common.exception.CommonException;
 import com.woobros.member.hub.common.exception.ErrorEnum;
 import com.woobros.member.hub.domain.card.FocusTypeEnum;
 import com.woobros.member.hub.domain.letter.LetterDto.PageResponse;
+import com.woobros.member.hub.domain.letter.LetterDto.PostFocusRequest;
 import com.woobros.member.hub.model.card.CardTypeEnum;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;
@@ -19,7 +21,10 @@ import com.woobros.member.hub.model.member_letter.MemberLetterRepository;
 import com.woobros.member.hub.model.stamp.Stamp;
 import com.woobros.member.hub.model.stamp.StampRepository;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -71,105 +77,113 @@ public class LetterServiceImpl implements LetterService {
         Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc().orElseThrow(
             () -> new CommonException(ErrorEnum.NOT_FOUND)
         );
-        StringBuilder sb = new StringBuilder(latestLetter.getContents());
-        sb.setLength(80);
 
         LetterDto.ReadResponse response = letterMapper.toResponseDto(latestLetter);
-        return response.setContents(sb.toString());
+        response.setContents(response.getContentWithOutTag());
+        return response.setLimitedContents(response.getContents());
     }
 
-    /**
-     * [open] 편지 리스트 조회 전달받은 letterId 이후의 size 만큼의 편지 정보 조회한다.
-     *
-     * @param lastLetterId - 해당 편지(미포함) 아이디 이후에 편지들 조회하기 위해 필요
-     * @param size         - 가져올 편지의 수
-     * @return Page 에 담긴 편지 리스트 리턴
-     */
     @Override
-    public Page<LetterDto.PageResponse> getLettersPage(Long lastLetterId, int size) {
+    public Page<LetterDto.PageResponse> getMyLetterList(int pageNo, int size,
+        List<FocusTypeEnum> focusTypeList, UserDetails userDetails) {
 
-        PageRequest pageRequest = PageRequest.of(0, size);
+        pageNo = Common.verifyPageNo(pageNo);
 
-        Page<Letter> lettersPage = letterRepository
-            .findByIdLessThanOrderByIdDesc(lastLetterId, pageRequest);
+        Pageable pageable = PageRequest.of(pageNo, size);
 
-        return new PageImpl<>(
-            lettersPage.stream()
-                .map(letterMapper::toPageResponseDto)
-                .collect(Collectors.toList())
+        Member member = getMemberByUserDetail(userDetails);
+
+        // 해당 repo 메소드 > entityGraph 처리 : 즉시 로딩 (n+1해결)
+        Page<MemberLetter> memberLetters = memberLetterRepository
+            .findByMemberIdAndFocusInOrderByCreatedAtDesc(
+                member.getId(), focusTypeList, pageable);
+
+        List<PageResponse> pageResponses = new ArrayList<>();
+        memberLetters.forEach(memberLetter -> {
+                Letter letter = memberLetter.getLetter();
+                PageResponse pageResponse = letterMapper.toPageResponseDto(letter)
+                    .setLimitedContent(letter.getContents())
+                    .setMemberLetterId(memberLetter.getId())
+                    .setFocusType(memberLetter.getFocus());
+                pageResponses.add(pageResponse);
+            }
         );
+
+        return new PageImpl<>(pageResponses, pageable, memberLetters.getTotalElements());
     }
 
     @Override
-    public Page<PageResponse> getHaveLatestLetterPage(int size, UserDetails userDetails) {
-        PageRequest pageRequest = PageRequest.of(0, size);
-
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
-
-        Page<MemberLetter> memberLetterPage = memberLetterRepository
-            .findByMemberIdOrderByLetterIdDesc(member.getId(), pageRequest);
-
-        return new PageImpl<>(
-            memberLetterPage.stream()
-                .map(MemberLetter::getLetter)
-                .map(letterMapper::toPageResponseDto)
-                .collect(Collectors.toList()));
-    }
-
-    @Override
-    public Page<LetterDto.PageResponse> getHaveLetterPage(Long lastLetterId, int size,
+    public Page<PageResponse> getMissLetterList(int pageNo, int size,
         UserDetails userDetails) {
+        pageNo = Common.verifyPageNo(pageNo);
 
-        PageRequest pageRequest = PageRequest.of(0, size);
+        Pageable pageable = PageRequest.of(pageNo, size);
 
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+        Member member = getMemberByUserDetail(userDetails);
 
-        Page<MemberLetter> memberLetterPage = memberLetterRepository
-            .findByMemberIdAndLetterIdLessThanOrderByLetterIdDesc(
-                member.getId(), lastLetterId, pageRequest);
+        Page<Letter> letters = letterRepository.findMissLetter(member.getId(), pageable);
 
-        return new PageImpl<>(
-            memberLetterPage.stream()
-                .map(MemberLetter::getLetter)
-                .map(letterMapper::toPageResponseDto)
-                .collect(Collectors.toList()));
+        List<PageResponse> pageResponses = getPageResponse(letters);
+
+        return new PageImpl<>(pageResponses, pageable, letters.getTotalElements());
     }
 
     @Override
-    public Page<PageResponse> getDoesNotHaveLatestLetterPage(int size, UserDetails userDetails) {
-
-        PageRequest pageRequest = PageRequest.of(0, size);
-
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
-
-        Page<Letter> letterPage = letterRepository
-            .findDoesNotHaveLastLetter(member.getId(), pageRequest);
-
-        return new PageImpl<>(
-            letterPage.stream()
-                .map(letterMapper::toPageResponseDto)
-                .collect(Collectors.toList()));
-    }
-
-    @Override
-    public Page<PageResponse> getDoesNotHaveLetterPage(Long lastLetterId, int size,
+    public Page<PageResponse> getAllLetterList(int pageNo, int size,
         UserDetails userDetails) {
+        pageNo = Common.verifyPageNo(pageNo);
 
-        PageRequest pageRequest = PageRequest.of(0, size);
+        Member member = getMemberByUserDetail(userDetails);
 
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
+        Pageable pageable = PageRequest.of(pageNo, size);
+
+        Page<Letter> letters = letterRepository.findAllByOrderByIdDesc(pageable);
+
+        List<Long> letterIds = letters.stream().map(Letter::getId)
+            .collect(Collectors.toList());
+
+        List<MemberLetter> memberLetters = memberLetterRepository
+            .findByMemberIdAndLetterIdInOrderByLetterIdDesc(
+                member.getId(), letterIds);
+
+        Map<Long, Map<String, Object>> memberLetterMap = new HashMap<>();
+
+        memberLetters.forEach(memberLetter -> {
+            Long letterId = memberLetter.getLetter().getId();
+
+            Map<String, Object> memberLetterInfoMap = new HashMap<>();
+            memberLetterInfoMap.put("memberLetterId", memberLetter.getId());
+            memberLetterInfoMap.put("focusType", memberLetter.getFocus());
+
+            memberLetterMap.put(letterId, memberLetterInfoMap);
+        });
+
+        List<PageResponse> pageResponses = getPageResponse(letters);
+
+        pageResponses.forEach(pageResponse -> {
+            if (memberLetterMap.containsKey(pageResponse.getId())) {
+                pageResponse
+                    .setMemberLetterId(
+                        (Long) memberLetterMap.get(pageResponse.getId()).get("memberLetterId"))
+                    .setFocusType(
+                        (FocusTypeEnum) memberLetterMap.get(pageResponse.getId()).get("focusType"));
+            }
+        });
+
+        return new PageImpl<>(pageResponses, pageable, letters.getTotalElements());
+    }
+
+    @Override
+    public void postFocusLetter(PostFocusRequest focusCardRequest, UserDetails userDetails) {
+        Member member = getMemberByUserDetail(userDetails);
+
+        MemberLetter memberLetter = memberLetterRepository.findByMemberIdAndLetterId(member.getId(),
+            focusCardRequest.getLetterId())
+            .filter(
+                ml -> ml.getId().equals(focusCardRequest.getMemberLetterId()))
             .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
 
-        Page<Letter> letterPage = letterRepository
-            .findDoesNotHaveLetter(member.getId(), lastLetterId, pageRequest);
-
-        return new PageImpl<>(
-            letterPage.stream()
-                .map(letterMapper::toPageResponseDto)
-                .collect(Collectors.toList()));
+        memberLetter.focusLetter(focusCardRequest.getFocusType());
     }
 
     /**
@@ -207,8 +221,7 @@ public class LetterServiceImpl implements LetterService {
     public LetterDto.ReadResponse getLetterContentsByLetterId(Long letterId,
         UserDetails userDetails) {
 
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.STAMP_NOT_ENOUGH));
+        Member member = getMemberByUserDetail(userDetails);
 
         Letter letter = letterRepository.findById(letterId)
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
@@ -242,6 +255,7 @@ public class LetterServiceImpl implements LetterService {
             .save(MemberLetter.builder()
                 .member(member)
                 .letter(letter)
+                .focus(FocusTypeEnum.NON)
                 .build());
 
         // 확언 카드는 편지 하나에 여러개 일 수 있기에 순회하여 멤버 소유 카드에 저장
@@ -290,5 +304,30 @@ public class LetterServiceImpl implements LetterService {
             .memberLetter(memberLetter)
             .action(-1)
             .build());
+    }
+
+    /**
+     * userDetail 을 이용해 유저 조회
+     *
+     * @param userDetails security 멤버 정보
+     * @return member entity
+     */
+    private Member getMemberByUserDetail(UserDetails userDetails) {
+        return memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
+            new CommonException(ErrorEnum.NOT_FOUND));
+    }
+
+
+    private List<PageResponse> getPageResponse(Page<Letter> letters) {
+        List<PageResponse> pageResponses = new ArrayList<>();
+
+        letters.forEach(letter -> {
+                PageResponse pageResponse = letterMapper.toPageResponseDto(letter)
+                    .setLimitedContent(letter.getContents());
+                pageResponses.add(pageResponse);
+            }
+        );
+
+        return pageResponses;
     }
 }

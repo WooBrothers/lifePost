@@ -31,14 +31,14 @@ public class CardController {
     private static final String SCHEMA = "/api/v1/card/auth/";
 
     /**
-     * 멤버가 소유한 카드중 전달한 페이비 번호 이후의 카드를 size 만큼 조회 (리스트 출력용)
+     * 멤버가 소유한 카드중 전달한 페이 번호 이후의 카드를 size 만큼 조회 (리스트 출력용)
      *
      * @param size        불러올 카드 사이즈
      * @param pageNo      조회할 페이지 번호
      * @param userDetails security 멤버 정보
      * @param focus       focus 한 정보 조회
      * @param type        카드 종류
-     * @return Page 처리된 카드 정보
+     * @return Page 처리된 카드 정보지
      */
     @GetMapping("/auth/member/{pageNo}/{size}")
     public Page<CardDto.PageResponse> getMemberCards(

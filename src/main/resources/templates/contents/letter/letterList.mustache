@@ -2,18 +2,41 @@
 
 <html lang="ko">
 <head>
-  <title>card list</title>
+  <title>letter list</title>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
-  <link rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <!--  <link rel="stylesheet" type="text/css" href="/css/letterGrid.css">-->
+  <link rel="stylesheet" type="text/css" href="/css/letterList.css">
 </head>
 <body>
 
 {{> layout/navigation}}
-<!--<script type="module" src="/js/indexPage.js"></script>-->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<div id="letter-parent-space">
+  <div id="letter-list-btn-space">
+    <div class="row-flex-div">
+      <div class="spacer"></div>
+      <button class="letter-list-btn filter" id="filter-btn">필터</button>
+    </div>
+    <div class="row-flex-div" id="act-btn-space">
+      <div class="spacer"></div>
+      <button class="letter-list-btn filter act-btn" id="my-letter-filter-btn" data-on-off="false">
+        소지한
+        편지
+      </button>
+      <button class="letter-list-btn filter act-btn" id="miss-letter-filter-btn"
+              data-on-off="false">놓친 편지
+      </button>
+      <button class="letter-list-btn filter act-btn" id="focus-letter-filter-btn"
+              data-on-off="false">focus한
+        편지
+      </button>
+    </div>
+  </div>
+  <div id="letter-list-space"></div>
+</div>
+
+<!--<div id="letter-list-pagination-space"></div>-->
+{{> layout/pagination}}
+
+<script type="module" src="/js/letterListPage.js"></script>
 
 </body>
 </html>

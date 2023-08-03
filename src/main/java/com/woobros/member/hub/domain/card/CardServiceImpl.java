@@ -1,5 +1,6 @@
 package com.woobros.member.hub.domain.card;
 
+import com.woobros.member.hub.common.Common;
 import com.woobros.member.hub.common.exception.CommonException;
 import com.woobros.member.hub.common.exception.ErrorEnum;
 import com.woobros.member.hub.domain.card.CardDto.PageResponse;
@@ -61,7 +62,7 @@ public class CardServiceImpl implements CardService {
     public Page<PageResponse> getMemberCards(int size, int pageNo,
         Optional<FocusTypeEnum> focus, List<CardTypeEnum> type, UserDetails userDetails) {
 
-        pageNo = verifyPageNo(pageNo);
+        pageNo = Common.verifyPageNo(pageNo);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
@@ -94,7 +95,7 @@ public class CardServiceImpl implements CardService {
     public Page<CardDto.PageResponse> getMemberCustomCards(int size, int pageNo,
         UserDetails userDetails) {
 
-        pageNo = verifyPageNo(pageNo);
+        pageNo = Common.verifyPageNo(pageNo);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
@@ -126,7 +127,7 @@ public class CardServiceImpl implements CardService {
     @Override
     public Page<PageResponse> getFocusCards(int size, int pageNo, UserDetails userDetails) {
 
-        pageNo = verifyPageNo(pageNo);
+        pageNo = Common.verifyPageNo(pageNo);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
@@ -372,14 +373,5 @@ public class CardServiceImpl implements CardService {
     private Member getMemberByUserDetail(UserDetails userDetails) {
         return memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
             new CommonException(ErrorEnum.NOT_FOUND));
-    }
-
-    private int verifyPageNo(int pageNo) {
-        if (pageNo > 0) {
-            pageNo--;
-        } else if (pageNo < 0) {
-            throw new CommonException(ErrorEnum.PAGE_NO_INVALID);
-        }
-        return pageNo;
     }
 }

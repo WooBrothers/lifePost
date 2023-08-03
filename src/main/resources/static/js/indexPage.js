@@ -9,7 +9,7 @@ window.onload = async () => {
 
     /* cookie - token 확인 -> 토큰 있을 시 검증하고 만료 됬다면 refreshToken으로 재발급 */
     // server에서 쿠키에 새 토큰을 삽입하기 전까지 동기 처리가 필요함
-    checkAndRefreshToken();
+    await checkAndRefreshToken();
 
     /* view 생성 */
     const todayLetterGrid = document.getElementById("today-letter-grid");
@@ -23,4 +23,5 @@ window.onload = async () => {
     const todayLetterId = todayLetterGrid.children[0].dataset.id;
     const letterGridContainers = document.getElementById("letter-grid-containers");
     await LetterGrid.createGridByLetterId(todayLetterId, letterGridContainers);
+
 }
