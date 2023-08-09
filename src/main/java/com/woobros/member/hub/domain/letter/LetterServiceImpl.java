@@ -52,20 +52,6 @@ public class LetterServiceImpl implements LetterService {
 
     private final LetterMapper letterMapper;
 
-
-    /**
-     * [admin] 편지 쓰기
-     *
-     * @param letterReqDto - 작성한 편지의 정보를 담은 dto
-     */
-    @Override
-    public LetterDto.ReadResponse postLetter(LetterDto.PostRequest letterReqDto) {
-
-        Letter letter = letterMapper.toEntity(letterReqDto);
-
-        return letterMapper.toResponseDto(letterRepository.save(letter));
-    }
-
     /**
      * [open] 가장 최근의 편지 정보 조회
      *
@@ -74,7 +60,7 @@ public class LetterServiceImpl implements LetterService {
     @Override
     public LetterDto.ReadResponse getLatestLetter() {
 
-        Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc().orElseThrow(
+        Letter latestLetter = letterRepository.findByPostDate(LocalDate.now()).orElseThrow(
             () -> new CommonException(ErrorEnum.NOT_FOUND)
         );
 
@@ -187,31 +173,6 @@ public class LetterServiceImpl implements LetterService {
     }
 
     /**
-     * [auth] 오늘의 편지 요청 시 처음이면 저장 + 편지 내용 조회
-     *
-     * @param letterId    - 읽으려는 편지의 아이디
-     * @param userDetails - 요청한 멤버 정보
-     */
-    @Override
-    public LetterDto.ReadResponse getTodayLetterContentsByLetterId(Long letterId,
-        UserDetails userDetails) {
-
-        Member member = memberRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
-
-        Letter latestLetter = letterRepository.findTopByOrderByCreatedAtDesc()
-            .filter(letter -> letter.getId().equals(letterId))
-            .filter(letter -> letter.getCreatedDate().equals(LocalDate.now()))
-            .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
-
-        if (doesNotHaveLetterForMember(member.getId(), latestLetter.getId())) {
-            saveLetterAndCardToMember(member, latestLetter);
-        }
-
-        return letterMapper.toResponseDto(latestLetter);
-    }
-
-    /**
      * [auth] 오늘의 편지가 아닐 때 우표를 사용해서 편지, 카드 획득 + 편지 내용 조회
      *
      * @param letterId    - 읽으려는 편지의 아이디
@@ -227,7 +188,7 @@ public class LetterServiceImpl implements LetterService {
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
 
         if (doesNotHaveLetterForMember(member.getId(), letter.getId())) {
-            if (letter.getCreatedDate().equals(LocalDate.now())) {
+            if (letter.getPostDate().equals(LocalDate.now())) {
                 saveLetterAndCardToMember(member, letter);
                 saveMemberStampUsed(member, letter);
             } else if (member.getStampCount() > 0) {

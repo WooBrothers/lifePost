@@ -16,6 +16,7 @@ values (1, 'CUSTOM', null, null, 1, 'NON', now(), now()),
        (1, 'CUSTOM', null, null, 12, 'NON', now() - INTERVAL '11' DAY, now() - INTERVAL '11' DAY),
        (1, 'CUSTOM', null, null, 13, 'NON', now() - INTERVAL '12' DAY, now() - INTERVAL '12' DAY)
 ;
+commit
 
 
 

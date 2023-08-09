@@ -107,7 +107,7 @@ public class CardDto {
         private String letterTitle;
         private Long letterId;
         @JsonFormat(pattern = "yyyy-MM-dd")
-        private LocalDate createdDate;
+        private LocalDate postDate;
         private final String contents;
         private final String tag;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -145,8 +145,8 @@ public class CardDto {
             return this;
         }
 
-        public PageResponse setCreatedDate(LocalDate createdDate) {
-            this.createdDate = createdDate;
+        public PageResponse setPostDate(LocalDate postDate) {
+            this.postDate = postDate;
             return this;
         }
     }

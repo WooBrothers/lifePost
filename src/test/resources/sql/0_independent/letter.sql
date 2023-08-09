@@ -1,5 +1,5 @@
 /* 편지 삽입 */
-insert into letter (title, contents, writer, tag, created_date, created_at, updated_at)
+insert into letter (title, contents, writer, tag, post_date, created_at, updated_at)
 values ('test1', 'test1', 'wk', 'TEST', CURDATE() - INTERVAL '14' DAY, now() - INTERVAL '14' DAY,
         now() - INTERVAL '14' DAY),
        ('test2', 'test2', 'wk', 'TEST', CURDATE() - INTERVAL '13' DAY, now() - INTERVAL '13' DAY,

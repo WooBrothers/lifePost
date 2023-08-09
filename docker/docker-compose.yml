@@ -6,6 +6,8 @@ services:
     container_name: woobros-member-db
     restart: always
     platform: linux/arm64/v8
+    volumes:
+      - /Users/gimgyeong-u/IdeaProjects/mysqlData:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: 2023
       MYSQL_DATABASE: member

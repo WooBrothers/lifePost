@@ -17,6 +17,6 @@ public interface LetterMapper {
 
     LetterDto.PostRequest toRequestDto(Letter letter);
 
-    @Mapping(source = "letter.createdDate", target = "createdDate", dateFormat = "yyyy-MM-dd")
+    @Mapping(source = "letter.postDate", target = "postDate", dateFormat = "yyyy-MM-dd")
     LetterDto.PageResponse toPageResponseDto(Letter letter);
 }

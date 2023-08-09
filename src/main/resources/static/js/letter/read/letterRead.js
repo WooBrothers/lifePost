@@ -6,7 +6,7 @@ function setLetterInfo() {
     LetterApi.getLetterContentById(letterId).then(res => {
         const letterImage = res.letterImage;
         const title = res.title;
-        const createdDate = res.createdDate;
+        const postDate = res.postDate;
         const writer = res.writer;
         const contents = res.contents;
 
@@ -16,9 +16,9 @@ function setLetterInfo() {
         const titleDiv = document.getElementById("letter-title");
         titleDiv.innerHTML = title;
 
-        const createdDateDiv = document.getElementById("letter-post-date");
-        const dates = createdDate.split("-");
-        createdDateDiv.innerHTML = dates[0] + "년 " + dates[1] + "월 " + dates[2] + "일";
+        const PostDateDiv = document.getElementById("letter-post-date");
+        const dates = postDate.split("-");
+        PostDateDiv.innerHTML = dates[0] + "년 " + dates[1] + "월 " + dates[2] + "일";
 
         const writerDiv = document.getElementById("author-name");
         writerDiv.innerHTML = "<b>Author</b> " + writer;

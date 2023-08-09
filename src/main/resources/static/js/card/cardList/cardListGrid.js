@@ -138,11 +138,11 @@ export class CardListGrid {
 
         if (content.type !== "CUSTOM") {
             innerHtmlList.push(new PTag()
-                .setInnerHTML(content.createdDate + "<br/><b>Letter</b> " + content.letterTitle)
+                .setInnerHTML(content.postDate + "<br/><b>Letter</b> " + content.letterTitle)
             );
         } else {
             innerHtmlList.push(new PTag()
-                .setInnerHTML(content.createdDate + "<br/><b>Custom</b> " + "내가 만든 카드")
+                .setInnerHTML(content.postDate + "<br/><b>Custom</b> " + "내가 만든 카드")
             );
         }
 

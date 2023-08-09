@@ -13,3 +13,4 @@ values (1, 'member custom card. :0', now(), now()),
        (1, 'member custom card. :11', now() - INTERVAL '11' DAY, now() - INTERVAL '11' DAY),
        (1, 'member custom card. :12', now() - INTERVAL '12' DAY, now() - INTERVAL '12' DAY)
 ;
+commit

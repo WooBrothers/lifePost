@@ -29,7 +29,7 @@ export class LetterGrid {
             {
                 id: LetterGrid.ID_TODAY_PREFIX + "letter-image",
                 className: LetterGrid.CLASS_TODAY_PREFIX,
-                innerHTML: [new ImgTag().setSrc('/img/letter-img.png')]
+                innerHTML: [new ImgTag().setSrc(letter.letterImage)]
             }, {
                 id: LetterGrid.ID_TODAY_PREFIX + "text",
                 className: LetterGrid.CLASS_TODAY_PREFIX,
@@ -111,7 +111,7 @@ export class LetterGrid {
 
         const divInfos = [
             {className: "letter-item-title bg-primary", innerHTML: letter.title},
-            {className: "letter-item-date bg-success", innerHTML: letter.createdDate},
+            {className: "letter-item-date bg-success", innerHTML: letter.postDate},
             {className: "letter-item-img1 bg-info", innerHTML: letter.letterImage},
             {className: "letter-item-img2 bg-warning", innerHTML: letter.postStampImage},
         ];

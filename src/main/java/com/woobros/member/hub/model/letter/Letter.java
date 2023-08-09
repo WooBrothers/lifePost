@@ -50,7 +50,7 @@ public class Letter {
 
     @Column(unique = true, nullable = false)
     @CreationTimestamp
-    private LocalDate createdDate;
+    private LocalDate postDate;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -343,7 +343,7 @@ public class CardServiceImpl implements CardService {
                     .setMemberCardId(memberCard.getId())
                     .setLetterId(letter.getId())
                     .setLetterTitle(letter.getTitleByText())
-                    .setCreatedDate(letter.getCreatedDate());
+                    .setPostDate(letter.getPostDate());
 
                 pageResponses.add(pageResponse);
 
@@ -356,7 +356,7 @@ public class CardServiceImpl implements CardService {
                     .setFocus(memberCard.getFocus())
                     .setCardId(memberCustomCard.getId())
                     .setMemberCardId(memberCard.getId())
-                    .setCreatedDate(memberCard.getCreatedAt().toLocalDate());
+                    .setPostDate(memberCard.getCreatedAt().toLocalDate());
 
                 pageResponses.add(pageResponse);
             }

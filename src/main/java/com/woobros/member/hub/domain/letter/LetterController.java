@@ -60,37 +60,12 @@ public class LetterController {
         return responses;
     }
 
-    @GetMapping("/auth/{letterId}")
-    public ResponseEntity<LetterDto.ReadResponse> getTodayLetterContents(
-        @PathVariable Long letterId,
-        @AuthenticationPrincipal UserDetails userDetails) {
-
-        return ResponseEntity.ok(letterService
-            .getTodayLetterContentsByLetterId(letterId, userDetails));
-    }
-
     @GetMapping("/auth/stamp/{letterId}")
     public ResponseEntity<LetterDto.ReadResponse> getLetterContentsUsingStamp(
         @PathVariable Long letterId,
         @AuthenticationPrincipal UserDetails userDetails) {
 
         return ResponseEntity.ok(letterService.getLetterContentsByLetterId(letterId, userDetails));
-    }
-
-    /** backoffice */
-
-    /**
-     * @param letterReqDto
-     * @return
-     */
-    @PostMapping("/admin")
-    public ResponseEntity<String> postLetter(
-        @Valid @RequestBody LetterDto.PostRequest letterReqDto) {
-
-        LetterDto.ReadResponse readResponse = letterService.postLetter(letterReqDto);
-
-        String url = "/api/v1/letter/auth/" + readResponse.getId();
-        return ResponseEntity.created(URI.create(url)).body("letter is created.");
     }
 
     @PostMapping("/auth/focus")
@@ -103,5 +78,4 @@ public class LetterController {
             .created(URI.create("/api/v1/letter/auth/" + letterReqDto.getLetterId()))
             .body("member letter is focus request success.");
     }
-
 }

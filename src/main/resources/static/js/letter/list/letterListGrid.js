@@ -98,7 +98,7 @@ function createLetter(response, letterListSpace) {
                 memberLetterId: responseContent.memberLetterId,
                 letterId: responseContent.id,
                 type: responseContent.type,
-                createdDate: responseContent.createdDate,
+                postDate: responseContent.postDate,
             }])
             .getTag();
 
@@ -208,7 +208,7 @@ function setLetterContentGridSpace(responseContent, letterSpace, focusInfo) {
         .setInnerHTML([
             new DivTag()
                 .setClassName("letter-create-date")
-                .setInnerHTML(getKoreanDate(responseContent.createdDate)),
+                .setInnerHTML(getKoreanDate(responseContent.postDate)),
             new DivTag()
                 .setClassName("spacer")
                 .setStyle([{

@@ -65,7 +65,7 @@ async function clickLetter() {
             parent.appendChild(modal);
 
             if (modal.querySelector("#info-space").dataset.stamp === "0"
-                && getTodayDate() !== this.dataset.createdDate) {
+                && getTodayDate() !== this.dataset.postDate) {
 
                 const letterReadBtn = modal.querySelector("#letter-read-btn");
                 letterReadBtn.style.backgroundColor = "gray";

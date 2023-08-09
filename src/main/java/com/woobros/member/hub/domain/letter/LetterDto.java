@@ -68,7 +68,7 @@ public class LetterDto {
         private String contents;
         private final String writer;
         @JsonFormat(pattern = "yyyy-MM-dd")
-        private final LocalDate createdDate;
+        private final LocalDate postDate;
         private final LetterTagEnum tag;
         private FocusTypeEnum focusType;
 
@@ -118,7 +118,7 @@ public class LetterDto {
         private String content;
         private final LetterTagEnum tag;
         @JsonFormat(pattern = "yyyy-MM-dd")
-        private final LocalDate createdDate;
+        private final LocalDate postDate;
         private FocusTypeEnum focusType;
 
         public PageResponse setMemberLetterId(Long memberLetterId) {
