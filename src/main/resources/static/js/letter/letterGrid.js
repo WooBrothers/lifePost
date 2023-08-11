@@ -27,9 +27,11 @@ export class LetterGrid {
 
         const divInfos = [
             {
-                id: LetterGrid.ID_TODAY_PREFIX + "letter-image",
+                id: LetterGrid.ID_TODAY_PREFIX + "letter-image-div",
                 className: LetterGrid.CLASS_TODAY_PREFIX,
-                innerHTML: [new ImgTag().setSrc(letter.letterImage)]
+                innerHTML: [new ImgTag()
+                    .setId("letter-image")
+                    .setSrc(letter.letterImage)]
             }, {
                 id: LetterGrid.ID_TODAY_PREFIX + "text",
                 className: LetterGrid.CLASS_TODAY_PREFIX,
@@ -54,6 +56,9 @@ export class LetterGrid {
                         }])
                     , new DivTag()
                         .setId(LetterGrid.ID_TODAY_PREFIX + "timer")
+                        .setStyle([{
+                            "width": "200px"
+                        }])
                         .setInnerHTML(LetterGrid.getTime())]
             }, {
                 id: LetterGrid.ID_TODAY_PREFIX + "line",
