@@ -60,8 +60,11 @@ public class LetterServiceImpl implements LetterService {
     @Override
     public LetterDto.ReadResponse getLatestLetter() {
 
-        Letter latestLetter = letterRepository.findByPostDate(LocalDate.now()).orElseThrow(
-            () -> new CommonException(ErrorEnum.NOT_FOUND)
+        Letter latestLetter = letterRepository.findByPostDate(LocalDate.now()).orElseGet(
+            () -> letterRepository.findTopByOrderByPostDateDesc()
+                .orElseThrow(
+                    () -> new CommonException(ErrorEnum.NOT_FOUND)
+                )
         );
 
         LetterDto.ReadResponse response = letterMapper.toResponseDto(latestLetter);
