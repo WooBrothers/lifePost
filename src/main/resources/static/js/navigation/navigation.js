@@ -1,5 +1,5 @@
-import {checkAndRefreshToken, getAccessToken} from "../common/apiUtil.js";
-import {isScreenWide} from "../common/utilTool.js";
+import {getAccessToken} from "../common/apiUtil.js";
+import {isScreenWide, isTokenExpired} from "../common/utilTool.js";
 import {bindNavigationEvent} from "./navigationEvent.js";
 
 await setMembership();
@@ -10,15 +10,13 @@ export async function setMembership() {
         setLogoutMembership();
         setLogoutNaviMenu();
     } else {
-        await checkAndRefreshToken().then(res => {
-            if (res.result === "ok") {
-                setLoginMembership();
-                setLoginNaviMenu();
-            } else {
-                setLogoutMembership();
-                setLogoutNaviMenu();
-            }
-        });
+        if (!isTokenExpired()) {
+            setLoginMembership();
+            setLoginNaviMenu();
+        } else {
+            setLogoutMembership();
+            setLogoutNaviMenu();
+        }
     }
 }
 

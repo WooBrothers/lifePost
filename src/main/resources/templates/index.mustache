@@ -4,12 +4,19 @@
 <head>
   <title>Life Post</title>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
-  <link rel="stylesheet" type="text/css" href="/css/letterGrid.css">
-  <link rel="stylesheet" type="text/css" href="/css/cardGrid.css">
+  <link rel="stylesheet" type="text/css" href="/css/default.css">
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <link rel="stylesheet" type="text/css" href="/css/card/cardGrid.css">
 </head>
 <body>
 
 {{> layout/navigation}}
+
+<div id="index-space">
+  <div class="spacer"></div>
+  {{> contents/letter/today}}
+</div>
+
 <div class="container">
   <div id="lp-title">
     <div id="today-letter-grid"></div>

@@ -101,7 +101,7 @@
     text-align: center;
     justify-content: center;
     align-items: center;
-    background-image: url("../img/card-frame-mobile.png");
+    background-image: url("../../img/card-frame-mobile.png");
     background-size: cover;
     font-size: 20px;
   }
@@ -154,7 +154,7 @@
     text-align: center;
     justify-content: center;
     align-items: center;
-    background-image: url("../img/card-frame.png");
+    background-image: url("../../img/card-frame.png");
     background-size: cover;
     font-size: 20px;
   }
