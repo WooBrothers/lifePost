@@ -1,6 +1,7 @@
 package com.woobros.member.hub.model.letter;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,5 +23,7 @@ public interface LetterRepository extends JpaRepository<Letter, Long> {
     Page<Letter> findMissLetter(Long memberId, Pageable pageable);
 
     Page<Letter> findAllByOrderByIdDesc(Pageable pageable);
+
+    List<Letter> findByIdIn(List<Long> ids);
 
 }

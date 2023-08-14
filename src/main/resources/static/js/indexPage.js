@@ -1,4 +1,3 @@
-import {CardGrid} from "./card/cardGrid.js";
 import {isTokenExpired} from "./common/utilTool.js";
 import {checkAndRefreshToken} from "./common/apiUtil.js";
 
@@ -11,9 +10,4 @@ window.onload = async () => {
     if (isTokenExpired()) {
         await checkAndRefreshToken();
     }
-
-    const todayCardGrid = document.getElementById("today-card-grid");
-    // CardGrid.createCardGridByPageIndex(todayCardGrid);
-    await CardGrid.createFocusCardGrid(todayCardGrid);
-
 }

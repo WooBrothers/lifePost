@@ -44,12 +44,6 @@
   font-size: 14px;
 }
 
-.card-action-btn {
-  background-color: white;
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-  margin-left: 10px;
-}
-
 .card-space {
   display: flex;
   flex-direction: column;
@@ -57,8 +51,15 @@
   margin: 10px 10px 10px 15px;
   padding: 5px;
   max-width: 300px;
+  min-width: 300px;
   min-height: 400px;
   max-height: 400px;
+}
+
+.card-action-btn {
+  background-color: white;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  margin-left: 10px;
 }
 
 .focus-space {
@@ -76,6 +77,14 @@
 .spacer {
   align-self: stretch; /* 높이를 최대한 늘려서 parent의 높이를 넘지 않음 */
   flex: 1;
+}
+
+.p-card-content {
+  font-size: 20px;
+  font-weight: bold;
+  align-self: flex-start;
+  max-height: 206px;
+  overflow: auto;
 }
 
 #card-list-btn-space {

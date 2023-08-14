@@ -4,18 +4,17 @@
     display: flex;
     flex-direction: row;
     width: 80%;
-    max-width: 1300px;
+    max-width: 1350px;
     height: 540px;
     color: white;
     overflow: hidden;
-    margin-top: 50px;
-    margin-bottom: 60px;
+    margin-top: 150px;
+    margin-bottom: 150px;
   }
 
   #image-space {
     position: relative;
-    width: 50%;
-    min-width: 500px;
+    width: 675px;
     height: 100%;
   }
 
@@ -39,8 +38,7 @@
   #today-letter-info-space {
     display: flex;
     flex-direction: column;
-    width: 50%;
-    max-width: 500px;
+    max-width: 675px;
     min-width: 300px;
     height: 100%;
     padding-left: 20px;

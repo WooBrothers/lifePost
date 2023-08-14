@@ -88,6 +88,16 @@ public class CardController {
         return cardService.getFocusCards(size, pageNo, userDetails);
     }
 
+    @GetMapping("/auth/focus/after/{memberCardId}/{size}")
+    public ResponseEntity<Page<CardDto.PageResponse>> getCardListAfterCardId(
+        @PathVariable Long memberCardId,
+        @PathVariable int size,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+        return ResponseEntity
+            .ok(cardService.getCardListAfterCardId(memberCardId, size, userDetails));
+    }
+
     /**
      * cardId의 내용 읽기
      *
@@ -183,6 +193,4 @@ public class CardController {
 
         return ResponseEntity.ok(Long.toString(count));
     }
-
-
 }

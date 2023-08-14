@@ -1,5 +1,5 @@
 import {bindEventToCardGrid} from "./cardEvent.js"
-import {CardApi} from "./cardApi.js";
+import {getFocusCards} from "./cardApi.js";
 import {ButtonTag, DivTag} from "../common/tagUtil.js";
 
 export class CardGrid {
@@ -7,7 +7,7 @@ export class CardGrid {
 
     static async createFocusCardGrid(focusCardGrid) {
 
-        await CardApi.getFocusCards(1).then(response => {
+        await getFocusCards(1).then(response => {
             CardGrid.setFocusCardsGrid(focusCardGrid, response);
             bindEventToCardGrid();
         });

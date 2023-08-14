@@ -5,7 +5,6 @@
     flex-direction: column;
     width: 100%;
     color: white;
-    overflow-y: scroll;
     margin: 0;
     padding: 0;
   }
@@ -35,10 +34,9 @@
   #today-letter-info-space {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     width: 100%;
     height: 100%;
-    padding-left: 15px;
-    padding-right: 30px;
     padding-bottom: 15px;
   }
 

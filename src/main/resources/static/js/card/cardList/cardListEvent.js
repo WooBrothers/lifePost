@@ -26,7 +26,9 @@ export function bindEventToCardListGrid() {
 
     const writeCardBtnList = document.querySelectorAll(".card-write-btn");
     writeCardBtnList.forEach(btn => {
-        btn.addEventListener("click", writeCardBtnClick);
+        btn.addEventListener("click", (event) => {
+            writeCardBtnClick.call(event, "card-list-space")
+        });
     })
 
     const readLetterBtnList = document.querySelectorAll(".letter-read-btn");
@@ -139,15 +141,15 @@ async function createCardBtnClick() {
         })
 }
 
-async function writeCardBtnClick() {
+export async function writeCardBtnClick(parentId) {
 
-    const cardParent = findParentWithClass(this, "card-space");
+    const cardParent = findParentWithClass(this.target, "card-space");
     const cardId = cardParent.dataset.cardId;
     const contentText = cardParent.querySelector(
         `#card-content-${cardId}`
     ).innerHTML;
 
-    const parent = document.getElementById("card-list-space");
+    const parent = document.getElementById(parentId);
 
     const modal = new ModalTag()
         .setId("modal-parent")
@@ -192,7 +194,7 @@ async function writeCardBtnClick() {
         });
 }
 
-function clickReadLetter() {
+export function clickReadLetter() {
 
     localStorage.setItem("letterId", this.dataset.letterId);
     window.location = "/letter/read/page";

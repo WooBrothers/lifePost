@@ -1,4 +1,4 @@
-import {CardListApi} from "./cardListApi.js";
+import {getCardList} from "./cardListApi.js";
 import {ButtonTag, DivTag, PTag} from "../../common/tagUtil.js";
 import {getColorHexInFiveTypeList} from "../../common/utilTool.js";
 
@@ -12,7 +12,8 @@ export class CardListGrid {
         const focus = CardListGrid.getIsFocus();
 
         let resultResponse = null;
-        await CardListApi.getCardList(page, type, focus).then(response => {
+
+        await getCardList(page, 10, type, focus).then(response => {
             CardListGrid.createCard(response, cardListSpace);
             resultResponse = response;
         });
@@ -43,7 +44,6 @@ export class CardListGrid {
     }
 
     static createCard(response, cardListSpace) {
-
         const preEmptyContentDiv = document.querySelector(".empty-content");
         if (preEmptyContentDiv) {
             preEmptyContentDiv.remove();
@@ -109,12 +109,8 @@ export class CardListGrid {
                     ]),
                 new PTag()
                     .setId("card-content-" + content.cardId)
+                    .setClassName("p-card-content")
                     .setInnerHTML(content.contents)
-                    .setStyle([{
-                        fontSize: "20px",
-                        fontWeight: "bold",
-                        alignSelf: "flex-start"
-                    }])
             ])
         cardSpace.appendChild(headerSpace.getTag());
 

@@ -35,6 +35,9 @@ public interface CardService {
         UserDetails userDetails);
 
     void deleteFocusCard(CardDto.PostFocusRequest focusCardRequest, UserDetails userDetails);
+
+    Page<CardDto.PageResponse> getCardListAfterCardId(Long memberCardId, int size,
+        UserDetails userDetails);
 }
 
 

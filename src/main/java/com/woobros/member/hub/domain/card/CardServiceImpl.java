@@ -17,11 +17,14 @@ import com.woobros.member.hub.model.card.memb_card.MemberCardRepository;
 import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCard;
 import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCardRepository;
 import com.woobros.member.hub.model.letter.Letter;
+import com.woobros.member.hub.model.letter.LetterRepository;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -47,7 +50,9 @@ public class CardServiceImpl implements CardService {
     private final MemberCardRepository memberCardRepository;
     private final MemberCustomCardRepository memberCustomCardRepository;
     private final MemberRepository memberRepository;
+    private final LetterRepository letterRepository;
     private final CardMapper cardMapper;
+
 
     /**
      * 입력한 멤버 카드 이후의 최신의 카드를 size 만큼 멤버 카드 조회
@@ -76,7 +81,7 @@ public class CardServiceImpl implements CardService {
         }
 
         Page<MemberCard> memberCards = memberCardRepository
-            .findByMemberIdAndTypeInAndFocusInOrderByCreatedAtDesc(member.getId(), type,
+            .findMemberCardAndRelatedCardAndLetterInfos(member.getId(), type,
                 focusList, pageable);
 
         List<PageResponse> pageResponses = separateMemberCardByType(memberCards);
@@ -318,6 +323,50 @@ public class CardServiceImpl implements CardService {
         memberCard.setWriteCount(memberCard.getWriteCount() + cardWriteReqDto.getCount());
         memberCardRepository.save(memberCard);
         return memberCard.getWriteCount();
+    }
+
+    @Override
+    public Page<CardDto.PageResponse> getCardListAfterCardId(Long memberCardId, int size,
+        UserDetails userDetails) {
+
+        if (memberCardId == 0) {
+            memberCardId = Long.MAX_VALUE;
+        }
+
+        Pageable pageable = PageRequest.of(0, size);
+        Member member = getMemberByUserDetail(userDetails);
+
+        Page<MemberCard> memberCards = memberCardRepository
+            .findByIdIsLessThanAndMemberIdAndFocusOrderByIdDesc(memberCardId, member.getId(),
+                FocusTypeEnum.ATTENTION,
+                pageable);
+
+        List<Long> letterIds = memberCards.stream()
+            .filter(card -> card.getType().equals(CardTypeEnum.AFFIRMATION))
+            .map(MemberCard::getAffirmationCard)
+            .map(AffirmationCard::getLetter)
+            .map(Letter::getId)
+            .distinct()
+            .collect(Collectors.toList());
+
+        List<Letter> letters = letterRepository.findByIdIn(letterIds);
+        Map<Long, AffirmationCard> affirmationCardMapByLetterIdKey = new HashMap<>();
+
+        memberCards.forEach(card -> {
+            if (card.getType().equals(CardTypeEnum.AFFIRMATION)) {
+                AffirmationCard affirmationCard = card.getAffirmationCard();
+                affirmationCardMapByLetterIdKey
+                    .put(affirmationCard.getLetter().getId(), affirmationCard);
+            }
+        });
+
+        for (Letter letter : letters) {
+            AffirmationCard affirmationCard = affirmationCardMapByLetterIdKey.get(letter.getId());
+            affirmationCard.setLetter(letter);
+        }
+
+        return new PageImpl<>(separateMemberCardByType(memberCards), pageable,
+            memberCards.getTotalElements());
     }
 
     /**

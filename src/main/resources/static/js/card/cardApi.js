@@ -1,58 +1,34 @@
 import {authFetch, getAccessToken} from "../common/apiUtil.js";
 
+/* card 관련 API class */
 
-export class CardApi {
-    /* card 관련 API class */
+const cardSchema = "/api/v1/card";
 
-    // card api url 상수
-    static CARD_API_URL = "/api/v1/card";
-    static CARD_OPEN_API_URL = CardApi.CARD_API_URL + "/open";
-    static CARD_AUTH_API_URL = CardApi.CARD_API_URL + "/auth";
-    static CARD_LOAD_SIZE = 3;
+export async function getFocusCards(pageNo) {
+    const url = `${cardSchema}/auth/focus/${pageNo}/10`;
 
-    static async getFocusCards(pageNo) {
+    let option = {
+        method: 'GET'
+    };
 
-        const url = CardApi.CARD_AUTH_API_URL + `/focus/${pageNo}/10`;
-
-        let option = {
-            method: 'GET'
-        };
-
-        if (getAccessToken()) {
-            return await authFetch(url, option);
-        } else {
-            return null;
-        }
+    if (getAccessToken()) {
+        return await authFetch(url, option);
+    } else {
+        return null;
     }
+}
 
-    static async getLatestCard() {
-        /* 가장 최신의 카드 조회 */
+export async function getCardListAfterCardId(memberCardId, size) {
 
-        const url = CardApi.CARD_OPEN_API_URL + "/latest";
+    const url = `${cardSchema}/auth/focus/after/${memberCardId}/${size}`
 
-        return await fetch(url).then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            return response.text().then(text => {
-                throw new Error(text);
-            });
-        });
-    }
+    let option = {
+        method: "GET"
+    };
 
-    static async getNextCardsByPageId(pageId) {
-        /* 입력받은 card id 이후의 카드 리스트 조회 */
-
-        const url = CardApi.CARD_OPEN_API_URL + "/page/"
-            + pageId + "/" + CardApi.CARD_LOAD_SIZE;
-
-        return await fetch(url).then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            return response.text().then(text => {
-                throw new Error(text);
-            })
-        });
+    if (getAccessToken()) {
+        return await authFetch(url, option);
+    } else {
+        return null;
     }
 }
