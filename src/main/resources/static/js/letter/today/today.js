@@ -9,9 +9,14 @@ async function renderTodayComp() {
     });
 
     setInterval(setTime, 1000);
+
+    bindTodayLetterEvent();
 }
 
 function setLetterInfoByResponse(response) {
+    const todaySpace = document.querySelector("#today-space");
+    todaySpace.dataset.letterId = response.id;
+
     const img = document.querySelector("#today-img");
     img.src = response.letterImage;
 
@@ -43,4 +48,15 @@ function setTime() {
     const timeDiv = document.getElementById("today-timer");
 
     timeDiv.innerHTML = getTime();
+}
+
+function bindTodayLetterEvent() {
+    const todaySpace = document.querySelector("#today-space");
+    todaySpace.addEventListener("click", clickTodaySpace);
+}
+
+function clickTodaySpace() {
+    const todaySpace = document.querySelector("#today-space");
+    localStorage.setItem("letterId", todaySpace.dataset.letterId);
+    window.location = "/letter/read/page";
 }
