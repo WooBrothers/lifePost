@@ -12,7 +12,9 @@ async function renderFocusCard(focusSpace, memberCardId, event) {
     await getCardListAfterCardId(memberCardId, 5).then(response => {
         resultResponse = response;
         CardListGrid.createCard(response, focusSpace);
-    })
+    });
+
+    setEmptyFocusCardStyle();
 
     event();
     return resultResponse;
@@ -33,6 +35,11 @@ function bindFocusCard() {
 
     const focusCardContentsSpace = document.querySelector("#focus-card-contents-space");
     focusCardContentsSpace.addEventListener("scroll", scrollFocusCardLoad);
+
+    const goToLoginPageBtn = document.querySelector("#go-to-login-page-btn");
+    if (goToLoginPageBtn) {
+        goToLoginPageBtn.addEventListener("click", clickGoToLoginPageBtn);
+    }
 }
 
 async function scrollFocusCardLoad() {
@@ -55,5 +62,15 @@ async function scrollFocusCardLoad() {
                 await renderFocusCard(space, memberCardId, bindFocusCard);
             }
         }
+    }
+}
+
+function clickGoToLoginPageBtn() {
+    window.location = "/login/page";
+}
+
+function setEmptyFocusCardStyle() {
+    if (document.querySelector(".empty-content")) {
+        document.querySelector("#focus-card-contents-space").style.justifyContent = "center";
     }
 }

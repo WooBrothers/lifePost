@@ -36,9 +36,17 @@ export function isTokenExpired() {
         if (!expTimestamp) {
             return true;  // 만료 시간이 없으면 만료된 것으로 간주합니다.
         }
-        
+
         return Math.floor(Date.now() / 1000) > expTimestamp;
     } catch (error) {
         return true;  // 에러 발생 시 만료된 것으로 간주합니다.
     }
+}
+
+export function deleteCookie(cookieName) {
+    document.cookie = `${cookieName}=; expires=${getCurrentUtcTime()}; path=/;`;
+}
+
+function getCurrentUtcTime() {
+    return new Date().toUTCString();
 }

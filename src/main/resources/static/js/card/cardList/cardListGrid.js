@@ -1,5 +1,5 @@
 import {getCardList} from "./cardListApi.js";
-import {ButtonTag, DivTag, PTag} from "../../common/tagUtil.js";
+import {ButtonTag, DivTag, ImgTag, PTag} from "../../common/tagUtil.js";
 import {getColorHexInFiveTypeList} from "../../common/utilTool.js";
 
 export class CardListGrid {
@@ -45,15 +45,60 @@ export class CardListGrid {
 
     static createCard(response, cardListSpace) {
         const preEmptyContentDiv = document.querySelector(".empty-content");
+
         if (preEmptyContentDiv) {
             preEmptyContentDiv.remove();
         }
 
-        if (response.content.length === 0) {
+        const cardCount = document.querySelector("#focus-card-contents-space").childElementCount;
+
+        if (!response) {
             const emptyContentDiv = new DivTag()
                 .setClassName("empty-content")
+                .setInnerHTML(
+                    [new DivTag()
+                        .setId("empty-content-space")
+                        .setInnerHTML(
+                            [
+                                new ImgTag()
+                                    .setStyle([{
+                                        "width": "400px",
+                                        "height": "200px"
+                                    }])
+                                    .setSrc('/img/focus-card-ex.png'),
+
+                                new PTag()
+                                    .setStyle([
+                                        {
+                                            "font-size": "20px",
+                                            "color": "white",
+                                            "text-align": "center"
+                                        }
+                                    ])
+                                    .setInnerHTML("매일 떠올리고 싶은 글귀들을 카드로 관리해보세요!<br/>그리고 자신을 다시 설계해보세요!"),
+                                new ButtonTag()
+                                    .setId("go-to-login-page-btn")
+                                    .setInnerHTML("카드 만들기")
+                                ,
+                                new PTag()
+                                    .setStyle([
+                                        {
+                                            "font-size": "25px",
+                                            "color": "white"
+                                        }
+                                    ])
+                                    .setInnerHTML("당신의 잠재력은 무한합니다.")
+                            ]
+                        )]
+                )
                 .setStyle()
+            cardListSpace.appendChild(emptyContentDiv.getTag());
+            return;
+        } else if (cardCount === 0 && response.content.length === 0) {
+            const emptyContentDiv = new DivTag()
+                .setClassName("empty-content")
                 .setInnerHTML("카드가 없습니다. 편지을 읽거나 직접 만들어 보세요!")
+                .setStyle()
             cardListSpace.appendChild(emptyContentDiv.getTag());
             return;
         }

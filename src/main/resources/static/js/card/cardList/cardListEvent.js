@@ -29,12 +29,14 @@ export function bindEventToCardListGrid() {
         btn.addEventListener("click", (event) => {
             writeCardBtnClick.call(event, "card-list-space")
         });
-    })
+    });
 
     const readLetterBtnList = document.querySelectorAll(".letter-read-btn");
     readLetterBtnList.forEach(btn => {
         btn.addEventListener("click", clickReadLetter);
-    })
+    });
+
+
 }
 
 function clickFilterBtn() {
