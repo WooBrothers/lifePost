@@ -15,58 +15,72 @@
   background-color: darkgrey;
 }
 
+#card-write-space {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 90%;
+}
+
+#write-content-space {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-top: 1px solid darkgray;
+  border-bottom: 1px solid darkgray;
+}
+
 #text-container {
-  position: relative;
-  margin-top: 50px;
-  width: 400px;
-  height: 200px;
-  background-color: lightgray;
+  width: 50%;
+  height: 100%;
+  font-weight: bold;
   font-size: 18px;
-  z-index: 2000;
-  padding: 0 0 0 0;
 }
 
 #card-content-answer {
-  position: absolute;
   width: 100%;
   height: 100%;
-  border: none;
-  resize: none;
-  outline: none;
   font-size: 18px;
-  background-color: transparent;
-  z-index: 2001;
-}
-
-#card-write-content {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border: none;
-  resize: none;
-  outline: none;
-  font-size: 18px;
-  background-color: transparent;
-  z-index: 2001;
-  color: rgba(0, 0, 0, 0);
-  caret-color: black;
-  ime-mode: active;
 }
 
 #display-output {
-  position: absolute;
-  background-color: transparent;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-content: flex-start;
   width: 100%;
-  border: none;
+  height: 100%;
+  font-size: 18px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+#card-write-text-space {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
+}
+
+#card-write-content {
+  width: 95%;
+  height: 100%;
+  font-size: 18px;
+  caret-color: black;
   resize: none;
   outline: none;
-  font-size: 18px;
-  z-index: 2002;
-  margin-top: 1px;
+  border: none;
+  border-left: 1px solid gray;
+  padding: 10px;
+}
+
+.content-text-class {
+  margin-top: 20px;
 }
 
 .input-text {
@@ -84,4 +98,8 @@
 
 .valid {
   color: blue;
+}
+
+.line-break {
+  width: 100%;
 }

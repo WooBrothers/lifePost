@@ -30,13 +30,10 @@ function clickNextFocusCard() {
         const zIndex = parseInt(card.style.zIndex);
         card.style.zIndex = `${zIndex + 1}`;
         if (maxIndex < zIndex) {
-            console.log(`maxIndex: ${maxIndex} < zIndex: ${zIndex}`)
             maxIndex = zIndex;
             maxCardId = card.id;
         }
     }
-    console.log("maxCardId: " + maxCardId);
-    console.log("maxIndex: " + maxIndex);
     // 현재 카드를 뒤로 넘기는 애니메이션
     let targetCard = document.getElementById(maxCardId);
     targetCard.style.animationName = "flip-over-card";
@@ -93,6 +90,5 @@ function clickPreviousFocusCard() {
 }
 
 function clickFocusAdd() {
-    console.log("clickFocusAdd");
     location.href = "/auth/card/list";
 }

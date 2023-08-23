@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.3</version>
+    <version>3.1.2</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
@@ -18,7 +18,7 @@
   <description>MOU Member Repo</description>
 
   <properties>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
     <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
   </properties>
 
@@ -26,6 +26,7 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.25</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -110,7 +111,7 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>5.4.30.Final</version>
+      <version>6.2.7.Final</version>
     </dependency>
     <dependency>
       <groupId>org.mapstruct</groupId>
@@ -172,13 +173,6 @@
             </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.springframework.restdocs</groupId>
-            <artifactId>spring-restdocs-asciidoctor</artifactId>
-            <version>${spring-restdocs.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

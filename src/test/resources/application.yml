@@ -6,8 +6,10 @@ spring:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: create
-      naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     properties:
+      naming:
+        physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         show_sql: true
@@ -30,7 +32,7 @@ spring:
             client-secret: sfRUgrINtEbg2TTmhDsYOEWtrffsqly8
             redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             authorization_grant_type: authorization_code
-            client-authentication-method: POST
+            client-authentication-method: client_secret_post
             scope: account_email, profile_image
             cleint-name: Kakao
         provider:

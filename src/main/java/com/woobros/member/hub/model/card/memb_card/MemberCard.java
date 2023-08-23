@@ -6,17 +6,17 @@ import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.card.memb_cust_card.MemberCustomCard;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member_letter.MemberLetter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -92,4 +92,13 @@ public class MemberCard {
 
     @UpdateTimestamp
     private LocalDateTime updateAt;
+
+
+    public MemberLetter getMemberLetterIfAffirmationCard() {
+        if (this.getType().equals(CardTypeEnum.AFFIRMATION)) {
+            return this.memberLetter;
+        } else {
+            return null;
+        }
+    }
 }

@@ -20,6 +20,12 @@ import com.woobros.member.hub.model.letter.Letter;
 import com.woobros.member.hub.model.letter.LetterRepository;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
+import com.woobros.member.hub.model.stamp.Stamp;
+import com.woobros.member.hub.model.stamp.StampRepository;
+import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -46,11 +51,13 @@ public class CardServiceImpl implements CardService {
     /**
      * beans
      */
+    private final Common common;
     private final AffirmationCardRepository affirmationCardRepository;
     private final MemberCardRepository memberCardRepository;
     private final MemberCustomCardRepository memberCustomCardRepository;
     private final MemberRepository memberRepository;
     private final LetterRepository letterRepository;
+    private final StampRepository stampRepository;
     private final CardMapper cardMapper;
 
 
@@ -67,11 +74,11 @@ public class CardServiceImpl implements CardService {
     public Page<PageResponse> getMemberCards(int size, int pageNo,
         Optional<FocusTypeEnum> focus, List<CardTypeEnum> type, UserDetails userDetails) {
 
-        pageNo = Common.verifyPageNo(pageNo);
+        pageNo = common.verifyPageNo(pageNo);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         List<FocusTypeEnum> focusList = focus.map(Collections::singletonList)
             .orElseGet(() -> List.of(FocusTypeEnum.ATTENTION, FocusTypeEnum.NON));
@@ -100,11 +107,11 @@ public class CardServiceImpl implements CardService {
     public Page<CardDto.PageResponse> getMemberCustomCards(int size, int pageNo,
         UserDetails userDetails) {
 
-        pageNo = Common.verifyPageNo(pageNo);
+        pageNo = common.verifyPageNo(pageNo);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
             .findByMemberIdOrderByCreatedAtDesc(
@@ -132,11 +139,11 @@ public class CardServiceImpl implements CardService {
     @Override
     public Page<PageResponse> getFocusCards(int size, int pageNo, UserDetails userDetails) {
 
-        pageNo = Common.verifyPageNo(pageNo);
+        pageNo = common.verifyPageNo(pageNo);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         Page<MemberCard> memberCards = memberCardRepository
             .findByMemberIdAndFocusOrderByCreatedAtDesc(
@@ -159,7 +166,7 @@ public class CardServiceImpl implements CardService {
     public ReadResponse getCardContents(Long cardId, CardTypeEnum cardTypeEnum,
         UserDetails userDetails) {
 
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         CardDto.ReadResponse readResponse;
 
@@ -200,22 +207,31 @@ public class CardServiceImpl implements CardService {
     public ReadResponse postMemberCustomCard(PostCustomRequest memberCustomCardPostDto,
         UserDetails userDetails) {
 
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
-        MemberCustomCard memberCustomCard = cardMapper
-            .toMemberCustomCardEntity(memberCustomCardPostDto);
+        MemberCustomCard memberCustomCard;
 
-        memberCustomCard.setMember(member);
+        if (memberCustomCardPostDto.getCardId() != null) {
+            memberCustomCard = memberCustomCardRepository
+                .findById(memberCustomCardPostDto.getCardId())
+                .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+            memberCustomCard.setContents(memberCustomCardPostDto.getContents());
+            memberCustomCard.setTag(memberCustomCardPostDto.getTag());
+        } else {
+            memberCustomCard = cardMapper
+                .toMemberCustomCardEntity(memberCustomCardPostDto);
+            memberCustomCard.setMember(member);
+            memberCustomCard = memberCustomCardRepository.save(memberCustomCard);
 
-        MemberCard memberCard = MemberCard.builder()
-            .member(member)
-            .memberCustomCard(memberCustomCard)
-            .focus(FocusTypeEnum.NON)
-            .type(CardTypeEnum.CUSTOM)
-            .build();
+            MemberCard memberCard = MemberCard.builder()
+                .member(member)
+                .memberCustomCard(memberCustomCard)
+                .focus(FocusTypeEnum.NON)
+                .type(CardTypeEnum.CUSTOM)
+                .build();
 
-        memberCustomCard = memberCustomCardRepository.save(memberCustomCard);
-        memberCardRepository.save(memberCard);
+            memberCardRepository.save(memberCard);
+        }
 
         return cardMapper.toReadResponse(memberCustomCard).setType(CardTypeEnum.CUSTOM);
     }
@@ -229,7 +245,7 @@ public class CardServiceImpl implements CardService {
      */
     @Override
     public ReadResponse postFocusCard(PostFocusRequest focusCardRequest, UserDetails userDetails) {
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         MemberCard memberCard;
         ReadResponse response;
@@ -288,7 +304,7 @@ public class CardServiceImpl implements CardService {
 
         CardTypeEnum cardTypeEnum = focusCardRequest.getType();
         Long cardId = focusCardRequest.getCardId();
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         MemberCard memberCard;
 
@@ -310,22 +326,6 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Long postWriteCardCount(CardDto.PostWriteRequest cardWriteReqDto,
-        UserDetails userDetails) {
-
-        Member member = getMemberByUserDetail(userDetails);
-        MemberCard memberCard = memberCardRepository
-            .findByMemberIdAndId(member.getId(), cardWriteReqDto.getMemberCardId())
-            .orElseThrow(
-                () -> new CommonException(ErrorEnum.NOT_FOUND)
-            );
-
-        memberCard.setWriteCount(memberCard.getWriteCount() + cardWriteReqDto.getCount());
-        memberCardRepository.save(memberCard);
-        return memberCard.getWriteCount();
-    }
-
-    @Override
     public Page<CardDto.PageResponse> getCardListAfterCardId(Long memberCardId, int size,
         UserDetails userDetails) {
 
@@ -334,7 +334,7 @@ public class CardServiceImpl implements CardService {
         }
 
         Pageable pageable = PageRequest.of(0, size);
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         Page<MemberCard> memberCards = memberCardRepository
             .findByIdIsLessThanAndMemberIdAndFocusOrderByIdDesc(memberCardId, member.getId(),
@@ -367,6 +367,63 @@ public class CardServiceImpl implements CardService {
 
         return new PageImpl<>(separateMemberCardByType(memberCards), pageable,
             memberCards.getTotalElements());
+    }
+
+    @Override
+    public void postCardWrite(CardDto.PostWriteRequest postWriteRequest,
+        UserDetails userDetails) {
+
+        Member member = common.getMemberByUserDetail(userDetails);
+
+        MemberCard memberCard = memberCardRepository
+            .findByMemberIdAndId(member.getId(), postWriteRequest.getMemberCardId())
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        memberCard.setWriteCount(memberCard.getWriteCount() + postWriteRequest.getCount());
+    }
+
+    @Override
+    public void postCardWriteReward(UserDetails userDetails) {
+        Member member = common.getMemberByUserDetail(userDetails);
+
+        LocalDate today = LocalDate.now();
+
+        stampRepository
+            .findByMemberIdAndActionAndCreatedAtBetween(member.getId(), 1, today.atStartOfDay(),
+                LocalDateTime.of(today, LocalTime.MAX))
+            .ifPresentOrElse(existStamp -> {
+            }, () -> {
+
+                Stamp newStamp = Stamp.builder()
+                    .action(1)
+                    .member(member)
+                    .build();
+
+                stampRepository.save(newStamp);
+
+                member.rewardStamp();
+            });
+    }
+
+    @Override
+    public void deleteCustomCard(CardDto.DeleteCustomRequest deleteCustomRequest,
+        UserDetails userDetails) {
+
+        Member member = common.getMemberByUserDetail(userDetails);
+
+        MemberCustomCard customCard = memberCustomCardRepository
+            .findByIdAndMemberId(deleteCustomRequest.getCardId(), member.getId())
+            .orElseThrow(() -> new CommonException(
+                ErrorEnum.NOT_FOUND));
+
+        MemberCard memberCard = memberCardRepository
+            .findByMemberIdAndMemberCustomCardIdAndType(member.getId(), customCard.getId(),
+                deleteCustomRequest.getType())
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+
+        memberCustomCardRepository.delete(customCard);
+        memberCardRepository.delete(memberCard);
+
     }
 
     /**
@@ -411,16 +468,5 @@ public class CardServiceImpl implements CardService {
             }
         }
         return pageResponses;
-    }
-
-    /**
-     * userDetail 을 이용해 유저 조회
-     *
-     * @param userDetails security 멤버 정보
-     * @return member entity
-     */
-    private Member getMemberByUserDetail(UserDetails userDetails) {
-        return memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
-            new CommonException(ErrorEnum.NOT_FOUND));
     }
 }

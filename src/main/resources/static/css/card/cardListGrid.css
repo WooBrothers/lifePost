@@ -31,6 +31,7 @@
 .card-list-btn.filter {
   margin-left: 10px;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 #filter-btn-space {
@@ -42,6 +43,7 @@
   width: 50px;
   height: 40px;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .card-space {
@@ -60,6 +62,7 @@
   background-color: white;
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
   margin-left: 10px;
+  cursor: pointer;
 }
 
 .focus-space {
@@ -72,6 +75,7 @@
   height: 44px;
   border: none;
   background-color: transparent;
+  cursor: pointer;
 }
 
 .spacer {
@@ -114,6 +118,7 @@
   background-color: darkorange;
   border: none;
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .btn-on {

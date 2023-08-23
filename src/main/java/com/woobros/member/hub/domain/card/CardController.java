@@ -2,6 +2,7 @@ package com.woobros.member.hub.domain.card;
 
 import com.woobros.member.hub.domain.card.CardDto.PageResponse;
 import com.woobros.member.hub.model.card.CardTypeEnum;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -123,7 +123,7 @@ public class CardController {
      */
     @PostMapping("/auth/member/custom")
     public ResponseEntity<String> postMemberCustomCard(
-        @RequestBody CardDto.PostCustomRequest memberCustomCardPostDto,
+        @RequestBody @Valid CardDto.PostCustomRequest memberCustomCardPostDto,
         @AuthenticationPrincipal UserDetails userDetails) {
 
         CardDto.ReadResponse cardDto = cardService
@@ -131,6 +131,16 @@ public class CardController {
 
         String url = SCHEMA + cardDto.getType().toString() + "/" + cardDto.getId();
         return ResponseEntity.created(URI.create(url)).body("member custom card created.");
+    }
+
+    @PostMapping("/auth/member/custom/delete")
+    public ResponseEntity<String> deleteMemberCustomCard(
+        @RequestBody @Valid CardDto.DeleteCustomRequest deleteCustomRequest,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        cardService.deleteCustomCard(deleteCustomRequest, userDetails);
+
+        return ResponseEntity.ok("member custom card deleted");
     }
 
     /**
@@ -142,7 +152,7 @@ public class CardController {
      */
     @PostMapping("/auth/focus")
     public ResponseEntity<String> postFocusCard(
-        @RequestBody CardDto.PostFocusRequest focusCardRequest,
+        @RequestBody @Valid CardDto.PostFocusRequest focusCardRequest,
         @AuthenticationPrincipal UserDetails userDetails) {
 
         CardDto.ReadResponse cardDto = cardService.postFocusCard(focusCardRequest, userDetails);
@@ -158,7 +168,7 @@ public class CardController {
      */
     @DeleteMapping("/auth/focus")
     public ResponseEntity<String> deleteFocusCard(
-        @RequestBody CardDto.PostFocusRequest focusCardRequest,
+        @RequestBody @Valid CardDto.PostFocusRequest focusCardRequest,
         @AuthenticationPrincipal UserDetails userDetails) {
 
         cardService.deleteFocusCard(focusCardRequest, userDetails);
@@ -166,31 +176,20 @@ public class CardController {
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * backoffice 확언 카드 쓰기 기능
-     *
-     * @param cardPostReqDto 확언 카드의 내용을 담은 dto
-     * @param userDetails    security 멤버 정보
-     * @return 성공 msg 와 header > location: 생성한 리소스를 확인 가능한 url
-     */
-    @PostMapping("/admin/affirmation")
-    public ResponseEntity<String> postAffirmationCard(
-        @RequestBody CardDto.PostRequest cardPostReqDto,
+    @PostMapping("/auth/write_count")
+    public ResponseEntity<String> postCardWrite(
+        @RequestBody @Valid CardDto.PostWriteRequest postWriteRequest,
         @AuthenticationPrincipal UserDetails userDetails) {
 
-        CardDto.ReadResponse cardDto = cardService.postAffirmationCard(cardPostReqDto, userDetails);
-
-        String url = SCHEMA + cardDto.getType() + "/" + cardDto.getId();
-        return ResponseEntity.created(URI.create(url)).body("affirmation card created.");
+        cardService.postCardWrite(postWriteRequest, userDetails);
+        return ResponseEntity.created(URI.create("/")).body("write count saved.");
     }
 
-    @PatchMapping("/auth/write/count")
-    public ResponseEntity<String> postCardWriteCount(
-        @RequestBody CardDto.PostWriteRequest cardWriteReqDto,
+    @PostMapping("/auth/write_count/reward")
+    public ResponseEntity<String> postCardWriteReward(
         @AuthenticationPrincipal UserDetails userDetails) {
 
-        Long count = cardService.postWriteCardCount(cardWriteReqDto, userDetails);
-
-        return ResponseEntity.ok(Long.toString(count));
+        cardService.postCardWriteReward(userDetails);
+        return ResponseEntity.created(URI.create("/")).body("reward saved.");
     }
 }

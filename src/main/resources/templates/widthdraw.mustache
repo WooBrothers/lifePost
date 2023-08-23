@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+
+<html lang="ko">
+<head>
+  <title>Life Post</title>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+  <link rel="stylesheet" type="text/css" href="/css/withdraw.css">
+</head>
+<body>
+
+<div id="withdraw-page-space">
+  <div id="modal-header-space">
+    <div class="modal-title">회원탈퇴</div>
+    <div id="create-card-empty-space"></div>
+    <button id="modal-close-btn">X</button>
+  </div>
+  <div id="withdraw-contents-space">
+    <div id="withdraw-info-space">
+      <div class="alert-class">회원을 탈퇴하시면 회원님의 정보가 삭제됩니다.</div>
+      <div class="alert-class">탈퇴 이후에는 데이터 복구 또한 불가능합니다.</div>
+      <div class="alert-class">그래도 탈퇴하시겠습니까?</div>
+    </div>
+    <div id="btn-space">
+      <label>
+        <input id="agree-check-box" type="checkbox" name="agree" value="true"> 동의합니다.
+      </label>
+      <button id="withdraw-ok-btn" disabled>탈퇴</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/js/withdrawEvent.js"></script>
+
+</body>
+</html>

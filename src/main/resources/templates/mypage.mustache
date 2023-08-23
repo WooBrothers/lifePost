@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+
+<html lang="ko">
+<head>
+  <title>Life Post</title>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+  <link rel="stylesheet" type="text/css" href="/css/mypage.css">
+</head>
+<body>
+
+{{> layout/navigation}}
+<div id="my-page-space">
+  <div id="membership-info-space" class="my-page-div-space-class"></div>
+  <div id="payment-info-space" class="my-page-div-space-class"></div>
+  <div id="member-info-space" class="my-page-div-space-class">
+    <div id="member-info-title" class="info-title-class">회원 정보</div>
+    <div id="member-info-box-space" class="box-class">
+      <div class="info-class">
+        <div id="sign-in-date-title" class="info-title">가입일자</div>
+        <div id="sign-in-date" class="info-contents-class"></div>
+      </div>
+      <div class="info-class">
+        <div id="email-title" class="info-title">이메일</div>
+        <div id="email" class="info-contents-class"></div>
+      </div>
+      <div class="info-class">
+        <div id="social-title" class="info-title">소셜</div>
+        <div id="social-type" class="info-contents-class"></div>
+      </div>
+      <div class="info-class">
+        <div id="stamp-count-title" class="info-title">보유한 스탬프 수</div>
+        <div id="stamp-count" class="info-contents-class"></div>
+      </div>
+      <div id="withdraw-space">
+        <button id="withdraw-btn">회원탈퇴</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/js/mypage.js"></script>
+
+</body>
+</html>

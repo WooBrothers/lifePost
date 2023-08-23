@@ -1,5 +1,9 @@
 import {authFetch} from "../../common/apiUtil.js";
-import {findParentWithClass} from "../../common/utilTool.js";
+import {
+    findParentWithClass,
+    removeHTMLAndWhitespace,
+    TodayCardWriteHistory
+} from "../../common/utilTool.js";
 import {CardListGrid} from "./cardListGrid.js";
 import {DivTag, ModalTag} from "../../common/tagUtil.js";
 import {bindEventToCardCreatePage} from "../cardCreate/cardCreateEvent.js";
@@ -13,7 +17,7 @@ export function bindEventToCardListGrid() {
 
     const focusBtnList = document.querySelectorAll(".focus-btn");
     focusBtnList.forEach(btn => {
-        btn.addEventListener("click", clickBookmarkBtn);
+        btn.addEventListener("click", clickFocusBtn);
     });
 
     const filterBtnList = document.querySelectorAll(".filter");
@@ -36,6 +40,15 @@ export function bindEventToCardListGrid() {
         btn.addEventListener("click", clickReadLetter);
     });
 
+    const modifyCustomCardBtnList = document.querySelectorAll(".card-modify-btn");
+    modifyCustomCardBtnList.forEach(modifyCustomCardBtn => {
+        modifyCustomCardBtn.addEventListener("click", clickCardSpaceModifyCardBtn);
+    })
+
+    const deleteCustomCardBtnList = document.querySelectorAll(".card-delete-btn");
+    deleteCustomCardBtnList.forEach(deleteCustomCardBtn => {
+        deleteCustomCardBtn.addEventListener("click", clickCardSpaceDeleteCardBtn);
+    })
 
 }
 
@@ -53,7 +66,7 @@ function clickFilterBtn() {
     });
 }
 
-async function clickBookmarkBtn() {
+async function clickFocusBtn() {
 
     const parentCardSpace = findParentWithClass(this, "card-space");
     const url = "/api/v1/card/auth/focus";
@@ -129,7 +142,8 @@ async function createCardBtnClick() {
                     position: "fixed",
                     top: "5%",
                 }])
-        ).getTag();
+        )
+        .getTag();
 
     const url = "/card/custom/page";
     let option = {method: "GET"};
@@ -139,8 +153,9 @@ async function createCardBtnClick() {
             modal.querySelector("#modal-content").innerHTML = res;
             modal.style.display = "block";
             parent.appendChild(modal);
+
             bindEventToCardCreatePage();
-        })
+        });
 }
 
 export async function writeCardBtnClick(parentId) {
@@ -190,7 +205,14 @@ export async function writeCardBtnClick(parentId) {
 
             // paenrt에 modal을 추가한 이후에 동작
             modal.querySelector("#card-write-content").focus();
-            modal.dataset.memberCardId = cardParent.dataset.memberCardId;
+            const memberCardId = cardParent.dataset.memberCardId;
+            modal.dataset.memberCardId = memberCardId
+
+            const todayCardWriteHistory = new TodayCardWriteHistory();
+            document.querySelector("#today-total-write-count").innerHTML += todayCardWriteHistory.totalCount;
+
+            document.querySelector("#card-write-count").innerHTML
+                = "이 카드를 쓴 횟수: " + todayCardWriteHistory.getMemberCardCount(memberCardId);
 
             bindInputEventTextarea();
         });
@@ -202,23 +224,65 @@ export function clickReadLetter() {
     window.location = "/letter/read/page";
 }
 
-function createTextEleByCardContent(modal, contentText) {
+function createTextEleByCardContent(modal, tagText) {
     const displayOutput = modal.querySelector("#display-output");
 
-    for (let i = 0; i < contentText.length; i++) {
-        const text = new DivTag()
-            .setId("content-text-" + i)
-            .setInnerHTML(contentText[i])
-            .setStyle([{
-                    backgroundColor: "transparent",
-                    zIndex: 2005
-                }]
-            ).getTag();
+    let replacedText = removeHTMLAndWhitespace(tagText);
+    replacedText = replacedText.replace(/\s{2,}/g, "<br/>");
 
-        if (contentText[i] === " ") {
-            text.classList.add("empty-space");
+    const contentTextList = replacedText.split("<br/>");
+
+    let idx = 0;
+    contentTextList.forEach(contentText => {
+        for (let i = 0; i < contentText.length; i++) {
+            const text = new DivTag()
+                .setId("content-text-" + (i + idx))
+                .setClassName("content-text-class")
+                .setInnerHTML(contentText[i])
+                .setStyle([{
+                        backgroundColor: "transparent",
+                        zIndex: 2005
+                    }]
+                ).getTag();
+
+            if (contentText[i] === " ") {
+                text.classList.add("empty-space");
+            }
+
+            displayOutput.appendChild(text);
         }
+        idx += contentText.length;
+        displayOutput.appendChild(new DivTag()
+            .setClassName("line-break")
+            .setId("content-text-" + idx)
+            .setInnerHTML("\n")
+            .getTag());
+        idx++;
+    });
+}
 
-        displayOutput.appendChild(text);
-    }
+async function clickCardSpaceModifyCardBtn() {
+    await createCardBtnClick().then(res => {
+        const cardId = this.dataset.cardId;
+        document.querySelector("#custom-card-create-btn").dataset.memberCardId = cardId;
+        document.querySelector("#custom-card-content").value = document.querySelector(`#card-content-${cardId}`).innerHTML;
+    });
+}
+
+async function clickCardSpaceDeleteCardBtn() {
+    const url = "/api/v1/card/auth/member/custom/delete";
+
+    const body = {
+        "cardId": this.dataset.cardId,
+        "type": this.dataset.type
+    };
+
+    let options = {
+        method: "POST",
+        body: JSON.stringify(body)
+    };
+
+    await authFetch(url, options).then(res => {
+        location.reload();
+    });
 }

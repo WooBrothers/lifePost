@@ -1,6 +1,7 @@
 import {CardListGrid} from "../cardList/cardListGrid.js";
 import {clickReadLetter, writeCardBtnClick} from "../cardList/cardListEvent.js";
 import {getCardListAfterCardId} from "../cardApi.js";
+import {getAccessToken} from "../../common/apiUtil.js";
 
 const space = document.querySelector("#focus-card-contents-space");
 await renderFocusCard(space, 0, bindFocusCard);
@@ -66,7 +67,11 @@ async function scrollFocusCardLoad() {
 }
 
 function clickGoToLoginPageBtn() {
-    window.location = "/login/page";
+    if (getAccessToken()) {
+        window.location = "/card/list/page";
+    } else {
+        window.location = "/login/page";
+    }
 }
 
 function setEmptyFocusCardStyle() {

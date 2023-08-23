@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.woobros.member.hub.domain.card.FocusTypeEnum;
 import com.woobros.member.hub.model.letter.LetterTagEnum;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -99,7 +99,7 @@ public class LetterDto {
             String tagPattern = "(<[^>]*>)|(&nbsp;)";
             Pattern pattern = Pattern.compile(tagPattern);
             String result = pattern.matcher(this.getContents()).replaceAll("_");
-            return result.trim().replaceAll("_", " ");
+            return result.trim().replace("_", " ");
         }
 
     }

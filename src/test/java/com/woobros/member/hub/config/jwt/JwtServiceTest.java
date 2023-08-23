@@ -9,9 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @Slf4j
 @SpringBootTest(properties = {
-//    "jwt.access.expiration=999999999",
-    "jwt.access.expiration=1000",
-    "jwt.refresh.expiration=99999999999",
+    "jwt.access.expiration=1",
+    "jwt.refresh.expiration=999999999",
 })
 class JwtServiceTest {
 
@@ -31,9 +30,5 @@ class JwtServiceTest {
         System.out.println("\n" + "[create Long term access token]");
         System.out.println(jwtService.createRefreshToken());
 
-        for (int i = 101; i < 201; i++) {
-            System.out.println(i);
-        }
     }
-
 }

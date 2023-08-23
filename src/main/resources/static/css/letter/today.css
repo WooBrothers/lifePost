@@ -12,6 +12,10 @@
     margin-bottom: 150px;
   }
 
+  #today-space:hover {
+    cursor: pointer;
+  }
+
   #image-space {
     position: relative;
     width: 675px;

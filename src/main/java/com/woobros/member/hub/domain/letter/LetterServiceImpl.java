@@ -20,13 +20,13 @@ import com.woobros.member.hub.model.member_letter.MemberLetter;
 import com.woobros.member.hub.model.member_letter.MemberLetterRepository;
 import com.woobros.member.hub.model.stamp.Stamp;
 import com.woobros.member.hub.model.stamp.StampRepository;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -43,6 +43,7 @@ import org.springframework.stereotype.Service;
 public class LetterServiceImpl implements LetterService {
 
     /* beans */
+    private final Common common;
     private final LetterRepository letterRepository;
     private final MemberRepository memberRepository;
     private final MemberLetterRepository memberLetterRepository;
@@ -60,12 +61,7 @@ public class LetterServiceImpl implements LetterService {
     @Override
     public LetterDto.ReadResponse getLatestLetter() {
 
-        Letter latestLetter = letterRepository.findByPostDate(LocalDate.now()).orElseGet(
-            () -> letterRepository.findTopByOrderByPostDateDesc()
-                .orElseThrow(
-                    () -> new CommonException(ErrorEnum.NOT_FOUND)
-                )
-        );
+        Letter latestLetter = getTodayOrLatestLetter();
 
         LetterDto.ReadResponse response = letterMapper.toResponseDto(latestLetter);
         response.setContents(response.getContentWithOutTag());
@@ -76,11 +72,11 @@ public class LetterServiceImpl implements LetterService {
     public Page<LetterDto.PageResponse> getMyLetterList(int pageNo, int size,
         List<FocusTypeEnum> focusTypeList, UserDetails userDetails) {
 
-        pageNo = Common.verifyPageNo(pageNo);
+        pageNo = common.verifyPageNo(pageNo);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         // 해당 repo 메소드 > entityGraph 처리 : 즉시 로딩 (n+1해결)
         Page<MemberLetter> memberLetters = memberLetterRepository
@@ -104,11 +100,11 @@ public class LetterServiceImpl implements LetterService {
     @Override
     public Page<PageResponse> getMissLetterList(int pageNo, int size,
         UserDetails userDetails) {
-        pageNo = Common.verifyPageNo(pageNo);
+        pageNo = common.verifyPageNo(pageNo);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         Page<Letter> letters = letterRepository.findMissLetter(member.getId(), pageable);
 
@@ -120,9 +116,9 @@ public class LetterServiceImpl implements LetterService {
     @Override
     public Page<PageResponse> getAllLetterList(int pageNo, int size,
         UserDetails userDetails) {
-        pageNo = Common.verifyPageNo(pageNo);
+        pageNo = common.verifyPageNo(pageNo);
 
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
@@ -164,7 +160,7 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     public void postFocusLetter(PostFocusRequest focusCardRequest, UserDetails userDetails) {
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         MemberLetter memberLetter = memberLetterRepository.findByMemberIdAndLetterId(member.getId(),
             focusCardRequest.getLetterId())
@@ -185,19 +181,26 @@ public class LetterServiceImpl implements LetterService {
     public LetterDto.ReadResponse getLetterContentsByLetterId(Long letterId,
         UserDetails userDetails) {
 
-        Member member = getMemberByUserDetail(userDetails);
+        Member member = common.getMemberByUserDetail(userDetails);
 
         Letter letter = letterRepository.findById(letterId)
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
 
+        Letter latestLetter = getTodayOrLatestLetter();
+
         if (doesNotHaveLetterForMember(member.getId(), letter.getId())) {
-            if (letter.getPostDate().equals(LocalDate.now())) {
+
+            if (letter.getPostDate().equals(LocalDate.now())
+                || letter.getId().equals(latestLetter.getId())) {
+
                 saveLetterAndCardToMember(member, letter);
                 saveMemberStampUsed(member, letter);
             } else if (member.getStampCount() > 0) {
+
                 memberRepository.save(member.useStamp());
                 saveLetterAndCardToMember(member, letter);
                 saveMemberStampUsed(member, letter);
+
             } else {
                 throw new CommonException(ErrorEnum.LETTER_REQUEST_INVALID);
             }
@@ -205,6 +208,17 @@ public class LetterServiceImpl implements LetterService {
         return letterMapper.toResponseDto(letter);
     }
 
+    /**
+     * 오늘의 편지 혹은 가장 마지막 편지 조회
+     */
+    private Letter getTodayOrLatestLetter() {
+        return letterRepository.findByPostDate(LocalDate.now()).orElseGet(
+            () -> letterRepository.findTopByOrderByPostDateDesc()
+                .orElseThrow(
+                    () -> new CommonException(ErrorEnum.NOT_FOUND)
+                )
+        );
+    }
 
     /**
      * 멤버가 최초로 편지를 읽으면 편지와 그 편지에 딸린 카드를 멤버가 소유하도록 저장
@@ -269,18 +283,6 @@ public class LetterServiceImpl implements LetterService {
             .action(-1)
             .build());
     }
-
-    /**
-     * userDetail 을 이용해 유저 조회
-     *
-     * @param userDetails security 멤버 정보
-     * @return member entity
-     */
-    private Member getMemberByUserDetail(UserDetails userDetails) {
-        return memberRepository.findByEmail(userDetails.getUsername()).orElseThrow(() ->
-            new CommonException(ErrorEnum.NOT_FOUND));
-    }
-
 
     private List<PageResponse> getPageResponse(Page<Letter> letters) {
         List<PageResponse> pageResponses = new ArrayList<>();

@@ -1,0 +1,61 @@
+#modal-header-space {
+  display: flex;
+  flex-direction: row;
+}
+
+#create-card-empty-space {
+  flex: 1;
+}
+
+#modal-close-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  font-size: 25px;
+  background-color: darkgrey;
+}
+
+.modal-title {
+  margin: 10px 10px 10px 10px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+#withdraw-contents-space {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+}
+
+.alert-class {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 15px;
+  margin-top: 30px;
+}
+
+#btn-space {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  align-items: center;
+}
+
+#withdraw-ok-btn {
+  margin-left: 15px;
+}
+
+#withdraw-ok-btn:enabled {
+  font-size: 15px;
+  border: none;
+  background-color: lightgray;
+  color: crimson;
+}
+
+#withdraw-ok-btn:disabled {
+  font-size: 15px;
+  border: none;
+  background-color: lightgray;
+  color: darkgray;
+}

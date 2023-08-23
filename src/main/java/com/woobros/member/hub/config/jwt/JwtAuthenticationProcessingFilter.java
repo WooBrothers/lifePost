@@ -1,12 +1,14 @@
 package com.woobros.member.hub.config.jwt;
 
+import com.woobros.member.hub.common.exception.CommonException;
+import com.woobros.member.hub.common.exception.ErrorEnum;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,7 +38,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
 
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+    private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -60,13 +62,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         // 일치한다면 AccessToken을 재발급해준다.
         if (refreshToken != null) {
             checkRefreshTokenAndReIssueAccessToken(request, response, refreshToken);
-            return; // RefreshToken을 보낸 경우에는 AccessToken을 재발급 하고 인증 처리는 하지 않게 하기위해 바로 return으로 필터 진행 막기
-        }
-
-        // RefreshToken이 없거나 유효하지 않다면, AccessToken을 검사하고 인증을 처리하는 로직 수행
-        // AccessToken이 없거나 유효하지 않다면, 인증 객체가 담기지 않은 상태로 다음 필터로 넘어가기 때문에 403 에러 발생
-        // AccessToken이 유효하다면, 인증 객체가 담긴 상태로 다음 필터로 넘어가기 때문에 인증 성공
-        if (refreshToken == null) {
+        } else {
             checkAccessTokenAndAuthentication(request, response, filterChain);
         }
     }
@@ -86,7 +82,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         jwtService.createAccessToken(member),
                         reIssuedRefreshToken);
                 }, () -> {
-                    throw new RuntimeException("refresh token not found");
+                    throw new CommonException(ErrorEnum.NOT_FOUND);
                 }
             );
     }

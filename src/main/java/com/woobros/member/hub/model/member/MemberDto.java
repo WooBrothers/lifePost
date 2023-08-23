@@ -1,5 +1,6 @@
 package com.woobros.member.hub.model.member;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,5 +45,22 @@ public class MemberDto {
         private final String nickName;
         private final LocalDateTime createdAt;
         private final LocalDateTime updateAt;
+    }
+
+    @Getter
+    @Builder
+    public static class InfoResponse {
+
+        private final String email;
+        private final String socialType;
+        private final String stampCount;
+
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime signInDate;
+
+        public InfoResponse setSignInDate(LocalDateTime signInDate) {
+            this.signInDate = signInDate;
+            return this;
+        }
     }
 }

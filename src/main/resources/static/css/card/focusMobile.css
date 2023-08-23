@@ -41,5 +41,6 @@
     font-size: 50px;
     color: white;
     background-color: transparent;
+    cursor: pointer;
   }
 }

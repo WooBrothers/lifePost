@@ -98,7 +98,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .email(attributes.getEmail())
                 .picture(attributes.getPicture())
                 .socialType(socialType)
-                .role(Role.GUEST)
+                .role(Role.USER)
                 .build()
         );
     }

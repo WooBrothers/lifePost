@@ -1,22 +1,25 @@
 import {authFetch} from "../../common/apiUtil.js";
 
-export function increaseWriteCount(memberCardId, count) {
-    const url = "/api/v1/card/auth/write/count";
+export async function rewardStampToUser() {
 
-    const body = {
-        memberCardId: memberCardId,
-        count: count
-    }
+    const url = "/api/v1/card/auth/write_count/reward";
 
     let option = {
-        method: "PATCH",
+        method: "POST",
+    };
+
+    await authFetch(url, option);
+}
+
+export async function increaseCardWriteCount(memberCardId, count) {
+    const url = "/api/v1/card/auth/write_count";
+
+    const body = {"memberCardId": memberCardId, "count": count};
+
+    let option = {
+        method: "POST",
         body: JSON.stringify(body)
     };
 
-
-    authFetch(url, option).then(
-        res => {
-            console.log(res);
-        }
-    )
+    await authFetch(url, option);
 }

@@ -1,14 +1,16 @@
 package com.woobros.member.hub.domain.card;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.woobros.member.hub.model.card.CardTypeEnum;
 import com.woobros.member.hub.model.letter.Letter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +38,7 @@ public class CardDto {
     public static class PostRequest {
 
         @NotBlank
-        @Size(min = 1, max = 200)
+        @Size(min = 1, max = 200, message = "contents@Size")
         private String contents;
 
         @NotBlank
@@ -49,8 +51,10 @@ public class CardDto {
     @Setter
     public static class PostCustomRequest {
 
-        //        @NotBlank
-//        @Size(min = 1, max = 200)
+        private Long cardId;
+
+        @NotNull(message = "contents@NotNull")
+        @NotBlank(message = "contents@NotBlank")
         private String contents;
 
         private String tag;
@@ -58,12 +62,22 @@ public class CardDto {
 
     @Getter
     @Setter
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class DeleteCustomRequest {
+
+        @NotNull(message = "memberCustomCardId@NotNull")
+        private Long cardId;
+        private CardTypeEnum type;
+    }
+
+    @Getter
+    @Setter
     public static class PostFocusRequest {
 
-        @NotBlank
+        @NotNull(message = "cardId@NotNull")
         private Long cardId;
 
-        @NotBlank
+        @NotNull(message = "type@NotNull")
         private CardTypeEnum type;
     }
 
@@ -74,7 +88,7 @@ public class CardDto {
         @NotBlank
         private Long memberCardId;
 
-        private int count = 1;
+        private Long count = 10L;
     }
 
     @Getter

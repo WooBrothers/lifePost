@@ -72,3 +72,10 @@
   justify-content: center;
 }
 
+#letter-list-space:hover {
+  cursor: pointer;
+}
+
+.focus-btn:hover {
+  cursor: pointer;
+}

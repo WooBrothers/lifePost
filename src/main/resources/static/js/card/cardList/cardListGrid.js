@@ -50,9 +50,9 @@ export class CardListGrid {
             preEmptyContentDiv.remove();
         }
 
-        const cardCount = document.querySelector("#focus-card-contents-space").childElementCount;
+        const focusCardContentsSpace = document.querySelector("#focus-card-contents-space");
 
-        if (!response) {
+        if (!response || (focusCardContentsSpace && focusCardContentsSpace.childElementCount === 0 && response.content.length === 0)) {
             const emptyContentDiv = new DivTag()
                 .setClassName("empty-content")
                 .setInnerHTML(
@@ -94,12 +94,18 @@ export class CardListGrid {
                 .setStyle()
             cardListSpace.appendChild(emptyContentDiv.getTag());
             return;
-        } else if (cardCount === 0 && response.content.length === 0) {
-            const emptyContentDiv = new DivTag()
-                .setClassName("empty-content")
-                .setInnerHTML("카드가 없습니다. 편지을 읽거나 직접 만들어 보세요!")
-                .setStyle()
-            cardListSpace.appendChild(emptyContentDiv.getTag());
+        }
+
+        if (response.content.length === 0) {
+            const emptyTexts = document.querySelectorAll(".card-empty-info-text")
+            emptyTexts.forEach(ele => {
+                ele.remove();
+            })
+
+            const emptyText = new DivTag()
+                .setClassName("card-empty-info-text")
+                .setInnerHTML("카드가 없습니다. 편지을 읽거나 카드를 만들어 보세요!");
+            cardListSpace.appendChild(emptyText.getTag());
             return;
         }
 
@@ -202,7 +208,18 @@ export class CardListGrid {
             .setInnerHTML("확언 쓰기")
         ];
 
-        if (content.type !== "CUSTOM") {
+        if (content.type === "CUSTOM") {
+            cardActionBtnList.unshift(
+                new ButtonTag()
+                    .setClassName("card-list-btn card-action-btn card-modify-btn")
+                    .setDataset([{cardId: content.cardId, type: content.type}])
+                    .setInnerHTML("수정 하기"),
+                new ButtonTag()
+                    .setClassName("card-list-btn card-action-btn card-delete-btn")
+                    .setDataset([{cardId: content.cardId, type: content.type}])
+                    .setInnerHTML("삭제 하기"),
+            );
+        } else {
             cardActionBtnList.push(new ButtonTag()
                 .setClassName("card-list-btn card-action-btn letter-read-btn")
                 .setDataset([{letterId: content.letterId}])

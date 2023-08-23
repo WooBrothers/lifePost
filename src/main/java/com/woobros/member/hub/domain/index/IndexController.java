@@ -63,6 +63,16 @@ public class IndexController {
         return "contents/letter/letterRead";
     }
 
+    @GetMapping("/mypage/page")
+    public String getMyPage() {
+        return "/mypage";
+    }
+
+    @GetMapping("/withdraw/page")
+    public String getWithdrawPage() {
+        return "/widthdraw";
+    }
+
     @GetMapping("/api/v1/letter/auth/stamp/popup")
     public String getStampUsePopUpPage(Model model,
         @AuthenticationPrincipal UserDetails userDetails) {

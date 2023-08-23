@@ -13,11 +13,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @RequiredArgsConstructor
@@ -58,46 +60,54 @@ public class SecurityConfig {
 
         // h2 console를 사용하기 위한 옵션
         http
-            .csrf().disable()
-            .headers().frameOptions().disable();
+            .csrf(AbstractHttpConfigurer::disable);
 
         http
             // 세션 관리
-            .sessionManagement()
-            // 세션 사용하지 않음
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .sessionManagement(sessionManagement ->
+                sessionManagement
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        // 세션 사용하지 않음
 
         http
             // URL별 권한 관리를 설정하는 옵션 시작점, 해당 옵션이 선언되어야만 antMatchers를 사용 가능함
-            .authorizeRequests()
-            // open url과 자원 요청은 권한 없이 허가
-            .antMatchers("/", "/templates/**", "/css/**", "/js/**",
-                "/favicon.ico", "/h2/**", "/api/v1/**/open/**",
-                "/img/**", "/auth/new/token", "/**/page/**")
-            .permitAll()
-            // 구독자만 접근 가능
-            .antMatchers("/api/v1/**/auth/**")
-            .hasRole(Role.USER.name())
-            // 관리자만 접근 가능
-            .antMatchers("/api/v1/**/admin/**")
-            .hasRole(Role.ADMIN.name())
-            // antMatchers 에서 지정되지 않은 나머지 url은
-            .anyRequest()
-            // 인증된 사용자들에게만 접근 허용 처리
-            .authenticated()
-            .and()
-            .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-            .accessDeniedPage("/forbidden/page");
+            .authorizeHttpRequests(
+                auth -> auth
+                    .requestMatchers(
+                        new AntPathRequestMatcher("/"),
+                        new AntPathRequestMatcher("/templates/**"),
+                        new AntPathRequestMatcher("/css/**"),
+                        new AntPathRequestMatcher("/js/**"),
+                        new AntPathRequestMatcher("/favicon.ico"),
+                        new AntPathRequestMatcher("/h2/**"),
+                        new AntPathRequestMatcher("/api/v1/**/open/**"),
+                        new AntPathRequestMatcher("/img/**"),
+                        new AntPathRequestMatcher("/auth/new/token"),
+                        new AntPathRequestMatcher("/**/page/**")
+                    )
+                    .permitAll()
+                    .requestMatchers(
+                        new AntPathRequestMatcher("/api/v1/**/auth/**")
+                    )
+                    .hasRole(Role.USER.name())
+                    .requestMatchers(
+                        new AntPathRequestMatcher("/api/v1/**/admin/**")
+                    )
+                    .hasRole(Role.ADMIN.name())
+                    .anyRequest()
+                    .authenticated()
+            );
 
-        http
-            // oAuth2 로그인 기능에 대한 설정의 진입점
-            .oauth2Login()
+        http.exceptionHandling(
+            handler -> handler.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedPage("/forbidden/page"));
+
+        http.oauth2Login(oauth -> oauth
             .loginPage("/login/page")
             .defaultSuccessUrl("/")
             .successHandler(oAuth2LoginSuccessHandler)
             .failureHandler(oAuth2LoginFailureHandler)
-            // 사용자 정보를 가져온 상태에서 추가 작업 진행
-            .userInfoEndpoint().userService(oAuth2UserService);
+            .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService)));
 
         // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
         http.addFilterAfter(jwtAuthenticationProcessingFilter(), LogoutFilter.class);

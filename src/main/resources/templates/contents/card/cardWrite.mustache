@@ -7,15 +7,22 @@
 <body>
 <div id="card-write-space">
   <div id="modal-header-space">
-    <label for="card-write-content" id="card-write-label">확언 쓰기</label>
+    <div id="card-write-info-space">
+      <label for="card-write-content" id="card-write-label">확언 쓰기</label>
+      <div id="today-total-write-count">오늘 쓴 총 횟수:</div>
+      <div id="card-write-count">이 카드를 쓴 횟수:</div>
+    </div>
     <div id="create-card-empty-space"></div>
     <button id="modal-close-btn">X</button>
   </div>
-  <div id="text-container">
-    <div>
-      <div id="card-content-answer"></div>
-      <div id="write-count"></div>
-      <div id="display-output"></div>
+  <div id="write-content-space">
+    <div id="text-container">
+      <div>
+        <div id="card-content-answer"></div>
+        <div id="display-output"></div>
+      </div>
+    </div>
+    <div id="card-write-text-space">
       <textarea id="card-write-content"></textarea>
     </div>
   </div>

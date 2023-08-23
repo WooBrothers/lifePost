@@ -15,4 +15,6 @@ public interface MemberMapper {
 
     MemberDto.Response toResponse(Member member);
 
+    MemberDto.InfoResponse toInfoResponse(Member member);
+
 }

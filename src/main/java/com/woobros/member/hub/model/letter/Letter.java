@@ -1,16 +1,16 @@
 package com.woobros.member.hub.model.letter;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +39,7 @@ public class Letter {
     private String postStampImage;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "CLOB")
     private String contents;
 
     @Column(nullable = false)

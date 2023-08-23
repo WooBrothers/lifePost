@@ -31,13 +31,16 @@ public interface CardService {
     CardDto.ReadResponse postAffirmationCard(CardDto.PostRequest cardPostReqDto,
         UserDetails userDetails);
 
-    Long postWriteCardCount(CardDto.PostWriteRequest cardWriteReqDto,
-        UserDetails userDetails);
-
     void deleteFocusCard(CardDto.PostFocusRequest focusCardRequest, UserDetails userDetails);
 
     Page<CardDto.PageResponse> getCardListAfterCardId(Long memberCardId, int size,
         UserDetails userDetails);
+
+    void postCardWrite(CardDto.PostWriteRequest postWriteRequest, UserDetails userDetails);
+
+    void postCardWriteReward(UserDetails userDetails);
+
+    void deleteCustomCard(CardDto.DeleteCustomRequest deleteCustomRequest, UserDetails userDetails);
 }
 
 

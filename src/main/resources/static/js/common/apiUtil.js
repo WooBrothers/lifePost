@@ -5,7 +5,9 @@ export async function checkAndRefreshToken() {
         let option = {
             method: "GET"
         }
-        return await authFetch(url, option);
+        return await authFetch(url, option).then(res => {
+            // location.reload();
+        });
     }
 }
 
@@ -38,23 +40,18 @@ export async function authFetch(url, option) {
             } else if (option.method === "PATCH" && response.status === 200) {
                 return response.text;
             } else if (response.status === 401) {
-                // 401 요청 실패 시 리프레쉬 토큰 저장 후 재요청
-                option.headers = {"Authorization-refresh": refreshToken};
+
+                option.headers = {
+                    "Authorization-refresh": refreshToken,
+                    "Content-Type": "application/json"
+                };
+
                 await fetch(url, option).then(
                     async response => {
                         if (response.ok || response.status === 201) {
-                            option.headers = {"Authorization": tokenPrefix + getAccessToken()};
-                            await fetch(url, option).then(
-                                response => {
-                                    if (response.ok || response.status === 201) {
-                                        return response.json();
-                                    } else {
-                                        throw new Error("요청 실패");
-                                    }
-                                }
-                            )
+                            location.reload();
+                            // window.location.href = "/";
                         } else {
-                            console.log("토큰 만료 실패");
                             window.location.href = "/login/page";
                         }
                     }

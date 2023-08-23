@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: ${profileActive}
+  datasource:
+    hikari:
+      leak-detection-threshold: 60000
 server:
   port: 8080
   servlet.encoding.force-response: true

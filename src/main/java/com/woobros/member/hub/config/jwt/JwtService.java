@@ -4,11 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,12 +55,12 @@ public class JwtService {
      * AccessToken 생성 메소드
      */
     public String createAccessToken(Member member) {
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now().plusSeconds(accessTokenExpirationPeriod);
+        Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+
         return JWT.create() // JWT 토큰을 생성하는 빌더 반환
             .withSubject(ACCESS_TOKEN_SUBJECT) // JWT의 Subject 지정 -> AccessToken이므로 AccessToken
-            .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod)) // 토큰 만료 시간 설정
-
-            // .withClaim(클래임 이름, 클래임 값) 으로 설정
+            .withExpiresAt(date) // 토큰 만료 시간 설정
             .withClaim(EMAIL_CLAIM, member.getEmail())
             .sign(Algorithm
                 .HMAC512(secretKey)); // HMAC512 알고리즘 사용, application-jwt.yml에서 지정한 secret 키로 암호화
@@ -68,10 +70,12 @@ public class JwtService {
      * RefreshToken 생성 RefreshToken은 Claim에 email도 넣지 않으므로 withClaim() X
      */
     public String createRefreshToken() {
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now().plusSeconds(refreshTokenExpirationPeriod);
+        Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+
         return JWT.create()
             .withSubject(REFRESH_TOKEN_SUBJECT)
-            .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
+            .withExpiresAt(date)
             .sign(Algorithm.HMAC512(secretKey));
     }
 
@@ -157,14 +161,14 @@ public class JwtService {
      * AccessToken 헤더 설정
      */
     public void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
-        response.setHeader(accessHeader, "Bearer " + accessToken);
+        response.setHeader(accessHeader, BEARER + accessToken);
     }
 
     /**
      * RefreshToken 헤더 설정
      */
     public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
-        response.setHeader(refreshHeader, "Bearer " + refreshToken);
+        response.setHeader(refreshHeader, BEARER + refreshToken);
     }
 
     /**
@@ -173,14 +177,24 @@ public class JwtService {
     private void setAccessTokenToCookie(HttpServletRequest request, HttpServletResponse response,
         String accessToken) {
 
+        boolean isSetCookie = false;
         for (Cookie cookie : request.getCookies()) {
             if (cookie.getName().equals("accessToken")) {
                 cookie.setValue(accessToken);
                 cookie.setPath("/");
                 cookie.setMaxAge(Math.toIntExact(accessTokenExpirationPeriod));
                 response.addCookie(cookie);
+
+                isSetCookie = true;
                 break;
             }
+        }
+
+        if (!isSetCookie) {
+            Cookie cookie = new Cookie("accessToken", accessToken);
+            cookie.setPath("/");
+            cookie.setMaxAge(Math.toIntExact(accessTokenExpirationPeriod));
+            response.addCookie(cookie);
         }
     }
 

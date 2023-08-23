@@ -58,5 +58,4 @@ public interface MemberCardRepository extends
     @EntityGraph(attributePaths = {"affirmationCard", "memberCustomCard"})
     Page<MemberCard> findByIdIsLessThanAndMemberIdAndFocusOrderByIdDesc(Long memberCardId,
         Long memberId, FocusTypeEnum focusTypeEnum, Pageable pageable);
-
 }
