@@ -60,7 +60,7 @@ jobs:
           cd ..
           ls
           echo ---------------------------------------------------------------
-          cd /docker/$profile
+          cd docker/$profile
           cp lifepost-service.Dockerfile ../../service
           cd ..
           cd ..
