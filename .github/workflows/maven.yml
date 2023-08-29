@@ -60,6 +60,7 @@ jobs:
           cd ..
           cd ..
           mv appspec.yml service/
+          mkdir artifacts
           zip -r ./artifacts/service.zip service/
           cd service/
           ls
