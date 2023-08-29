@@ -55,6 +55,10 @@ jobs:
           cd target/
           mv *.jar ../service
           ls
+          echo ---------------------------------------------------------------
+          pwd
+          ls
+          echo ---------------------------------------------------------------
           cd /docker/$profile
           cp lifepost-service.Dockerfile ../../service
           cd ..
