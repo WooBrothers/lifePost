@@ -59,7 +59,7 @@ jobs:
           cp lifepost-service.Dockerfile ../../service
           cd ..
           cd ..
-          mv appspce.yml service/
+          mv appspec.yml service/
           zip -r ./artifacts/service.zip service/
           cd service/
           ls
