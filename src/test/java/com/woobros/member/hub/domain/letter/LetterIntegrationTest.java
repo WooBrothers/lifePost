@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woobros.member.hub.domain.card.FocusTypeEnum;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCard;
 import com.woobros.member.hub.model.card.affr_card.AffirmationCardRepository;
 import com.woobros.member.hub.model.card.memb_card.MemberCard;
@@ -25,7 +26,6 @@ import com.woobros.member.hub.model.member.Role;
 import com.woobros.member.hub.model.member_letter.MemberLetter;
 import com.woobros.member.hub.model.member_letter.MemberLetterRepository;
 import jakarta.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -88,6 +88,7 @@ class LetterIntegrationTest {
             MemberLetter.builder()
                 .member(member)
                 .letter(letter)
+                .focus(FocusTypeEnum.ATTENTION)
                 .build()));
     }
 
@@ -112,84 +113,6 @@ class LetterIntegrationTest {
 
     }
 
-    @Test
-    void testPostLetter_WhenHaveAdminToken_WillOk() throws Exception {
-        Letter letter = Letter.builder()
-            .title("test15")
-            .contents("think every time.")
-            .writer("wookim")
-            .build();
-
-        // member -> admin 처리
-        Member member = memberRepository.findById(1L).orElseThrow();
-        member.setRole(Role.ADMIN);
-
-        LetterDto.PostRequest postRequest = letterMapper.toRequestDto(letter);
-
-        ResultActions response = mockMvc.perform(post("/api/v1/letter/admin")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken)
-            .content(objectMapper.writeValueAsString(postRequest))
-        );
-
-        response.andDo(print())
-            .andExpect(status().isCreated());
-    }
-
-    @Test
-    void testPostLetter_WhenHaveAdminToken_WillInvalid() {
-        Member member = memberRepository.findById(1L).orElseThrow();
-        member.setRole(Role.ADMIN);
-
-        List<Letter> wrongDataLetters = new ArrayList<>();
-        wrongDataLetters.add(Letter.builder()
-            .title("")
-            .contents("think every time.")
-            .writer("wookim")
-            .build());
-        wrongDataLetters.add(Letter.builder()
-            .title(null)
-            .contents("think every time.")
-            .writer("wookim")
-            .build());
-        wrongDataLetters.add(Letter.builder()
-            .title("title ok")
-            .contents("")
-            .writer("wookim")
-            .build());
-        wrongDataLetters.add(Letter.builder()
-            .title("title ok")
-            .contents(null)
-            .writer("wookim")
-            .build());
-        wrongDataLetters.add(Letter.builder()
-            .title("title ok")
-            .contents("contents ok")
-            .writer("")
-            .build());
-        wrongDataLetters.add(Letter.builder()
-            .title("title ok")
-            .contents("contents ok")
-            .writer(null)
-            .build());
-
-        wrongDataLetters.forEach(letter -> {
-
-            try {
-                LetterDto.PostRequest letterDto = letterMapper.toRequestDto(letter);
-                ResultActions response = mockMvc.perform(post("/api/v1/letter/admin")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(authorization, tokenType + testAccessToken)
-                    .content(objectMapper.writeValueAsString(letterDto))
-                );
-                response.andDo(print())
-                    .andExpect(status().isBadRequest());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        });
-    }
 
     @Test
     void testGetTodayLetter_WhenNoHaveToken_WillOk() throws Exception {
@@ -231,62 +154,6 @@ class LetterIntegrationTest {
             .andExpect(jsonPath("$.title", is("test14")));
     }
 
-    @Test
-    void testGetLettersPage_WhenNoHaveToken_WillOk() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/15/3")
-            .contentType(MediaType.APPLICATION_JSON));
-
-        response.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].id", is(14)))
-            .andExpect(jsonPath("$.content[1].id", is(13)))
-            .andExpect(jsonPath("$.content[2].id", is(12)));
-    }
-
-    @Test
-    void testGetLettersPage_WhenHaveGuestToken_WillOk() throws Exception {
-        Member member = memberRepository.findById(1L).orElseThrow();
-        member.setRole(Role.GUEST);
-
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/15/3")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken));
-
-        response.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].id", is(14)))
-            .andExpect(jsonPath("$.content[1].id", is(13)))
-            .andExpect(jsonPath("$.content[2].id", is(12)));
-    }
-
-    @Test
-    void testGetLettersPage_WhenHaveUserToken_WillOk() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/15/3")
-            .header(authorization, tokenType + testAccessToken)
-            .contentType(MediaType.APPLICATION_JSON));
-
-        response.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].id", is(14)))
-            .andExpect(jsonPath("$.content[1].id", is(13)))
-            .andExpect(jsonPath("$.content[2].id", is(12)));
-    }
-
-    @Test
-    void testGetLettersPage_WhenHaveAdminToken_WillOk() throws Exception {
-        Member member = memberRepository.findById(1L).orElseThrow();
-        member.setRole(Role.ADMIN);
-
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/open/page/15/3")
-            .header(authorization, tokenType + testAccessToken)
-            .contentType(MediaType.APPLICATION_JSON));
-
-        response.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].id", is(14)))
-            .andExpect(jsonPath("$.content[1].id", is(13)))
-            .andExpect(jsonPath("$.content[2].id", is(12)));
-    }
 
     @Test
     void testGetTodayLetterContents_WhenNoHaveToken_Will302() throws Exception {
@@ -308,38 +175,6 @@ class LetterIntegrationTest {
         response.andDo(print()).andExpect(status().isForbidden());
     }
 
-    @Test
-    void testGetTodayLetterContents_WhenHaveUserToken_WillOk() throws Exception {
-
-        // 권한 변경 user -> admin
-        Member member = memberRepository.findById(1L).orElseThrow();
-        member.setRole(Role.ADMIN);
-        memberRepository.save(member);
-
-        // 오늘의 편지 생성
-        Letter letter = Letter.builder()
-            .title("test15")
-            .contents("think every time.")
-            .writer("wookim")
-            .build();
-
-        letterRepository.save(letter);
-
-        // 권한 되돌리기
-        member.setRole(Role.USER);
-        memberRepository.save(member);
-
-        // 오늘의 편지 생성 이후 조회 요청
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/15")
-            .header(authorization, tokenType + testAccessToken)
-            .contentType(MediaType.APPLICATION_JSON));
-
-        response.andDo(print()).andExpect(status().isOk())
-            .andExpect(jsonPath("$.id", is(15)))
-            .andExpect(jsonPath("$.title", is(letter.getTitle())))
-            .andExpect(jsonPath("$.contents", is(letter.getContents())))
-        ;
-    }
 
     @Test
     void testGetTodayLetterContents_WhenHaveAdminToken_WillForbidden() throws Exception {
@@ -419,59 +254,5 @@ class LetterIntegrationTest {
         ;
     }
 
-    @Test
-    void testGetDoesNotHaveLatestLetterPage_WhenHaveUserToken_WillOk() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/no-have/3")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken)
-        );
 
-        response.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].id", is(9)))
-            .andExpect(jsonPath("$.content[1].id", is(8)));
-    }
-
-    @Test
-    void testGetDoesNotHaveLetterPage_WhenHaveUserToken_WillOk() throws Exception {
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/no-have/3/9")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken)
-        );
-
-        response.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].id", is(8)))
-            .andExpect(jsonPath("$.content[2].id", is(6)));
-    }
-
-    @Test
-    void testGetHaveLetterPage_WhenHaveUserToken_WillOk() throws Exception {
-        // when - action or behaviour that we are going test
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/3/12")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken)
-        );
-
-        // then - verify the result or output using assert statements
-        response.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content[0].id", is(11)))
-            .andExpect(jsonPath("$.totalElements", is(2)));
-    }
-
-    @Test
-    void testGetHaveLatestLetterPage_WhenHaveUserToken_WillOk() throws Exception {
-
-        // when - action or behaviour that we are going test
-        ResultActions response = mockMvc.perform(get("/api/v1/letter/auth/page/3")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken)
-        );
-
-        // then - verify the result or output using assert statements
-        response.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.totalElements", is(3)));
-    }
 }

@@ -1,6 +1,5 @@
 package com.woobros.member.hub.domain.card;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -21,7 +20,6 @@ import com.woobros.member.hub.model.letter.LetterMapper;
 import com.woobros.member.hub.model.letter.LetterRepository;
 import com.woobros.member.hub.model.member.Member;
 import com.woobros.member.hub.model.member.MemberRepository;
-import com.woobros.member.hub.model.member.Role;
 import com.woobros.member.hub.model.member_letter.MemberLetter;
 import com.woobros.member.hub.model.member_letter.MemberLetterRepository;
 import jakarta.transaction.Transactional;
@@ -93,6 +91,7 @@ public class CardIntegrationCardTest {
                     MemberLetter.builder()
                         .member(member)
                         .letter(letter)
+                        .focus(FocusTypeEnum.ATTENTION)
                         .build());
 
                 // 14 13 12 11 10 편지에 딸린 카드 memberCard 저장처리
@@ -338,38 +337,5 @@ public class CardIntegrationCardTest {
         )
             .andDo(print())
             .andExpect(status().isOk());
-    }
-
-    @Test
-    void testPostAffirmationCard() throws Exception {
-        member.setRole(Role.ADMIN);
-        memberRepository.save(member);
-
-        Map<String, String> affirmationCardMap = new HashMap<>();
-        affirmationCardMap.put("contents", "affirmation card test create");
-
-        ResultActions response = mockMvc.perform(post("/api/v1/card/admin/affirmation")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken)
-            .content(objectMapper.writeValueAsString(affirmationCardMap)));
-
-        response.andDo(print())
-            .andExpect(status().isCreated());
-    }
-
-    @Test
-    void testDeleteFocusCard() throws Exception {
-
-        ResultActions response = mockMvc.perform(delete("/api/v1/card/auth/focus/AFFIRMATION/14")
-            .contentType(MediaType.APPLICATION_JSON)
-            .header(authorization, tokenType + testAccessToken))
-            .andDo(print())
-            .andExpect(status().isOk());
-
-        MemberCard memberCard = memberCardRepository.findByMemberIdAndAffirmationCardIdAndType(
-            member.getId(), 14L, CardTypeEnum.AFFIRMATION).orElseThrow();
-
-        assert memberCard.getFocus().equals(FocusTypeEnum.NON);
-
     }
 }

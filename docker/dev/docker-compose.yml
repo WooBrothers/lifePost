@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    container_name: woobros-member-db
+    restart: always
+    platform: linux/arm64/v8
+    volumes:
+      - /Users/gimgyeong-u/IdeaProjects/mysqlData:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 2023
+      MYSQL_DATABASE: member
+      MYSQL_USER: member_app
+      MYSQL_PASSWORD: member2023
+    ports:
+      - "3306:3306"
