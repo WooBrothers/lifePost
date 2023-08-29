@@ -15,7 +15,7 @@
 
   <groupId>com.woobros</groupId>
   <artifactId>member</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <name>member</name>
   <description>MOU Member Repo</description>
 
