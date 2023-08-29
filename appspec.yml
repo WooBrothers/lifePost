@@ -1,0 +1,11 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    # ec2 목적지
+    destination: /home/app/lifepost/
+hook:
+  BeforeInstall:
+    - location: /home/app/lifepost/unzip_shell.sh
+      timeout: 300
+      runas: root
