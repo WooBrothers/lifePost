@@ -50,5 +50,6 @@ jobs:
         run: mvn clean package -P $profile
 
       - name: check jar
-        run: ls
+        run: cd target/
+        | ls
 
