@@ -51,8 +51,14 @@ jobs:
 
       - name: check jar
         run: |
+          mkdir service
           cd target/
+          mv *.jar ../service
           ls
-
+          cd /docker/$profile
+          cp lifepost-service.Dockerfile ../../service
+          cd ..
+          cd ..
+          zip -r service.zip service/
 
 
