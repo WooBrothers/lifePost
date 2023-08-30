@@ -51,19 +51,20 @@ jobs:
 
       - name: zip jar with docker file
         run: |
-          mkdir service
+          mkdir build
           cd target/
-          mv *.jar ../service
+          mv *.jar ../build
           cd ..
           cd docker/$profile
-          cp lifepost-service.Dockerfile ../../service
+          cp lifepost-service.Dockerfile ../../build
           cd ..
           cd ..
-          mv appspec.yml service/
+          mv appspec.yml build/
           mkdir artifacts
-          zip -r ./artifacts/service.zip service/
-          cd service/
+          zip -r ./artifacts/build.zip build/
+          cd artifacts/
           ls
+          pwd
 
       #      - name: deploy to s3
       #        uses: jakejarvis/s3-sync-action@master
