@@ -60,6 +60,7 @@ jobs:
           cd ..
           cd ..
           mv appspec.yml artifact/
+          mkdir build
           zip -r ./build/build.zip artifact/
           cd build/
           ls
