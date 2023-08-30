@@ -78,13 +78,13 @@ jobs:
       #          DEST_DIR: 'backend/'
 
       - name: Sync Bucket
-          env:
-            AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-            AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-            AWS_EC2_METADATA_DISABLED: true
-          run: |
-            aws s3 sync \
-              --region ap-northeast-2 \
-              build s3://${{secrets.AWS_S3_BUCKET}}/backend \
-              --delete
-          working-directory: ./my-agora-states-client
+        env:
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          AWS_EC2_METADATA_DISABLED: true
+        run: |
+          aws s3 sync \
+            --region ap-northeast-2 \
+            build s3://${{secrets.AWS_S3_BUCKET}}/backend \
+            --delete
+        working-directory: ./my-agora-states-client
