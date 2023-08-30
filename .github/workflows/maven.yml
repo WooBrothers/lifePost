@@ -51,18 +51,17 @@ jobs:
 
       - name: zip jar with docker file
         run: |
-          mkdir build
+          mkdir artifact
           cd target/
-          mv *.jar ../build
+          mv *.jar ../artifact
           cd ..
           cd docker/$profile
-          cp lifepost-service.Dockerfile ../../build
+          cp lifepost-service.Dockerfile ../../artifact
           cd ..
           cd ..
-          mv appspec.yml build/
-          mkdir artifacts
-          zip -r ./artifacts/build.zip build/
-          cd artifacts/
+          mv appspec.yml artifact/
+          zip -r ./build/build.zip artifact/
+          cd build/
           ls
           pwd
 
