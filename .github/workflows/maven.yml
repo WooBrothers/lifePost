@@ -88,4 +88,4 @@ jobs:
             --region ap-northeast-2 \
             build s3://lifepost-jar-bucket \
             --delete
-        working-directory: ./artifacts
+#        working-directory: ./artifacts
