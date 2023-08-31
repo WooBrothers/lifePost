@@ -82,8 +82,7 @@ jobs:
             --delete
 
       - name: Code deploy
-        run: aws deploy create-deployment \
-          --application-name lifepost-application \
+        run: aws deploy create-deployment --application-name lifepost-application \
           --deployment-group-name lifepost-application-deploy-group \
           --s3-location bucket=lifepost-jar-bucket,bundleType=zip,key=build.zip
         env:
