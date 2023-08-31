@@ -15,3 +15,5 @@ services:
       MYSQL_PASSWORD: member2023
     ports:
       - "3306:3306"
+  service:
+    image:
