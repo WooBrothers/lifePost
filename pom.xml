@@ -13,15 +13,16 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
-  <groupId>com.woobros</groupId>
-  <artifactId>member</artifactId>
+  <groupId>net.lifepost</groupId>
+  <artifactId>service</artifactId>
   <version>0.0.1</version>
-  <name>member</name>
+  <name>service</name>
   <description>MOU Member Repo</description>
 
   <properties>
     <java.version>17</java.version>
     <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
+    <finalName>${project.artifactId}</finalName>
   </properties>
 
   <dependencies>
