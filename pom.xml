@@ -22,7 +22,6 @@
   <properties>
     <java.version>17</java.version>
     <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
-    <finalName>${project.artifactId}</finalName>
   </properties>
 
   <dependencies>
@@ -166,6 +165,7 @@
   </profiles>
 
   <build>
+    <finalName>service</finalName>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
