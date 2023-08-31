@@ -55,6 +55,7 @@ jobs:
           mkdir artifact
           ls
           cd target/
+          ls
           mv service.jar ../artifact
           cd ..
           cd docker/$profile
