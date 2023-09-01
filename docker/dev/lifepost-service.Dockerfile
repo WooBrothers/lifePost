@@ -4,8 +4,8 @@ FROM openjdk:17-jdk-slim
 WORKDIR /home/lifepost/service
 
 # 빌드 단계에서 생성된 JAR 파일을 복사합니다.
-#COPY /home/ec2-user/myapp/lifepost/service/service.jar /home/lifepost/service/service.jar
-COPY ./service.jar /home/lifepost/service/service.jar
+COPY /home/ec2-user/myapp/lifepost/service/service.jar /home/lifepost/service/service.jar
+#COPY ./service.jar /home/lifepost/service/service.jar
 
 # 포트 8080을 노출합니다.
 EXPOSE 8080
