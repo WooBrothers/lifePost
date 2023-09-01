@@ -82,7 +82,7 @@ jobs:
             --delete
 
       - name: Code deploy
-        run: aws deploy create-deployment --application-name lifepost-deploy-app --deployment-group-name lifepost-deploy-group --s3-location bucket=lifepost-jar-bucket,bundleType=zip,key=build.zip
+        run: aws deploy create-deployment --application-name lifepost-app-deploy --deployment-group-name lifepost-app-deploy-group --s3-location bucket=lifepost-jar-bucket,bundleType=zip,key=build.zip
         env:
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
