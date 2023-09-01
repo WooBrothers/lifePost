@@ -1,7 +1,7 @@
 FROM openjdk:17-jdk-slim
 
 # 작업 디렉토리 설정
-WORKDIR /home/ec2-user/myapp/lifepost/service
+WORKDIR /home/lifepost/service
 
 # 빌드 단계에서 생성된 JAR 파일을 복사합니다.
 COPY service.jar /home/lifepost/service/service.jar
