@@ -14,7 +14,7 @@ permissions:
     group: ec2-user
 
 hook:
-  BeforeInstall:
+  ApplicationStart:
     - location: deploy.sh
       timeout: 300
       runas: root
