@@ -7,7 +7,7 @@ services:
     restart: always
     platform: linux/arm64/v8 # ec2에서는 해당 옵션 지워야함
     volumes:
-      - /var/lib/mysql:/var/lib/mysql
+      - /Users/gimgyeong-u/IdeaProjects/mysqlData:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: 2023
       MYSQL_DATABASE: member

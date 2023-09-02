@@ -1,31 +1,22 @@
-### local properties ###
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:test;MODE=MySQL;
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/member
+    username: member_app
+    password: member2023
   jpa:
-    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create
-
+      ddl-auto: update
     properties:
       hibernate:
         naming:
           physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
           implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
         show_sql: true
         format_sql: true
-        use_sql_comments: true
-        database-platform: org.hibernate.dialect.H2Dialect
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
       generate-ddl: true
-  sql:
-    init:
-      data-locations: classpath:sql/*/*.sql
-  h2:
-    console:
-      enabled: true
-      path: /h2
   security:
     oauth2:
       client:
@@ -49,12 +40,76 @@ spring:
       enabled: true
   freemarker:
     cache: false
+  mustache:
+    servlet:
+      cache: false
 
 jwt:
   secretKey: bcd0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp
   access:
     header: Authorization
-    expiration: 3600000
+    expiration: 1800
   refresh:
     header: Authorization-refresh
-    expiration: 1209600000
+    expiration: 604800
+
+#### local properties ###
+#spring:
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:test;MODE=MySQL;
+#  jpa:
+#    defer-datasource-initialization: true
+#    hibernate:
+#      ddl-auto: create
+#
+#    properties:
+#      hibernate:
+#        naming:
+#          physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+#        dialect: org.hibernate.dialect.H2Dialect
+#        show_sql: true
+#        format_sql: true
+#        use_sql_comments: true
+#        database-platform: org.hibernate.dialect.H2Dialect
+#      generate-ddl: true
+#  sql:
+#    init:
+#      data-locations: classpath:sql/*/*.sql
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          kakao:
+#            client-id: e76259eec862c33998200c0c690bcdba
+#            client-secret: sfRUgrINtEbg2TTmhDsYOEWtrffsqly8
+#            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+#            authorization_grant_type: authorization_code
+#            client-authentication-method: client_secret_post
+#            scope: account_email, profile_image
+#            cleint-name: Kakao
+#        provider:
+#          kakao:
+#            authorization-uri: https://kauth.kakao.com/oauth/authorize
+#            token-uri: https://kauth.kakao.com/oauth/token
+#            user-info-uri: https://kapi.kakao.com/v2/user/me
+#            user-name-attribute: id
+#  devtools:
+#    livereload:
+#      enabled: true
+#  freemarker:
+#    cache: false
+#
+#jwt:
+#  secretKey: bcd0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp
+#  access:
+#    header: Authorization
+#    expiration: 3600000
+#  refresh:
+#    header: Authorization-refresh
+#    expiration: 1209600000
