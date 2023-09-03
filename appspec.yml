@@ -14,6 +14,6 @@ permissions:
 
 hook:
   ApplicationStart:
-    - location: /home/ec2-user/myapp/lifepost/service/deploy.sh
+    - location: deploy.sh
       timeout: 300
       runas: root
