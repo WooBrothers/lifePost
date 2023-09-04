@@ -1,5 +1,8 @@
 package net.lifepost.service.domain.index;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +25,15 @@ public class IndexController {
 
     /* beans */
     private final MemberRepository memberRepository;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/")
-    public String index() {
+    public String index(HttpServletRequest request) throws JsonProcessingException {
+
+//        System.out.println(objectMapper.writeValueAsString(request));
+        System.out.println(request.getHeader("User-Agent"));
         return "/index";
+
     }
 
     @GetMapping("/login/page")
