@@ -3,18 +3,17 @@ os: linux
 files:
   - source: /
     destination: /home/ec2-user/myapp/lifepost/service
-    orverwirte: yes
 permissions:
-  - object: /home/ec2-user/myapp
+  - object: /home/ec2-user/myapp/lifepost/service
     parttern: "**"
     owner: ec2-user
     group: ec2-user
     mode: 777
 hook:
   BeforeInstall:
-    - location: scripts/log.sh
+    - location: /home/ec2-user/myapp/lifepost/service/scripts/log.sh
       runas: root
   ApplicationStart:
-    - location: scripts/deploy.sh
+    - location: /home/ec2-user/myapp/lifepost/service/scripts/deploy.sh
       timeout: 1800
       runas: root
