@@ -3,6 +3,7 @@ os: linux
 files:
   - source: /
     destination: /home/ec2-user/myapp/lifepost/service
+    overwrite: yes
 permissions:
   - object: /home/ec2-user/myapp/lifepost/service
     parttern: "**"
