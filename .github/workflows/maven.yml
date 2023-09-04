@@ -65,7 +65,7 @@ jobs:
           cd ..
           mv appspec.yml build/
           mv start.sh build/
-          zip -r ./build.zip build/
+          zip -r ./build/build.zip build/
           ls
       # build 폴더내 zip파일을 s3로 전송
       - name: Sync Bucket
