@@ -10,9 +10,6 @@ permissions:
     group: ec2-user
     mode: 777
 hook:
-  AfterInstall:
-    - location: /home/ec2-user/myapp/lifepost/service/scripts/log.sh
-      runas: root
   ApplicationStart:
-    - location: /home/ec2-user/myapp/lifepost/service/scripts/deploy.sh
+    - location: start.sh
       runas: root

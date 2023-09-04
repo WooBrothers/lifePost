@@ -65,12 +65,6 @@ jobs:
           cd ..
           mv appspec.yml artifact/
           mv deploy.sh artifact/
-          mv log.sh artifact/
-          cd artifact/
-          mkdir scripts
-          mv deploy.sh scripts/
-          mv log.sh scripts/
-          cd ..
           mkdir build
           zip -r ./build/build.zip artifact/
           cd artifact/
