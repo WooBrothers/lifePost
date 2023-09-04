@@ -64,7 +64,7 @@ jobs:
           cd ..
           cd ..
           mv appspec.yml build/
-          mv deploy.sh build/
+          mv start.sh build/
           zip -r ./build.zip build/
           cd artifact/
           ls
