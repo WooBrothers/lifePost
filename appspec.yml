@@ -11,5 +11,5 @@ permissions:
     mode: 777
 hook:
   ApplicationStart:
-    - location: start.sh
+    - location: /home/ec2-user/myapp/lifepost/service/start.sh
       runas: root
