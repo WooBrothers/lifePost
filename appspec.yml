@@ -9,7 +9,7 @@ permissions:
     owner: ec2-user
     group: ec2-user
     mode: 777
-hook:
+hooks:
   ApplicationStart:
     - location: /home/ec2-user/myapp/lifepost/service/start.sh
       runas: root
