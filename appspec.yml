@@ -12,9 +12,11 @@ permissions:
     parttern: "**"
     owner: ec2-user
     group: ec2-user
+    mode: 777
 
 hook:
   ApplicationStart:
     - location: scripts/deploy.sh
       timeout: 30
-      runas: root
+      runas: ec2-user
+#      runas: root
