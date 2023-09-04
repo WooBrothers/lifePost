@@ -52,21 +52,20 @@ jobs:
         # s3로 보내기 위해 working directory에 build 폴더에 zip 파일을 저장해야 함.
       - name: zip jar with docker file
         run: |
-          mkdir artifact
+          mkdir build
           ls
           cd target/
           ls
-          mv service.jar ../artifact
+          mv service.jar ../build
           cd ..
           cd docker/$profile
-          cp lifepost-service.Dockerfile ../../artifact
-          cp docker-compose.yml ../../artifact
+          cp lifepost-service.Dockerfile ../../build
+          cp docker-compose.yml ../../build
           cd ..
           cd ..
-          mv appspec.yml artifact/
-          mv deploy.sh artifact/
-          mkdir build
-          zip -r ./build/build.zip artifact/
+          mv appspec.yml build/
+          mv deploy.sh build/
+          zip -r ./build.zip build/
           cd artifact/
           ls
       # build 폴더내 zip파일을 s3로 전송
