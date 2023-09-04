@@ -1,20 +1,19 @@
 version: 0.0
 os: linux
-
 files:
   - source: /
-    # ec2 목적지
     destination: /home/ec2-user/myapp/lifepost/service
     orverwirte: yes
-
 permissions:
-  - object: /
+  - object: /home/ec2-user/myapp
     parttern: "**"
     owner: ec2-user
     group: ec2-user
     mode: 777
-
 hook:
+  BeforeInstall:
+    - location: scripts/log.sh
+      runas: root
   ApplicationStart:
     - location: scripts/deploy.sh
       timeout: 1800
