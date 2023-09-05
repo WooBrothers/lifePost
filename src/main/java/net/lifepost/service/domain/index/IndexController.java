@@ -1,7 +1,6 @@
 package net.lifepost.service.domain.index;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,40 +24,35 @@ public class IndexController {
 
     /* beans */
     private final MemberRepository memberRepository;
-    private final ObjectMapper objectMapper;
 
     @GetMapping("/")
     public String index(HttpServletRequest request) throws JsonProcessingException {
-
-//        System.out.println(objectMapper.writeValueAsString(request));
-        System.out.println(request.getHeader("User-Agent"));
-        return "/index";
-
+        return "index";
     }
 
     @GetMapping("/login/page")
     public String login() {
-        return "/login";
+        return "login";
     }
 
     @GetMapping("/forbidden/page")
     public String forbidden() {
-        return "/forbidden";
+        return "forbidden";
     }
 
     @GetMapping("/card/list/page")
     public String getCardListPage() {
-        return "/contents/card/cardList";
+        return "contents/card/cardList";
     }
 
     @GetMapping("/card/custom/page")
     public String getCardCustomPage() {
-        return "/contents/card/cardCreate";
+        return "contents/card/cardCreate";
     }
 
     @GetMapping("/card/write/page")
     public String getCardWritePage() {
-        return "/contents/card/cardWrite";
+        return "contents/card/cardWrite";
     }
 
     @GetMapping("/letter/list/page")
@@ -73,12 +67,12 @@ public class IndexController {
 
     @GetMapping("/mypage/page")
     public String getMyPage() {
-        return "/mypage";
+        return "mypage";
     }
 
     @GetMapping("/withdraw/page")
     public String getWithdrawPage() {
-        return "/widthdraw";
+        return "widthdraw";
     }
 
     @GetMapping("/api/v1/letter/auth/stamp/popup")

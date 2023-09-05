@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,16 +57,14 @@ public class SecurityConfig {
          * 그리고 userService() 메소드에 해당 구현체를 메개변수로 넘겨주면 된다.
          *  */
 
-        // h2 console를 사용하기 위한 옵션
-        http
-            .csrf(AbstractHttpConfigurer::disable);
-
         http
             // 세션 관리
             .sessionManagement(sessionManagement ->
                 sessionManagement
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        // 세션 사용하지 않음
+
+        http.csrf().disable();
+        http.httpBasic().disable();
 
         http
             // URL별 권한 관리를 설정하는 옵션 시작점, 해당 옵션이 선언되어야만 antMatchers를 사용 가능함

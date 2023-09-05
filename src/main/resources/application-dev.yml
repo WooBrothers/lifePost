@@ -35,14 +35,14 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-  devtools:
-    livereload:
-      enabled: true
-  freemarker:
-    cache: false
   mustache:
+    check-template-location: true
+    charset: UTF-8
     servlet:
-      cache: false
+      content-type: text/html
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .mustache
 
 jwt:
   secretKey: bcd0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp
