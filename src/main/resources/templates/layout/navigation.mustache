@@ -2,51 +2,94 @@
 
 <html lang="ko">
 <head>
-  <title>Life Post</title>
-  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
-  <link rel="stylesheet" type="text/css" href="/css/navigation.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifePost</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+        crossorigin="anonymous">
 </head>
+
 <body>
-<nav>
-  <div id="nav-space">
-    <div class="logout membership" id="logout-membership">LifePost 멤버쉽 가입하기</div>
-    <div class="login membership" id="login-membership">아름다운 그대에게 편지를 보내요.</div>
-    <div id="navigation">
-      <div id="nav-home"><a id="nav-home-link" href="/">Life Post</a></div>
-      <div id="nav-empty"></div>
-      <div class="logout wide nav-menu" id="logout-nav-menu">
-        <ul class="nav-menu ul">
-          <li class="nav-menu li"><a href="/login/page">로그인/회원가입</a></li>
-          <li class="nav-menu li"><a href="">멤버쉽 가입하기</a></li>
-          <li class="nav-menu li"><a href="/letter/list/page">편지 리스트</a></li>
-        </ul>
+
+<nav class="navbar fixed-top navbar-expand-lg bg-primary" data-bs-theme="dark">
+  <div class="container-fluid d-flex">
+    <div class="mr-auro align-self-start">
+      <a class="btn navbar-brand" href="#">Life Post</a>
+    </div>
+    <div>
+      <div class="d-flex justify-content-end">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
       </div>
-      <div class="login wide nav-menu" id="login-nav-menu">
-        <ul class="nav-menu ul">
-          <li class="nav-menu li"><a href="/letter/list/page">편지 리스트</a></li>
-          <li class="nav-menu li"><a href="/card/list/page">카드 리스트</a></li>
-          <li class="nav-menu li logout-btn"><a href="">로그아웃</a></li>
-          <li class="nav-menu li"><a href="/mypage/page">마이페이지</a></li>
-        </ul>
-      </div>
-      <div class="mobile menu-space" id="nav-mobile-menu-btn-space">
-        <button class="mobile" id="nav-mobile-menu-btn"></button>
-        <ul class="mobile logout ul off" id="login-drop-menu">
-          <li class="mobile logout li off"><a href="/login/page">로그인/회원가입</a></li>
-          <li class="mobile logout li off"><a href="">멤버쉽 가입하기</a></li>
-          <li class="mobile logout li off"><a href="/letter/list/page">편지 리스트</a></li>
-        </ul>
-        <ul class="mobile login ul off" id="logout-drop-menu">
-          <li class="mobile login li off"><a href="/letter/list/page">편지 리스트</a></li>
-          <li class="mobile login li off"><a href="/card/list/page">카드 리스트</a></li>
-          <li class="mobile login li logout-btn"><a href="">로그아웃</a></li>
-          <li class="mobile login li off"><a href="/mypage/page">마이페이지</a></li>
-        </ul>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-0 mb-lg-0" id="navbarContentUl"></ul>
       </div>
     </div>
   </div>
-  <div id="nav-empty"></div>
 </nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
 <script type="module" src="/js/navigation/navigation.js"></script>
 </body>
+
 </html>
+<!--<!DOCTYPE HTML>-->
+
+<!--<html lang="ko">-->
+<!--<head>-->
+<!--  <title>Life Post</title>-->
+<!--  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>-->
+<!--  <link rel="stylesheet" type="text/css" href="/css/navigation.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<nav>-->
+<!--  <div id="nav-space">-->
+<!--    <div class="logout membership" id="logout-membership">LifePost 멤버쉽 가입하기</div>-->
+<!--    <div class="login membership" id="login-membership">아름다운 그대에게 편지를 보내요.</div>-->
+<!--    <div id="navigation">-->
+<!--      <div id="nav-home"><a id="nav-home-link" href="/">Life Post</a></div>-->
+<!--      <div id="nav-empty"></div>-->
+<!--      <div class="logout wide nav-menu" id="logout-nav-menu">-->
+<!--        <ul class="nav-menu ul">-->
+<!--          <li class="nav-menu li"><a href="/login/page">로그인/회원가입</a></li>-->
+<!--          <li class="nav-menu li"><a href="">멤버쉽 가입하기</a></li>-->
+<!--          <li class="nav-menu li"><a href="/letter/list/page">편지 리스트</a></li>-->
+<!--        </ul>-->
+<!--      </div>-->
+<!--      <div class="login wide nav-menu" id="login-nav-menu">-->
+<!--        <ul class="nav-menu ul">-->
+<!--          <li class="nav-menu li"><a href="/letter/list/page">편지 리스트</a></li>-->
+<!--          <li class="nav-menu li"><a href="/card/list/page">카드 리스트</a></li>-->
+<!--          <li class="nav-menu li logout-btn"><a href="">로그아웃</a></li>-->
+<!--          <li class="nav-menu li"><a href="/mypage/page">마이페이지</a></li>-->
+<!--        </ul>-->
+<!--      </div>-->
+<!--      <div class="mobile menu-space" id="nav-mobile-menu-btn-space">-->
+<!--        <button class="mobile" id="nav-mobile-menu-btn"></button>-->
+<!--        <ul class="mobile logout ul off" id="login-drop-menu">-->
+<!--          <li class="mobile logout li off"><a href="/login/page">로그인/회원가입</a></li>-->
+<!--          <li class="mobile logout li off"><a href="">멤버쉽 가입하기</a></li>-->
+<!--          <li class="mobile logout li off"><a href="/letter/list/page">편지 리스트</a></li>-->
+<!--        </ul>-->
+<!--        <ul class="mobile login ul off" id="logout-drop-menu">-->
+<!--          <li class="mobile login li off"><a href="/letter/list/page">편지 리스트</a></li>-->
+<!--          <li class="mobile login li off"><a href="/card/list/page">카드 리스트</a></li>-->
+<!--          <li class="mobile login li logout-btn"><a href="">로그아웃</a></li>-->
+<!--          <li class="mobile login li off"><a href="/mypage/page">마이페이지</a></li>-->
+<!--        </ul>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div id="nav-empty"></div>-->
+<!--</nav>-->
+<!--<script type="module" src="/js/navigation/navigation.js"></script>-->
+<!--</body>-->
+<!--</html>-->

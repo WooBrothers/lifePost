@@ -1,5 +1,4 @@
 import {getAccessToken} from "../common/apiUtil.js";
-import {isScreenWide, isTokenExpired} from "../common/utilTool.js";
 import {bindNavigationEvent} from "./navigationEvent.js";
 
 await setMembership();
@@ -7,124 +6,50 @@ bindNavigationEvent();
 
 export async function setMembership() {
     if (!getAccessToken()) {
-        setLogoutMembership();
-        setLogoutNaviMenu();
+        setLogoutNavMenu();
     } else {
-        if (!isTokenExpired()) {
-            setLoginMembership();
-            setLoginNaviMenu();
-        } else {
-            setLogoutMembership();
-            setLogoutNaviMenu();
+        setLoginNavMenu();
+    }
+}
+
+function setLogoutNavMenu() {
+    const nameLinkDict = {
+        "navLetter": ["/letter/list/page", "편지"],
+        "navIntroduction": ["/introduction", "서비스 소개"],
+        "navLogin": ["/login/page", "로그인/회원가입"],
+    };
+
+    createLiByDict(nameLinkDict);
+}
+
+function setLoginNavMenu() {
+    const nameLinkDict = {
+        "navLetter": ["/letter/list/page", "편지"],
+        "navCard": ["card/list/page", "카드"],
+        "navLogout": ["", "로그아웃"],
+        "navMypage": ["/mypage/page", "마이페이지"],
+    };
+
+    createLiByDict(nameLinkDict);
+}
+
+function createLiByDict(nameLinkDict) {
+    for (const key in nameLinkDict) {
+        const li = document.createElement("li");
+        li.classList.add("nav-item");
+        li.classList.add("ms-auto");
+
+        const a = document.createElement("a");
+        a.classList.add("nav-link");
+        a.classList.add("active");
+
+        if (nameLinkDict.hasOwnProperty(key)) {
+            a.href = nameLinkDict[key][0];
+            a.innerHTML = nameLinkDict[key][1]
+            a.id = key;
         }
+
+        li.append(a);
+        document.querySelector("#navbarContentUl").append(li);
     }
-}
-
-function setLogoutMembership() {
-    const logoutMembership = document.querySelector("#logout-membership");
-    const loginMembership = document.querySelector("#login-membership");
-
-    logoutMembership.classList.remove("off");
-    logoutMembership.classList.add("navi-on");
-    loginMembership.classList.remove("navi-on");
-    loginMembership.classList.add("off");
-}
-
-function setLoginMembership() {
-    const logoutMembership = document.querySelector("#logout-membership");
-    const loginMembership = document.querySelector("#login-membership");
-
-    loginMembership.classList.remove("off");
-    loginMembership.classList.add("navi-on");
-    logoutMembership.classList.remove("navi-on");
-    logoutMembership.classList.add("off");
-}
-
-function setLoginNaviMenu() {
-
-    setLogoutMenuOff();
-    setLoginDropMenuSpace()
-
-    if (isScreenWide()) {
-        setLoginMenuOn();
-        setDropMenuSpaceOff()
-    } else {
-        setLoginMenuOff();
-        setDropMenuSpaceOn();
-    }
-}
-
-function setLogoutNaviMenu() {
-    setLoginMenuOff();
-    setLogoutDropMenuSpace();
-
-    if (isScreenWide()) {
-        setLogoutMenuOn();
-        setDropMenuSpaceOff();
-    } else {
-        setLogoutMenuOff();
-        setDropMenuSpaceOn();
-    }
-}
-
-function setLoginMenuOn() {
-    document.querySelectorAll(".login.wide.nav-menu").forEach(tag => {
-        tag.classList.remove("off");
-        tag.classList.add("navi-on");
-    });
-}
-
-function setLoginMenuOff() {
-    document.querySelectorAll(".login.wide.nav-menu").forEach(tag => {
-        tag.classList.remove("navi-on");
-        tag.classList.add("off");
-    });
-}
-
-function setLogoutMenuOn() {
-    document.querySelectorAll(".logout.wide.nav-menu").forEach(tag => {
-        tag.classList.remove("off");
-        tag.classList.add("navi-on");
-    });
-}
-
-function setLogoutMenuOff() {
-    document.querySelectorAll(".logout.wide.nav-menu").forEach(tag => {
-        tag.classList.remove("navi-on");
-        tag.classList.add("off");
-    });
-}
-
-function setDropMenuSpaceOff() {
-    const dropMenuSpace = document.getElementById("nav-mobile-menu-btn-space");
-    dropMenuSpace.classList.remove("navi-on");
-    dropMenuSpace.classList.add("off");
-}
-
-function setDropMenuSpaceOn() {
-    const dropMenuSpace = document.getElementById("nav-mobile-menu-btn-space");
-    dropMenuSpace.classList.remove("off");
-    dropMenuSpace.classList.add("navi-on");
-}
-
-function setLoginDropMenuSpace() {
-    const loginMobileMenuSpace = document.querySelectorAll(".mobile.login");
-    const logoutMobileMenuSpace = document.querySelectorAll(".mobile.logout");
-    logoutMobileMenuSpace.forEach(tag => {
-        tag.classList.remove("drop-menu");
-    });
-    loginMobileMenuSpace.forEach(tag => {
-        tag.classList.add("drop-menu");
-    });
-}
-
-function setLogoutDropMenuSpace() {
-    const logoutMobileMenuSpace = document.querySelectorAll(".mobile.logout");
-    const loginMobileMenuSpace = document.querySelectorAll(".mobile.login");
-    loginMobileMenuSpace.forEach(tag => {
-        tag.classList.remove("drop-menu");
-    });
-    logoutMobileMenuSpace.forEach(tag => {
-        tag.classList.add("drop-menu");
-    });
 }
