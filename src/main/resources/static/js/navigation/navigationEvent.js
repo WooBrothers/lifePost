@@ -5,7 +5,6 @@ export function bindNavigationEvent() {
     if (logoutBtn) {
         logoutBtn.addEventListener("click", clickLogoutBtn);
     }
-
 }
 
 function clickLogoutBtn() {

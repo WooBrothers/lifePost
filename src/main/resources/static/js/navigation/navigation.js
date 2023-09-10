@@ -25,9 +25,9 @@ function setLogoutNavMenu() {
 function setLoginNavMenu() {
     const nameLinkDict = {
         "navLetter": ["/letter/list/page", "편지"],
-        "navCard": ["card/list/page", "카드"],
-        "navLogout": ["", "로그아웃"],
+        "navCard": ["/card/list/page", "카드"],
         "navMypage": ["/mypage/page", "마이페이지"],
+        "navLogout": ["", "로그아웃"],
     };
 
     createLiByDict(nameLinkDict);
