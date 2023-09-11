@@ -78,15 +78,7 @@ public class LetterDto {
         }
 
         public ReadResponse setLimitedContents(String content) {
-            StringBuilder sb = new StringBuilder(content);
-            if (sb.length() < 150) {
-                sb.setLength(sb.length() / 2);
-            } else {
-                sb.setLength(150);
-            }
-            sb.append("...");
-
-            this.contents = sb.toString();
+            this.contents = LetterDto.setLimitedContents(content);
             return this;
         }
 
@@ -132,15 +124,7 @@ public class LetterDto {
         }
 
         public PageResponse setLimitedContent(String content) {
-            StringBuilder sb = new StringBuilder(content);
-            if (sb.length() < 150) {
-                sb.setLength(sb.length() / 2);
-            } else {
-                sb.setLength(150);
-            }
-            sb.append("...");
-
-            this.content = sb.toString();
+            this.content = LetterDto.setLimitedContents(content);
             return this;
         }
 
@@ -148,6 +132,18 @@ public class LetterDto {
             this.focusType = focusType;
             return this;
         }
+    }
+
+    public static String setLimitedContents(String content) {
+        StringBuilder sb = new StringBuilder(content);
+        if (sb.length() < 200) {
+            sb.setLength(sb.length() / 2);
+        } else {
+            sb.setLength(200);
+        }
+        sb.append("...");
+
+        return sb.toString();
     }
 
     @Getter

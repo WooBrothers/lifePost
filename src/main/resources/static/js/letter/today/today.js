@@ -21,7 +21,7 @@ function setLetterInfoByResponse(response) {
     img.src = response.letterImage;
 
     const hourglass = document.querySelector("#hourglass");
-    hourglass.src = '/img/sand-time.png';
+    hourglass.src = '/img/alarm.svg';
 
     const timer = document.querySelector("#today-timer");
     timer.innerHTML = getTime();
@@ -30,7 +30,7 @@ function setLetterInfoByResponse(response) {
     title.innerHTML = response.title;
 
     const contents = document.querySelector("#today-letter-contents");
-    contents.innerHTML = response.contents.slice(0, 75) + "...";
+    contents.innerHTML = response.contents.slice(0, 150) + "...";
 }
 
 function getTime() {

@@ -3,6 +3,7 @@
 <head>
   <!--  <link rel="stylesheet" type="text/css" href="/css/letter/today.css">-->
   <!--  <link rel="stylesheet" type="text/css" href="/css/letter/todayMobile.css">-->
+  <link href="https://fonts.cdnfonts.com/css/bebas-neue" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
         rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
@@ -10,44 +11,28 @@
 </head>
 <body>
 
-<!--<div id="today-space">-->
-<!--  <div id="image-space">-->
-<!--    <div id="today-text" class="font-orange back-darkgray">Today</div>-->
-<!--    <img id="today-img">-->
-<!--  </div>-->
-<!--  <div id="today-letter-info-space" class="back-darkgray">-->
-<!--    <div id="today-letter-timer">-->
-<!--      <div id="today-letter-promotion">이 시간이 지나면 <br/>읽을 수 없는 편지</div>-->
-<!--      <img id="hourglass">-->
-<!--      <div id="today-timer"></div>-->
-<!--    </div>-->
-<!--    <div id="today-letter-line" class="font-orange"></div>-->
-<!--    <div id="today-letter-spacer" class="spacer"></div>-->
-<!--    <div id="today-letter-type" class="font-orange">Today</div>-->
-<!--    <div id="today-letter-title"></div>-->
-<!--    <div id="today-letter-contents"></div>-->
-<!--  </div>-->
-<!--</div>-->
-
 <div id="today-space" class="container" style="margin-top:5%; margin-bottom: 5%">
   <div class="card mb-3 mt-5">
     <div class="row g-0">
-      <div class="col-md-6">
+      <div class="col-lg-6">
         <img id="today-img" class="img-fluid" style="object-fit: cover;"
              alt="">
         <div class="card-img-overlay p-0">
-          <div class="bg-primary col-md-1 text-center h2 py-1">Today</div>
+          <div class="bg-primary text-white text-center h2 py-1" style="width: 108px;">
+            Today
+          </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-lg-6">
         <div class="card-body">
-          <div id="today-letter-timer" class="row g-1 justify-content-start align-items-sm-center">
-            <div id="today-letter-promotion" class="col-md-4 text-center h4">남은 시간</div>
-            <img id="hourglass" src="/img/sand-time.png" alt="" class="col-md-1">
-            <div id="today-timer" class="col-md-7 text-center h2"></div>
+          <div id="today-letter-timer"
+               class="d-flex flex-row justify-content-start align-items-center">
+            <img id="hourglass" class="me-3" src="/img/alarm.svg" alt="" style="width: 35px">
+            <div id="today-timer" class="mt-2"
+                 style="font-size: 50px; font-family: Bebas Neue, sans-serif; font-weight: bold;"></div>
           </div>
-          <div id="today-letter-title"></div>
-          <div id="today-letter-contents"></div>
+          <div id="today-letter-title" class="h1 mt-5"></div>
+          <div id="today-letter-contents" class=""></div>
         </div>
       </div>
     </div>
