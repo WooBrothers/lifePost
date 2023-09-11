@@ -27,6 +27,7 @@ function setLetterInfoByResponse(response) {
     timer.innerHTML = getTime();
 
     const title = document.querySelector("#today-letter-title");
+    // title.innerHTML = response.title;
     title.innerHTML = response.title;
 
     const contents = document.querySelector("#today-letter-contents");

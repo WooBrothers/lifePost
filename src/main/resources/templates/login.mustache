@@ -6,39 +6,47 @@
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
   <link rel="stylesheet"
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <meta name="appleid-signin-client-id" content="[CLIENT_ID]">
+  <meta name="appleid-signin-scope" content="[SCOPES]">
+  <meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]">
+  <meta name="appleid-signin-state" content="[STATE]">
+  <meta name="appleid-signin-use-popup" content="true"> <!-- or false defaults to false -->
 </head>
 <body>
 {{> layout/navigation}}
-<div class="container-fluid" style="height: 100vh">
-  <div class="d-flex justify-content-center" id="life-post">
-    <div>
-      <h1>Life Post</h1>
+
+<section class="vh-100 mt-5" style="background-color: #E4F1FF;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
+            <h3 class="mb-5">Sign in</h3>
+            <hr class="my-4">
+            <a class="btn btn-lg btn-block btn-social btn-kakao mb-2 border-0"
+               href="/oauth2/authorization/kakao"
+               style="text-decoration: none;background-color: #ffe812; color:#000000; max-width: 375px;"
+               type="submit">Sign in with kakao
+            </a>
+            <div id="appleid-signin" class="signin-button btn btn-lg btn-block mb-2 border-0 p-0 "
+                 data-color="black"
+                 data-border="true"
+                 data-mode="center-align"
+                 data-type="sign in"
+                 style="height: 48px; max-width: 375px;"></div>
+            <button class="btn btn-lg btn-block btn-primary mb-2 border-0"
+                    style="background-color: #dd4b39; max-width: 375px;"
+                    type="submit"><i class="fab fa-google me-2"></i> Sign in with google
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="d-flex" style="height: 70vh"></div>
-
-  <div class="d-flex flex-column align-items-center" style="height: 15vh">
-    <div>
-      <button type="button" class="login-btn" id="kakao-login">
-        <a href="http://localhost:8080/oauth2/authorization/kakao">kakao login</a>
-      </button>
-    </div>
-    <div class="p-1"></div>
-    <div>
-      <button type="button" class="login-btn" id="apple-login">apple login</button>
-    </div>
-    <div class="p-1"></div>
-    <div>
-      <button type="button" class="login-btn" id="google-login">google login</button>
-    </div>
-    <div class="p-1"></div>
-  </div>
-  <div class="d-flex p-2"></div>
-</div>
-
-<script type="module" src="/js/loginPage.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript"
+        src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 </body>
