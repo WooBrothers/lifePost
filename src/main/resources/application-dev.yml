@@ -43,7 +43,9 @@ spring:
     enabled: true
     prefix: classpath:/templates/
     suffix: .mustache
-
+server:
+  address: dev.life-post.net
+  port: 8080
 jwt:
   secretKey: bcd0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdpLWp3dC10ZXN0LWFsamphYmFlZ2ktand0LXRlc3QtYWxqamFiYWVnaS1qd3QtdGVzdC1hbGpqYWJhZWdp
   access:
