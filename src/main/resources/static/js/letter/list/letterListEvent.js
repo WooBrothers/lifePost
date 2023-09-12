@@ -3,7 +3,6 @@ import {createLetterListSpace} from "./letterListGrid.js";
 import {createPagination} from "../../pagination/pagination.js";
 import {findParentWithClass} from "../../common/utilTool.js";
 import {authFetch} from "../../common/apiUtil.js";
-import {DivTag, ModalTag} from "../../common/tagUtil.js";
 import {bindEventToLetterStampUsePage} from "./letterStampUseModal.js";
 
 export function bindEventToLetterListGrid() {
@@ -17,9 +16,6 @@ export function bindEventToLetterListGrid() {
         btn.addEventListener("click", clickFocusBtn);
     })
 
-    const openFilterBtn = document.getElementById("filter-btn");
-    openFilterBtn.addEventListener("click", clickOpenFilterBtn);
-
     const filterBtnList = document.querySelectorAll(".act-btn")
     filterBtnList.forEach(filterBtn => {
         filterBtn.addEventListener("click", filterBtnClick);
@@ -27,76 +23,32 @@ export function bindEventToLetterListGrid() {
 }
 
 async function clickLetter() {
+    const modal = $('#letterReadInfoModal');
+    modal.modal("show");
+
     const letterId = this.dataset.letterId;
     localStorage.setItem("letterId", letterId);
 
-    const parent = document.getElementById("letter-parent-space");
-
     if (this.dataset.memberLetterId === "undefined") {
-        const modal = new ModalTag()
-            .setId("modal-parent")
-            .setStyle([{
-                position: "fixed",
-                top: 0,
-                left: 0,
-            }])
-            .addInnerHTML(
-                new DivTag()
-                    .setId("modal-content")
-                    .setClassName("modal")
-                    .setStyle([{
-                        width: "20%",
-                        height: "32%",
-                        display: "block",
-                        backgroundColor: "white",
-                        zIndex: 1001,
-                        margin: "1% 35% 1% 35%",
-                        position: "fixed",
-                        top: "25%",
-                    }])
-            ).getTag();
 
-        const url = "/api/v1/letter/auth/stamp/popup";
-        let option = {method: "GET"};
+        const url = "/api/v1/member/auth/info";
+        let options = {method: "GET"};
 
-        await authFetch(url, option).then(res => {
-            modal.querySelector("#modal-content").innerHTML = res;
-            modal.style.display = "block";
-            parent.appendChild(modal);
+        await authFetch(url, options).then(res => {
+            const modalBody = document.querySelector("#modal-content-body");
+            modalBody.querySelector("#email").innerHTML = res.email;
+            modalBody.querySelector("#stamp").innerHTML = res.stampCount;
 
-            if (modal.querySelector("#info-space").dataset.stamp === "0"
-                && getTodayDate() !== this.dataset.postDate) {
-
-                const letterReadBtn = modal.querySelector("#letter-read-btn");
-                letterReadBtn.style.backgroundColor = "gray";
-                letterReadBtn.style.color = "lightgray";
-                letterReadBtn.disabled = true;
+            if (res.stampCount === 0) {
+                document.querySelector("#letter-read-btn").classList.add("disabled");
+            } else {
+                document.querySelector("#letter-read-btn").classList.remove("disabled");
             }
             bindEventToLetterStampUsePage();
-        })
+        });
+
     } else {
         window.location = "/letter/read/page";
-    }
-}
-
-function getTodayDate() {
-    const today = new Date();
-
-    const year = today.getFullYear();
-    let month = today.getMonth() + 1 > 9 ? today.getMonth() + 1 : "0" + (today.getMonth() + 1);
-
-    let day = today.getDate() > 9 ? today.getDate() : "0" + today.getDate();
-
-    return `${year}-${month}-${day}`
-}
-
-function clickOpenFilterBtn() {
-    const actBtnSpace = document.querySelector("#act-btn-space");
-
-    if (actBtnSpace.style.display === "" || actBtnSpace.style.display === "none") {
-        actBtnSpace.style.display = "flex";
-    } else {
-        actBtnSpace.style.display = "none";
     }
 }
 
@@ -104,10 +56,10 @@ async function filterBtnClick() {
 
     if (this.dataset.onOff === "true") {
         this.dataset.onOff = "false";
-        this.classList.remove("btn-on");
+        this.classList.remove("active")
     } else {
         this.dataset.onOff = "true"
-        this.classList.add("btn-on");
+        this.classList.add("active")
     }
 
     const letterListSpace = document.getElementById("letter-list-space");
@@ -150,7 +102,6 @@ async function clickFocusBtn() {
         method: "POST",
         body: JSON.stringify(body)
     }
-
 
     await authFetch(url, option).then(response => {
         this.style.backgroundImage = imgUrl;

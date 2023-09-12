@@ -1,5 +1,4 @@
-import {ButtonTag, DivTag} from "../common/tagUtil.js";
-
+import {ATag, LiTag} from "../common/tagUtil.js";
 
 export function createPagination(response, space) {
     const currentPageNo = response.pageable.pageNumber + 1;
@@ -10,9 +9,7 @@ export function createPagination(response, space) {
     let lastPageNo = 0;
     let firstPageNo = pageSection * 5 + 1;
 
-    const pageBtnSpace = new DivTag()
-        .setId("page-btn-space")
-        .getTag();
+    const pageBtnSpace = document.querySelector("#pagination-space");
 
     for (let pageNo = pageSection * 5 + 1; isTurnedTotalPage(pageNo, totalPageCount, pageSection); pageNo++) {
         createPageBtn(pageNo, currentPageNo, pageBtnClassName, pageBtnSpace);
@@ -21,8 +18,6 @@ export function createPagination(response, space) {
 
     createNextPageBtn(lastPageNo, totalPageCount, pageBtnClassName, pageBtnSpace);
     createPreviousBtn(pageSection, firstPageNo, pageBtnClassName, pageBtnSpace);
-
-    space.appendChild(pageBtnSpace);
 }
 
 function isTurnedTotalPage(pageNo, totalPageCount, pageSection) {
@@ -30,37 +25,48 @@ function isTurnedTotalPage(pageNo, totalPageCount, pageSection) {
 }
 
 function createPageBtn(pageNo, currentPageNo, pageBtnClassName, pageBtnSpace) {
-    let selectedPage = pageNo === currentPageNo ? " btn-on" : "";
+    let selectedPage = pageNo === currentPageNo ? " active" : "";
 
-    const pageBtn = new ButtonTag()
-        .setClassName(pageBtnClassName + selectedPage)
-        .setDataset([{pageNo: pageNo}])
-        .setInnerHTML(pageNo)
-        .getTag();
+    const li = new LiTag()
+        .setClassName("page-item")
+        .setInnerHTML([new ATag()
+            .setClassName(pageBtnClassName + selectedPage + " " + "page-link")
+            .setDataset([{pageNo: pageNo}])
+            .setHref("#")
+            .setInnerHTML(pageNo)
+        ]);
 
-    pageBtnSpace.appendChild(pageBtn);
+    pageBtnSpace.appendChild(li.getTag());
 }
 
 function createNextPageBtn(lastPageNo, totalPageCount, pageBtnClassName, pageBtnSpace) {
     // 즉 현재 페이지 섹션의 마지막 페이지 번호가 페이지 토탈보다 작으면 넥스트 버튼 출력
     if (lastPageNo < totalPageCount) {
-        const nextPageBtn = new ButtonTag()
-            .setClassName(pageBtnClassName + " next-btn")
-            .setDataset([{pageNo: lastPageNo + 1}])
-            .setInnerHTML(">")
-            .getTag();
-        pageBtnSpace.appendChild(nextPageBtn);
+        const li = new LiTag()
+            .setClassName("page-item")
+            .setInnerHTML([new ATag()
+                .setClassName(pageBtnClassName + " next-btn page-link")
+                .setDataset([{pageNo: lastPageNo + 1}])
+                .setHref("#")
+                .setInnerHTML(">")
+            ]);
+
+        pageBtnSpace.appendChild(li.getTag());
     }
 }
 
 function createPreviousBtn(pageSection, firstPageNo, pageBtnClassName, pageBtnSpace) {
     // 5보다 큰 섹션이라면 이전 버튼 추가
     if (pageSection > 0) {
-        const nextPageBtn = new ButtonTag()
-            .setClassName(pageBtnClassName + " before-btn")
-            .setDataset([{pageNo: firstPageNo - 5}])
-            .setInnerHTML("<")
-            .getTag();
-        pageBtnSpace.insertBefore(nextPageBtn, pageBtnSpace.firstChild);
+        const li = new LiTag()
+            .setClassName("page-item")
+            .setInnerHTML([new ATag()
+                .setClassName(pageBtnClassName + " before-btn page-link")
+                .setDataset([{pageNo: firstPageNo - 5}])
+                .setHref("#")
+                .setInnerHTML("<")
+            ]);
+
+        pageBtnSpace.insertBefore(li.getTag(), pageBtnSpace.firstChild);
     }
 }

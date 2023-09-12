@@ -1,12 +1,11 @@
 import {getLetterList} from "./letterListApi.js";
-import {ButtonTag, DivTag} from "../../common/tagUtil.js";
-import {getColorHexInFiveTypeList} from "../../common/utilTool.js";
+import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
 
 export async function createLetterListSpace(letterListSpace, page, event) {
     const type = getLetterType();
 
     let resultResponse = null;
-    await getLetterList(page, 10, type, getFocusType()).then(response => {
+    await getLetterList(page, 8, type, getFocusType()).then(response => {
         createLetter(response, letterListSpace);
         resultResponse = response;
     });
@@ -73,10 +72,7 @@ function createLetter(response, letterListSpace) {
 
     if (response.content.length === 0) {
         const emptyContentDiv = new DivTag()
-            .setClassName("empty-content")
-            .setStyle([{
-                fontSize: "20px",
-            }])
+            .setClassName("empty-content mt-5 h3")
             .setInnerHTML("편지가 없습니다. 편지을 읽어 보세요!")
         letterListSpace.appendChild(emptyContentDiv.getTag());
         return;
@@ -84,16 +80,8 @@ function createLetter(response, letterListSpace) {
 
     response.content.forEach(responseContent => {
         const letterSpace = new DivTag()
-            .setClassName("letter-space")
+            .setClassName("letter-space col")
             .setId(`letter-space-${responseContent.id}`)
-            .setStyle([{
-                "background-color": getColorHexInFiveTypeList(),
-                width: "250px",
-                height: "500px",
-                margin: "15px 15px 15px 15px",
-                display: "flex",
-                flexDirection: "column",
-            }])
             .setDataset([{
                 memberLetterId: responseContent.memberLetterId,
                 letterId: responseContent.id,
@@ -103,138 +91,78 @@ function createLetter(response, letterListSpace) {
             .getTag();
 
         // 카드 리스트 생성 메서드
-        setLetterContentGridSpace(responseContent, letterSpace, getFocusImgByContent(responseContent));
-
+        createLetterCard(responseContent, letterSpace, getFocusImgByContent(responseContent))
         letterListSpace.appendChild(letterSpace);
     });
 }
 
-function setLetterContentGridSpace(responseContent, letterSpace, focusInfo) {
+function createLetterCard(responseContent, letterSpace, focusInfo) {
+    const cardDiv = new DivTag()
+        .setClassName("card h-100 p-0")
 
-    const letterImgSpace = new DivTag()
-        .setClassName("letter-img-space")
-        .setStyle([
-            {
-                width: "100%",
-                height: "40%",
-                position: "relative",
-            }
-        ]);
+    const imgSrc = responseContent.letterImage ? responseContent.letterImage : '/img/letter-img.png';
 
-    const letterImage = responseContent.letterImage ? responseContent.letterImage : '/img/letter-img.png';
-    const letterImgTag = new DivTag()
-        .setClassName("letter-img")
-        .setStyle([{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            top: "0px",
-            zIndex: "1",
-            backgroundImage: `url(${letterImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            marginBottom: "10px",
-        }]);
+    const cardImgDiv = new DivTag()
+        .setClassName("col")
+    const cardImg = new ImgTag()
+        .setSrc(imgSrc)
+        .setClassName("card-img-top img-fluid")
+        .setAlt("no img")
+        .setStyle([{objectFit: "cover", height: "12rem"}]);
 
-    letterImgSpace.getTag().appendChild(letterImgTag.getTag());
-
-    // 소유한 편지일 경우 > focus btn, 소유여부 태그 추가
     if (focusInfo) {
-        const focusBtn = new DivTag()
-            .setClassName("focus-space")
-            .setStyle([{
-                display: "flex",
-                flexDirection: "row-reverse"
-            }])
-            .setInnerHTML([
-                new ButtonTag()
-                    .setClassName("focus-btn")
-                    .setDataset([{focus: focusInfo.focus}])
-                    .setBackground(focusInfo.focusImgUrl)
-                    .setStyle([{
-                        position: "absolute",
-                        top: "5px",
-                        zIndex: "2",
-                        width: "36px",
-                        height: "44px",
-                        border: "none",
-                        backgroundColor: "transparent",
-                    }])
-            ]);
+        const letterInfoSpace = new DivTag()
+            .setClassName("card-img-overlay p-0 d-flex justify-content-between");
 
-        const isOwnLetterTag = new DivTag()
-            .setClassName("own-letter-space")
-            .setStyle([{
-                backgroundColor: letterSpace.style.backgroundColor,
-                position: "absolute",
-                height: "30px",
-                width: "100px",
-                fontSize: "20px",
-                fontWeight: "bold",
-                zIndex: "3",
-                display: "flex",
-                alignItems: "center",
-                textAlign: "center",
-                justifyContent: "center"
+        const myLetterText = createMyLetterText();
+        const focusBtn = createFocusBtn(focusInfo);
 
-            }])
-            .setInnerHTML("My Letter");
-
-        letterImgSpace.getTag().appendChild(focusBtn.getTag());
-        letterImgSpace.getTag().appendChild(isOwnLetterTag.getTag());
+        letterInfoSpace.setInnerHTML([myLetterText, focusBtn]);
+        cardImgDiv.setInnerHTML([cardImg, letterInfoSpace]);
     }
 
+    const cardBody = createCardBody(responseContent);
 
-    const letterTitle = new DivTag()
-        .setClassName("letter-title")
-        .setInnerHTML(responseContent.title)
-        .setStyle([{fontSize: "30px", fontWeight: "bold"}]);
-
-    const line = new DivTag()
-        .setClassName("letter-line")
-        .setStyle([{
-            borderTop: "1px solid black",
-            display: "flex",
-            marginBottom: "10px"
-        }]);
-
-    const letterInfoSpace = new DivTag()
-        .setClassName("letter-info-space")
-        .setStyle([{
-            display: "flex",
-            flexDirection: "row"
-        }])
-        .setInnerHTML([
-            new DivTag()
-                .setClassName("letter-create-date")
-                .setInnerHTML(getKoreanDate(responseContent.postDate)),
-            new DivTag()
-                .setClassName("spacer")
-                .setStyle([{
-                    display: "flex",
-                    flex: 1
-                }]),
-            new DivTag()
-                .setClassName("letter-author-name")
-                .setStyle([{
-                    fontWeight: "bold"
-                }])
-                .setInnerHTML(`author ${responseContent.writer}`),
-        ]);
-    const limitedContent = new DivTag()
-        .setClassName("letter-limited-content")
-        .setInnerHTML(responseContent.content);
-
-    letterSpace.appendChild(letterImgSpace.getTag());
-    letterSpace.appendChild(letterTitle.getTag());
-    letterSpace.appendChild(line.getTag());
-    letterSpace.appendChild(letterInfoSpace.getTag());
-    letterSpace.appendChild(limitedContent.getTag());
+    cardDiv.setInnerHTML([cardImgDiv, cardBody]);
+    letterSpace.appendChild(cardDiv.getTag());
 }
 
-function getKoreanDate(date) {
-    const dateList = date.split("-");
+function createMyLetterText() {
+    return new PTag()
+        .setClassName("bg-primary text-white text-center h4 py-1")
+        .setTextContent("My Letter")
+        .setStyle([{width: "108px", height: "40px"}]);
+}
 
-    return `${dateList[0]}년 ${dateList[1]}월 ${dateList[2]}일`;
+function createFocusBtn(focusInfo) {
+    return new DivTag()
+        .setClassName("focus-space p-1")
+        .setInnerHTML([
+            new ButtonTag()
+                .setClassName("focus-btn")
+                .setDataset([{focus: focusInfo.focus}])
+                .setBackground(focusInfo.focusImgUrl)
+                .setStyle([{
+                    width: "36px",
+                    height: "44px",
+                    border: "none",
+                    backgroundColor: "transparent",
+                }])
+        ]);
+}
+
+function createCardBody(responseContent) {
+    const cardBody = new DivTag()
+        .setClassName("card-body");
+    const cardTitle = new HTag(5)
+        .setClassName("card-title")
+        .setInnerHTML(responseContent.title);
+    const cardText = new PTag()
+        .setClassName("card-text")
+        .setTextContent(responseContent.content);
+
+    return cardBody.setInnerHTML([
+        cardTitle,
+        cardText
+    ]);
 }

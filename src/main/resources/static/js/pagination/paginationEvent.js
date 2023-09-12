@@ -1,9 +1,9 @@
 import {createPagination} from "./pagination.js";
 
 export function bindPaginationBtnEvent(parentSpaceId, childClassName, renderFunc, eventFunc) {
-    const pageBtnSpace = document.getElementById("page-btn-space");
-    const paginationBtnList = pageBtnSpace.childNodes;
-    paginationBtnList.forEach(btn => {
+
+    const paginationLiList = document.querySelectorAll(".page-item");
+    paginationLiList.forEach(btn => {
         btn.addEventListener("click", (event) => {
             clickPaginationBtn.call(event, parentSpaceId, childClassName, renderFunc, eventFunc);
         });
@@ -24,7 +24,7 @@ async function clickPaginationBtn(parentSpaceId, childClassName, renderFunc, eve
 
     // 현재 페이지 번호 조회
     const pageNo = clickedBtn.dataset.pageNo;
-    // 카드 새로 그리기
+    // 페이지 새로 그리기
     const response = await renderFunc(parentSpace, pageNo, eventFunc);
 
     // 이전 페이지 버튼 온 끄기
@@ -45,7 +45,7 @@ async function clickPaginationBtn(parentSpaceId, childClassName, renderFunc, eve
 }
 
 function isSamePageButtonClick(clickedBtn) {
-    return clickedBtn === document.querySelector(".page-btn.btn-on");
+    return clickedBtn === document.querySelector(".page-btn.active");
 }
 
 function removeListElementFromParent(parentSpace, childClassName) {
@@ -57,13 +57,13 @@ function removeListElementFromParent(parentSpace, childClassName) {
 }
 
 function setPageBtnOff() {
-    const currentOnPageBtn = document.querySelector(".page-btn.btn-on");
-    currentOnPageBtn.classList.remove("btn-on");
+    const currentOnPageBtn = document.querySelector(".page-btn.active");
+    currentOnPageBtn.classList.remove("active");
 }
 
 function setClickPageBtnOn(response, clickedBtn) {
     // 클릭된 페이지 버튼의 페이지 번호 설정
     clickedBtn.dataset.pageNo = response.pageable.pageNumber + 1;
     // 현재 클릭한 버튼 활성화
-    clickedBtn.classList.add("btn-on");
+    clickedBtn.classList.add("active");
 }

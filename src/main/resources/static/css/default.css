@@ -1,11 +1,3 @@
-.spacer {
-  flex: 1;
-}
-
-.font-orange {
-  color: chocolate;
-}
-
-.back-darkgray {
-  background-color: #282828;;
+.card:hover {
+  cursor: pointer;
 }

@@ -13,6 +13,5 @@ window.onload = async () => {
     const letterListPaginationSpace = document.getElementById("pagination-space");
     await createPagination(response, letterListPaginationSpace);
 
-    
     bindPaginationBtnEvent("letter-list-space", "letter-space", createLetterListSpace, bindEventToLetterListGrid);
 }

@@ -105,11 +105,14 @@ export class PTag extends Tag {
     constructor() {
         super("p");
         this.innerHTML = null;
+        this.textContent = null;
     }
 
-    setInnerHTML(innerHTML) {
-        this.innerHTML = innerHTML;
-        this.tag.innerHTML = innerHTML;
+    setTextContent(text) {
+        this.textContent = text;
+        this.innerHTML = text;
+        this.tag.textContent = text;
+        this.tag.innerHTML = text;
         return this;
     }
 }
@@ -183,6 +186,41 @@ export class UlTag extends Tag {
     }
 }
 
+export class ATag extends Tag {
+    constructor() {
+        super("a");
+        this.innerHTML = null;
+        this.href = null;
+    }
+
+    setHref(href) {
+        this.tag.href = href;
+        this.href = href;
+        return this;
+    }
+
+    setInnerHTML(innerHTML) {
+        this.tag.innerHTML = innerHTML;
+        this.innerHTML = innerHTML;
+        return this;
+    }
+
+    setDataset(dataset) {
+        if (dataset && this.tag) {
+            if (Array.isArray(dataset)) {
+                dataset.forEach(datasetDict => {
+                    for (const [key, value] of Object.entries(datasetDict)) {
+                        this.tag.dataset[key] = value;
+                    }
+                });
+            } else {
+                throw new Error("dataset 적용 시 데이터 타입은 array 이어야 합니다.");
+            }
+        }
+        return this;
+    }
+}
+
 export class LiTag extends Tag {
     constructor() {
         super("li");
@@ -190,8 +228,16 @@ export class LiTag extends Tag {
     }
 
     setInnerHTML(innerHTML) {
-        this.innerHTML = innerHTML;
-        this.tag.innerHTML = innerHTML;
+        if (innerHTML && this.tag) {
+            if (Array.isArray(innerHTML)) {
+                innerHTML.forEach(innerHTMLEle => {
+                    this.tag.appendChild(innerHTMLEle.getTag());
+                })
+            } else {
+                this.innerHTML = innerHTML;
+                this.tag.innerHTML = innerHTML;
+            }
+        }
         return this;
     }
 }
@@ -245,6 +291,23 @@ export class ModalTag extends Tag {
             zIndex++;
         })
 
+        return this;
+    }
+}
+
+export class HTag extends Tag {
+    constructor(n) {
+        if (isNaN(n) || !(n >= 1 && n <= 6)) {
+            throw new Error("HTag 는 생성자에 1~5의 숫자를 입력해야 합니다.");
+        }
+
+        super("h" + n);
+        this.innerHTML = null;
+    }
+
+    setInnerHTML(innerHTML) {
+        this.innerHTML = innerHTML;
+        this.tag.innerHTML = innerHTML;
         return this;
     }
 }
