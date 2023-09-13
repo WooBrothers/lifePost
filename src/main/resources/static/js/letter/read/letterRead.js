@@ -1,5 +1,7 @@
 import {LetterApi} from "../letterApi.js";
 
+setLetterInfo();
+
 function setLetterInfo() {
     const letterId = localStorage.getItem("letterId");
 
@@ -25,7 +27,17 @@ function setLetterInfo() {
 
         const contentsDiv = document.getElementById("letter-content");
         contentsDiv.innerHTML = contents;
+
+        wrapImgTagInContentsDiv(contentsDiv);
     })
 }
 
-setLetterInfo();
+
+function wrapImgTagInContentsDiv(contentsDiv) {
+    const images = contentsDiv.querySelectorAll("img");
+
+    images.forEach(image => {
+        image.classList.add("img-fluid");
+        image.style.objectFit = "cover";
+    });
+}
