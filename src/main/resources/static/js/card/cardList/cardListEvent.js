@@ -4,17 +4,14 @@ import {
     removeHTMLAndWhitespace,
     TodayCardWriteHistory
 } from "../../common/utilTool.js";
-import {CardListGrid} from "./cardListGrid.js";
 import {DivTag, ModalTag} from "../../common/tagUtil.js";
 import {bindEventToCardCreatePage} from "../cardCreate/cardCreateEvent.js";
 import {bindInputEventTextarea} from "../cardWrite/cardWriteEvent.js";
 import {createPagination} from "../../pagination/pagination.js";
 import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
+import {createCardListSpace} from "./cardList.js";
 
 export function bindEventToCardListGrid() {
-    const filerBtn = document.getElementById("filter-btn");
-    filerBtn.addEventListener("click", clickFilterBtn);
-
     const focusBtnList = document.querySelectorAll(".focus-btn");
     focusBtnList.forEach(btn => {
         btn.addEventListener("click", clickFocusBtn);
@@ -52,20 +49,6 @@ export function bindEventToCardListGrid() {
 
 }
 
-function clickFilterBtn() {
-    const filterClassBtnList = document.querySelectorAll(".card-list-btn.filter");
-    const filterBtnSpace = document.querySelector("#filter-btn-space");
-
-    filterClassBtnList.forEach(filterBtn => {
-        if (filterBtn.style.display === "none") {
-            filterBtn.style.display = "block";
-        } else {
-            filterBtn.style.display = "none";
-            filterBtnSpace.style.border = "none";
-        }
-    });
-}
-
 async function clickFocusBtn() {
 
     const parentCardSpace = findParentWithClass(this, "card-space");
@@ -100,21 +83,22 @@ async function filterBtnClick() {
 
     if (this.dataset.onOff === "true") {
         this.dataset.onOff = "false";
-        this.classList.remove("btn-on");
+        this.classList.remove("active");
     } else {
         this.dataset.onOff = "true"
-        this.classList.add("btn-on");
+        this.classList.add("active");
     }
     const cardListSpace = document.getElementById("card-list-space");
     const cardList = document.getElementsByClassName("card-space");
     Array.from(cardList).forEach(card => cardListSpace.removeChild(card));
 
-    const response = await CardListGrid.createCardListSpace(cardListSpace, 1, bindEventToCardListGrid);
+    const response = await createCardListSpace(cardListSpace, 1, bindEventToCardListGrid);
 
     const cardListPaginationSpace = document.getElementById("pagination-space");
     cardListPaginationSpace.replaceChildren();
+
     await createPagination(response, cardListPaginationSpace);
-    bindPaginationBtnEvent("card-list-space", "card-space", CardListGrid.createCardListSpace, bindEventToCardListGrid);
+    bindPaginationBtnEvent("card-list-space", "card-space", createCardListSpace, bindEventToCardListGrid);
 }
 
 async function createCardBtnClick() {

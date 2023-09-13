@@ -52,6 +52,7 @@ export class CardListGrid {
 
         const focusCardContentsSpace = document.querySelector("#focus-card-contents-space");
 
+        // focus 카드 영역이 있고 카드 없을 시 실행
         if (!response || (focusCardContentsSpace && focusCardContentsSpace.childElementCount === 0 && response.content.length === 0)) {
             const emptyContentDiv = new DivTag()
                 .setClassName("empty-content")
@@ -96,6 +97,7 @@ export class CardListGrid {
             return;
         }
 
+        // 카드 없을 시 실행
         if (response.content.length === 0) {
             const emptyTexts = document.querySelectorAll(".card-empty-info-text")
             emptyTexts.forEach(ele => {
@@ -161,7 +163,7 @@ export class CardListGrid {
                 new PTag()
                     .setId("card-content-" + content.cardId)
                     .setClassName("p-card-content")
-                    .setInnerHTML(content.contents)
+                    .setTextContent(content.contents)
             ])
         cardSpace.appendChild(headerSpace.getTag());
 
@@ -185,11 +187,11 @@ export class CardListGrid {
 
         if (content.type !== "CUSTOM") {
             innerHtmlList.push(new PTag()
-                .setInnerHTML(content.postDate + "<br/><b>Letter</b> " + content.letterTitle)
+                .setTextContent(content.postDate + "<br/><b>Letter</b> " + content.letterTitle)
             );
         } else {
             innerHtmlList.push(new PTag()
-                .setInnerHTML(content.postDate + "<br/><b>Custom</b> " + "내가 만든 카드")
+                .setTextContent(content.postDate + "<br/><b>Custom</b> " + "내가 만든 카드")
             );
         }
 

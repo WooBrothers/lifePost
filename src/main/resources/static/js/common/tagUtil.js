@@ -158,6 +158,7 @@ export class ButtonTag extends Tag {
     constructor() {
         super("button");
         this.innerHTML = null;
+        this.type = null;
     }
 
     setInnerHTML(innerHTML) {
@@ -169,6 +170,12 @@ export class ButtonTag extends Tag {
     setBackground(backgroundImg) {
         this.tag.style.backgroundImage = `url(${backgroundImg})`;
         this.tag.style.backgroundSize = "cover";
+        return this;
+    }
+
+    setType(type) {
+        this.tag.type = type;
+        this.type = type;
         return this;
     }
 }
