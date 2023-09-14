@@ -5,7 +5,6 @@ import {
     TodayCardWriteHistory
 } from "../../common/utilTool.js";
 import {DivTag, ModalTag} from "../../common/tagUtil.js";
-import {bindEventToCardCreatePage} from "../cardCreate/cardCreateEvent.js";
 import {bindInputEventTextarea} from "../cardWrite/cardWriteEvent.js";
 import {createPagination} from "../../pagination/pagination.js";
 import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
@@ -39,14 +38,13 @@ export function bindEventToCardListGrid() {
 
     const modifyCustomCardBtnList = document.querySelectorAll(".card-modify-btn");
     modifyCustomCardBtnList.forEach(modifyCustomCardBtn => {
-        modifyCustomCardBtn.addEventListener("click", clickCardSpaceModifyCardBtn);
+        modifyCustomCardBtn.addEventListener("click", cardModifyBtnClick);
     })
 
     const deleteCustomCardBtnList = document.querySelectorAll(".card-delete-btn");
     deleteCustomCardBtnList.forEach(deleteCustomCardBtn => {
-        deleteCustomCardBtn.addEventListener("click", clickCardSpaceDeleteCardBtn);
+        deleteCustomCardBtn.addEventListener("click", deleteCardBtnClick);
     })
-
 }
 
 async function clickFocusBtn() {
@@ -101,45 +99,41 @@ async function filterBtnClick() {
     bindPaginationBtnEvent("card-list-space", "card-space", createCardListSpace, bindEventToCardListGrid);
 }
 
-async function createCardBtnClick() {
-    // 카드 만들기 버튼 클릭
-    const parent = document.getElementById("card-list-space");
+function cardModifyBtnClick() {
+    const modal = $("#card-modal");
+    modal.modal("show");
 
-    const modal = new ModalTag()
-        .setId("modal-parent")
-        .setStyle([{
-            position: "fixed",
-            top: 0,
-            left: 0,
-        }])
-        .addInnerHTML(
-            new DivTag()
-                .setId("modal-content")
-                .setClassName("modal")
-                .setStyle([{
-                    height: "90%",
-                    width: "60%",
-                    display: "block",
-                    backgroundColor: "white",
-                    zIndex: 1001,
-                    margin: "1% 20% 1% 20%",
-                    position: "fixed",
-                    top: "5%",
-                }])
-        )
-        .getTag();
+    const modalParent = findParentWithClass(event.target, "card");
+    const cardImgUrl = modalParent.querySelector(".card-img-top").src;
 
-    const url = "/card/custom/page";
-    let option = {method: "GET"};
+    const cardBody = modalParent.querySelector(".card-body");
+    const cardTitle = cardBody.childNodes.item(0).innerHTML;
+    const cardContent = cardBody.childNodes.item(1).innerHTML;
 
-    await authFetch(url, option)
-        .then(res => {
-            modal.querySelector("#modal-content").innerHTML = res;
-            modal.style.display = "block";
-            parent.appendChild(modal);
+    document.querySelector("#card-img").value = cardImgUrl;
+    document.querySelector("#card-title").value = cardTitle;
+    document.querySelector("#card-content").value = cardContent;
+    document.querySelector("#card-submit-btn").dataset.memberCardId
+        = event.target.dataset.cardId;
+}
 
-            bindEventToCardCreatePage();
-        });
+function createCardBtnClick() {
+    const modal = $("#card-modal");
+    modal.modal("show");
+
+    document.querySelector("#card-img").value = null;
+    document.querySelector("#card-title").value = null;
+    document.querySelector("#card-content").value = null;
+    document.querySelector("#card-submit-btn").dataset.memberCardId = null;
+}
+
+function deleteCardBtnClick() {
+    const modal = $("#card-delete-warning-modal")
+    modal.modal("show");
+
+    const cardDeleteBtn = document.querySelector("#card-delete-btn");
+    cardDeleteBtn.dataset.cardId = this.dataset.cardId;
+    cardDeleteBtn.dataset.type = "CUSTOM";
 }
 
 export async function writeCardBtnClick(parentId) {
@@ -242,31 +236,5 @@ function createTextEleByCardContent(modal, tagText) {
             .setInnerHTML("\n")
             .getTag());
         idx++;
-    });
-}
-
-async function clickCardSpaceModifyCardBtn() {
-    await createCardBtnClick().then(res => {
-        const cardId = this.dataset.cardId;
-        document.querySelector("#custom-card-create-btn").dataset.memberCardId = cardId;
-        document.querySelector("#custom-card-content").value = document.querySelector(`#card-content-${cardId}`).innerHTML;
-    });
-}
-
-async function clickCardSpaceDeleteCardBtn() {
-    const url = "/api/v1/card/auth/member/custom/delete";
-
-    const body = {
-        "cardId": this.dataset.cardId,
-        "type": this.dataset.type
-    };
-
-    let options = {
-        method: "POST",
-        body: JSON.stringify(body)
-    };
-
-    await authFetch(url, options).then(res => {
-        location.reload();
     });
 }

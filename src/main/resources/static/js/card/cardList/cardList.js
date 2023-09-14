@@ -148,26 +148,6 @@ function setCardGridToCardSpaceByContent(content, focusInfo, cardSpace) {
         ])
 
     cardSpace.appendChild(cardColumn.getTag());
-
-    // const headerSpace = new DivTag()
-    //     .setInnerHTML([
-    //         new DivTag()
-    //             .setClassName("focus-space")
-    //             .setInnerHTML([
-    //                 new ButtonTag()
-    //                     .setClassName("focus-btn")
-    //                     .setDataset([{focus: focusInfo.focus}])
-    //                     .setBackground(focusInfo.focusImgUrl)
-    //             ]),
-    //         new PTag()
-    //             .setId("card-content-" + content.cardId)
-    //             .setClassName("p-card-content")
-    //             .setTextContent(content.contents)
-    //     ])
-    // cardSpace.appendChild(headerSpace.getTag());
-    //
-    // const actionBtnSpace = createActionBtnSpace(content);
-    // cardSpace.appendChild(actionBtnSpace.getTag());
 }
 
 function getCardActBtnListByType(content) {
@@ -203,60 +183,4 @@ function getCardActBtnListByType(content) {
         .setInnerHTML("확언쓰기"));
 
     return resultBtnList;
-}
-
-function createLetterInfoSpace(content) {
-
-    let innerHtmlList = [
-        new DivTag()
-            .setStyle([{borderTop: "1px solid gray"}]),
-    ]
-
-    if (content.type !== "CUSTOM") {
-        innerHtmlList.push(new PTag()
-            .setTextContent(content.postDate + "<br/><b>Letter</b> " + content.letterTitle)
-        );
-    } else {
-        innerHtmlList.push(new PTag()
-            .setTextContent(content.postDate + "<br/><b>Custom</b> " + "내가 만든 카드")
-        );
-    }
-
-    return new DivTag()
-        .setStyle([{
-            display: "flex",
-            flexDirection: "column",
-            alignSelf: "stretch",
-        }]).setInnerHTML(innerHtmlList);
-}
-
-function createActionBtnSpace(content) {
-    let cardActionBtnList = [new ButtonTag()
-        .setClassName("card-list-btn card-action-btn card-write-btn")
-        .setId("card-space-write-card-btn")
-        .setInnerHTML("확언 쓰기")
-    ];
-
-    if (content.type === "CUSTOM") {
-        cardActionBtnList.unshift(
-            new ButtonTag()
-                .setClassName("card-list-btn card-action-btn card-modify-btn")
-                .setDataset([{cardId: content.cardId, type: content.type}])
-                .setInnerHTML("수정 하기"),
-            new ButtonTag()
-                .setClassName("card-list-btn card-action-btn card-delete-btn")
-                .setDataset([{cardId: content.cardId, type: content.type}])
-                .setInnerHTML("삭제 하기"),
-        );
-    } else {
-        cardActionBtnList.push(new ButtonTag()
-            .setClassName("card-list-btn card-action-btn letter-read-btn")
-            .setDataset([{letterId: content.letterId}])
-            .setId("card-space-read-letter-btn")
-            .setInnerHTML("편지 읽기"));
-    }
-
-    return new DivTag()
-        .setStyle([{display: "flex", alignSelf: "stretch", margin: "auto"}])
-        .setInnerHTML(cardActionBtnList);
 }

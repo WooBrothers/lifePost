@@ -20,7 +20,3 @@ export async function getCardList(pageNo, size, types, focus) {
 
     return await authFetch(url, option);
 }
-
-export async function getInfinityCardList(cardId, size, types, focus) {
-    let url = ``;
-}
