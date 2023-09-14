@@ -2,13 +2,23 @@
 
 <html lang="ko">
 <head>
+
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+  <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+  <link rel='stylesheet'
+        href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css'>
+
   <title>Document</title>
 </head>
 <body>
-<!-- Modal -->
+
+<!-- 카드 수정/생성 모달 -->
 <div class="modal fade" id="card-modal" tabindex="-1"
      aria-labelledby="card-modal-label"
      aria-hidden="true">
@@ -40,6 +50,8 @@
     </div>
   </div>
 </div>
+
+<!-- 카드 삭제 경고 모달 -->
 <div class="modal fade" id="card-delete-warning-modal" tabindex="-1"
      aria-labelledby="card-modal-label"
      aria-hidden="true">
@@ -56,6 +68,47 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" id="card-delete-btn">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 카드 쓰기 모달 -->
+<div class="modal fade" id="card-write-modal" tabindex="-1"
+     aria-labelledby="card-write-label"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-3 text-primary" id="card-write-label">Write Card</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-content-body">
+        <h4>카드 쓰기 달성량</h4>
+        <div class="progress mb-3">
+          <div id="write-progress" class="progress-bar" role="progressbar" style="width: 5%;"
+               aria-valuenow="0"
+               aria-valuemin="0" aria-valuemax="100">0%
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="goal-content" class="form-label h5" id="write-card-title"></label>
+          <textarea class="form-control" id="goal-content" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+          <!--          <h5 class='bi bi-emoji-neutral' id="write-correct-emoji"></h5>-->
+          <button type="button" id="write-correct-emoji"
+                  class="btn bi h5 bi-emoji-neutral" data-bs-container="body"
+                  data-bs-toggle="popover" data-bs-placement="right"
+                  data-bs-content="위 카드 본문을 아래에 써보세요!"
+                  style="border:solid 1px black">
+          </button>
+          <textarea class="form-control" id="card-write-editor" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-start">
+        <h6>이 카드를 쓴 횟수: </h6>
+        <h6 id="card-write-count">5</h6>
       </div>
     </div>
   </div>

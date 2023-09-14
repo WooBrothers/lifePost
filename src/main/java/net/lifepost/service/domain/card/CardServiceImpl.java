@@ -455,6 +455,7 @@ public class CardServiceImpl implements CardService {
                     .setMemberCardId(memberCard.getId())
                     .setLetterId(letter.getId())
                     .setLetterTitle(letter.getTitleByText())
+                    .setWriteCount(memberCard.getWriteCount())
                     .setPostDate(letter.getPostDate());
 
                 pageResponses.add(pageResponse);
@@ -470,6 +471,7 @@ public class CardServiceImpl implements CardService {
                     .setCardTitle(memberCustomCard.getTitle())
                     .setCardImg(memberCustomCard.getCardImg())
                     .setMemberCardId(memberCard.getId())
+                    .setWriteCount(memberCard.getWriteCount())
                     .setPostDate(memberCard.getCreatedAt().toLocalDate());
 
                 pageResponses.add(pageResponse);

@@ -4,8 +4,7 @@ import {
     removeHTMLAndWhitespace,
     TodayCardWriteHistory
 } from "../../common/utilTool.js";
-import {DivTag, ModalTag} from "../../common/tagUtil.js";
-import {bindInputEventTextarea} from "../cardWrite/cardWriteEvent.js";
+import {DivTag} from "../../common/tagUtil.js";
 import {createPagination} from "../../pagination/pagination.js";
 import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
 import {createCardListSpace} from "./cardList.js";
@@ -26,9 +25,7 @@ export function bindEventToCardListGrid() {
 
     const writeCardBtnList = document.querySelectorAll(".card-write-btn");
     writeCardBtnList.forEach(btn => {
-        btn.addEventListener("click", (event) => {
-            writeCardBtnClick.call(event, "card-list-space")
-        });
+        btn.addEventListener("click", writeCardBtnClick);
     });
 
     const readLetterBtnList = document.querySelectorAll(".letter-read-btn");
@@ -127,6 +124,41 @@ function createCardBtnClick() {
     document.querySelector("#card-submit-btn").dataset.memberCardId = null;
 }
 
+function writeCardBtnClick() {
+
+    // 모달창이 다 뜨고 나서 popover 적용한 버튼 클릭
+    const modal = document.querySelector("#card-write-modal");
+
+    const todayCardWriteHistory = new TodayCardWriteHistory();
+    
+    const totalCount = todayCardWriteHistory.totalCount < 100 ? todayCardWriteHistory.totalCount : 100;
+
+    const progressBar = document.querySelector("#write-progress")
+
+    progressBar.ariaValuenow = totalCount;
+    progressBar.style.width = totalCount + "%";
+    progressBar.innerHTML = totalCount + "%";
+
+    modal.addEventListener("shown.bs.modal", function () {
+        document.querySelector("#write-correct-emoji").click();
+    });
+
+    // 모달 보기
+    new bootstrap.Modal(modal).show();
+
+    const memberCardId = this.dataset.memberCardId;
+    const title = document.querySelector(`#card-title-${memberCardId}`).innerHTML;
+    const content = document.querySelector(`#card-content-${memberCardId}`).innerHTML;
+    const count = this.dataset.writeCount;
+
+    document.querySelector("#write-progress")
+    document.querySelector("#write-card-title").innerHTML = title;
+    document.querySelector("#goal-content").innerHTML = content;
+    document.querySelector("#card-write-editor").placeholder = "";
+    document.querySelector("#card-write-editor").dataset.memberCardId = memberCardId;
+    document.querySelector("#card-write-count").innerHTML = count;
+}
+
 function deleteCardBtnClick() {
     const modal = $("#card-delete-warning-modal")
     modal.modal("show");
@@ -136,65 +168,65 @@ function deleteCardBtnClick() {
     cardDeleteBtn.dataset.type = "CUSTOM";
 }
 
-export async function writeCardBtnClick(parentId) {
-
-    const cardParent = findParentWithClass(this.target, "card-space");
-    const cardId = cardParent.dataset.cardId;
-    const contentText = cardParent.querySelector(
-        `#card-content-${cardId}`
-    ).innerHTML;
-
-    const parent = document.getElementById(parentId);
-
-    const modal = new ModalTag()
-        .setId("modal-parent")
-        .setStyle([{
-            position: "fixed",
-            top: 0,
-            left: 0,
-        }])
-        .addInnerHTML(
-            new DivTag()
-                .setId("modal-content")
-                .setClassName("modal")
-                .setStyle([{
-                    height: "90%",
-                    width: "60%",
-                    display: "block",
-                    backgroundColor: "white",
-                    zIndex: 1001,
-                    margin: "1% 20% 1% 20%",
-                    position: "fixed",
-                    top: "5%",
-                }])
-        ).getTag();
-
-
-    const url = "/card/write/page";
-    let option = {method: "GET"};
-
-    await authFetch(url, option)
-        .then(res => {
-            modal.querySelector("#modal-content").innerHTML = res;
-            createTextEleByCardContent(modal, contentText);
-
-            modal.style.display = "block";
-            parent.appendChild(modal);
-
-            // paenrt에 modal을 추가한 이후에 동작
-            modal.querySelector("#card-write-content").focus();
-            const memberCardId = cardParent.dataset.memberCardId;
-            modal.dataset.memberCardId = memberCardId
-
-            const todayCardWriteHistory = new TodayCardWriteHistory();
-            document.querySelector("#today-total-write-count").innerHTML += todayCardWriteHistory.totalCount;
-
-            document.querySelector("#card-write-count").innerHTML
-                = "이 카드를 쓴 횟수: " + todayCardWriteHistory.getMemberCardCount(memberCardId);
-
-            bindInputEventTextarea();
-        });
-}
+// export async function writeCardBtnClick(parentId) {
+//
+//     const cardParent = findParentWithClass(this.target, "card-space");
+//     const cardId = cardParent.dataset.cardId;
+//     const contentText = cardParent.querySelector(
+//         `#card-content-${cardId}`
+//     ).innerHTML;
+//
+//     const parent = document.getElementById(parentId);
+//
+//     const modal = new ModalTag()
+//         .setId("modal-parent")
+//         .setStyle([{
+//             position: "fixed",
+//             top: 0,
+//             left: 0,
+//         }])
+//         .addInnerHTML(
+//             new DivTag()
+//                 .setId("modal-content")
+//                 .setClassName("modal")
+//                 .setStyle([{
+//                     height: "90%",
+//                     width: "60%",
+//                     display: "block",
+//                     backgroundColor: "white",
+//                     zIndex: 1001,
+//                     margin: "1% 20% 1% 20%",
+//                     position: "fixed",
+//                     top: "5%",
+//                 }])
+//         ).getTag();
+//
+//
+//     const url = "/card/write/page";
+//     let option = {method: "GET"};
+//
+//     await authFetch(url, option)
+//         .then(res => {
+//             modal.querySelector("#modal-content").innerHTML = res;
+//             createTextEleByCardContent(modal, contentText);
+//
+//             modal.style.display = "block";
+//             parent.appendChild(modal);
+//
+//             // paenrt에 modal을 추가한 이후에 동작
+//             modal.querySelector("#card-write-content").focus();
+//             const memberCardId = cardParent.dataset.memberCardId;
+//             modal.dataset.memberCardId = memberCardId
+//
+//             const todayCardWriteHistory = new TodayCardWriteHistory();
+//             document.querySelector("#today-total-write-count").innerHTML += todayCardWriteHistory.totalCount;
+//
+//             document.querySelector("#card-write-count").innerHTML
+//                 = "이 카드를 쓴 횟수: " + todayCardWriteHistory.getMemberCardCount(memberCardId);
+//
+//             bindInputEventTextarea();
+//         });
+// }
 
 export function clickReadLetter() {
 

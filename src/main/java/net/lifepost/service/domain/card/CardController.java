@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.lifepost.service.domain.card.CardDto.PageResponse;
 import net.lifepost.service.model.card.CardTypeEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -50,43 +49,43 @@ public class CardController {
     ) {
         return cardService.getMemberCards(size, pageNo, focus, type, userDetails);
     }
-
-    /**
-     * 멤버가 만든 카드중 전달한 memberCustomCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
-     *
-     * @param size        불러올 카드 사이즈
-     * @param pageNo      조회할 페이지 번호
-     * @param userDetails security 유저 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-    @GetMapping("/auth/custom/{pageNo}/{size}")
-    public Page<PageResponse> getMemberCustomCards(
-        @PathVariable int pageNo,
-        @PathVariable int size,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        return cardService.getMemberCustomCards(size, pageNo, userDetails);
-    }
-
-    /**
-     * 멤버가 focus 한 카드중 전달한 memberCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
-     * <p>
-     * memberCard의 리스트 중 focus 상태인 것들만 조회하는 리스트 뷰에서 사용한다. 전달하는 memberCardId 이후에 focus 상태인 리스트 정보를
-     * 조회한다.
-     *
-     * @param size        불러올 카드 사이즈
-     * @param pageNo      멤버가 소유한 카드의 아이디
-     * @param userDetails security 멤버 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-    @GetMapping("/auth/focus/{pageNo}/{size}")
-    public Page<PageResponse> getFocusCards(
-        @PathVariable int pageNo,
-        @PathVariable int size,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
-        return cardService.getFocusCards(size, pageNo, userDetails);
-    }
+//
+//    /**
+//     * 멤버가 만든 카드중 전달한 memberCustomCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
+//     *
+//     * @param size        불러올 카드 사이즈
+//     * @param pageNo      조회할 페이지 번호
+//     * @param userDetails security 유저 정보
+//     * @return Page 처리된 카드 정보 (컨텐츠 x)
+//     */
+//    @GetMapping("/auth/custom/{pageNo}/{size}")
+//    public Page<PageResponse> getMemberCustomCards(
+//        @PathVariable int pageNo,
+//        @PathVariable int size,
+//        @AuthenticationPrincipal UserDetails userDetails
+//    ) {
+//        return cardService.getMemberCustomCards(size, pageNo, userDetails);
+//    }
+//
+//    /**
+//     * 멤버가 focus 한 카드중 전달한 memberCardId 이후의 최신 카드를 size 만큼 조회 (리스트 출력용)
+//     * <p>
+//     * memberCard의 리스트 중 focus 상태인 것들만 조회하는 리스트 뷰에서 사용한다. 전달하는 memberCardId 이후에 focus 상태인 리스트 정보를
+//     * 조회한다.
+//     *
+//     * @param size        불러올 카드 사이즈
+//     * @param pageNo      멤버가 소유한 카드의 아이디
+//     * @param userDetails security 멤버 정보
+//     * @return Page 처리된 카드 정보 (컨텐츠 x)
+//     */
+//    @GetMapping("/auth/focus/{pageNo}/{size}")
+//    public Page<PageResponse> getFocusCards(
+//        @PathVariable int pageNo,
+//        @PathVariable int size,
+//        @AuthenticationPrincipal UserDetails userDetails
+//    ) {
+//        return cardService.getFocusCards(size, pageNo, userDetails);
+//    }
 
     @GetMapping("/auth/focus/after/{memberCardId}/{size}")
     public ResponseEntity<Page<CardDto.PageResponse>> getCardListAfterCardId(

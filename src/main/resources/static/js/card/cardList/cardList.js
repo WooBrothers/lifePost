@@ -3,6 +3,7 @@ import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
 import {bindEventToCardListGrid} from "./cardListEvent.js";
 import {createPagination} from "../../pagination/pagination.js";
 import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
+import {bootstrapPopover} from "../../common/utilTool.js";
 
 const cardListSpace = document.getElementById("card-list-space");
 const response = await createCardListSpace(cardListSpace, 1, bindEventToCardListGrid);
@@ -10,6 +11,9 @@ await createPagination(response);
 bindPaginationBtnEvent("card-list-space", "card-space", createCardListSpace, bindEventToCardListGrid);
 
 export async function createCardListSpace(cardListSpace, page, event) {
+
+    // bootstrap popover 사용을 위한 조건
+    bootstrapPopover();
 
     const cardType = getCardTypeFilter();
     const focusType = getIsFocusFilter();
@@ -136,10 +140,11 @@ function setCardGridToCardSpaceByContent(content, focusInfo, cardSpace) {
                 .setInnerHTML([
                     new HTag(5)
                         .setClassName("card-title")
+                        .setId(`card-title-${content.memberCardId}`)
                         .setInnerHTML(content.cardTitle),
                     new PTag()
-                        .setId(`card-content-${content.cardId}`)
-                        .setTextContent("card-text")
+                        .setId(`card-content-${content.memberCardId}`)
+                        .setClassName("card-content")
                         .setTextContent(content.contents)
                 ]),
             new DivTag()
@@ -158,14 +163,22 @@ function getCardActBtnListByType(content) {
             new ButtonTag()
                 .setClassName("btn btn-warning card-list-btn card-action-btn card-modify-btn me-2")
                 .setType("button")
-                .setDataset([{cardId: content.cardId, type: content.type}])
+                .setDataset([{
+                    memberCardId: content.memberCardId,
+                    cardId: content.cardId,
+                    type: content.type
+                }])
                 .setInnerHTML("수정")
         )
         resultBtnList.push(
             new ButtonTag()
                 .setClassName("btn btn-danger card-list-btn card-action-btn card-delete-btn me-2")
                 .setType("button")
-                .setDataset([{cardId: content.cardId, type: content.type}])
+                .setDataset([{
+                    memberCardId: content.memberCardId,
+                    cardId: content.cardId,
+                    type: content.type
+                }])
                 .setInnerHTML("삭제")
         )
     } else {
@@ -179,7 +192,11 @@ function getCardActBtnListByType(content) {
     }
     resultBtnList.push(new ButtonTag()
         .setClassName("btn btn-primary card-list-btn card-write-btn  me-2")
-        .setId("card-space-write-card-btn")
+        .setDataset([{
+            memberCardId: content.memberCardId,
+            cardId: content.cardId,
+            writeCount: content.writeCount
+        }])
         .setInnerHTML("확언쓰기"));
 
     return resultBtnList;

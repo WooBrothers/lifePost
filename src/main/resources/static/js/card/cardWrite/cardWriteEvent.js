@@ -1,9 +1,11 @@
-import {TodayCardWriteHistory} from "../../common/utilTool.js";
+import {animateCSS, TodayCardWriteHistory} from "../../common/utilTool.js";
 import {increaseCardWriteCount, rewardStampToUser} from "./cardWriteApi.js";
 
 export function bindInputEventTextarea() {
-    const cardWriteContent = document.getElementById("card-write-content");
-    cardWriteContent.addEventListener("input", inputTextarea);
+    // const cardWriteContent = document.getElementById("card-write-content");
+    // cardWriteContent.addEventListener("input", inputTextarea);
+    const cardWriteContent = document.getElementById("card-write-editor");
+    cardWriteContent.addEventListener("input", inputText);
 
     const closeBtn = document.getElementById("modal-close-btn");
     closeBtn.addEventListener("click", closeModalBtn);
@@ -13,6 +15,27 @@ export function bindInputEventTextarea() {
 
     const modalParent = document.getElementById("modal-parent");
     modalParent.addEventListener("keydown", escKeyDown);
+}
+
+async function inputText() {
+    const goal = document.querySelector("#goal-content").value
+    const input = document.querySelector("#card-write-editor").value
+
+    if (goal === input) {
+        await increaseWriteCount();
+
+        const emoji = document.querySelector("#write-correct-emoji")
+        emoji.classList.remove("bi-emoji-frown");
+        emoji.classList.add("bi-emoji-smile");
+
+        animateCSS("#write-correct-emoji", "tada").then((message) => {
+            emoji.classList.remove("bi-emoji-smile");
+            emoji.classList.add("bi-emoji-frown");
+        });
+
+    } else {
+        animateCSS("#write-correct-emoji", "shakeX").then();
+    }
 }
 
 async function inputTextarea() {

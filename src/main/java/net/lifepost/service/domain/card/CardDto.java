@@ -101,7 +101,7 @@ public class CardDto {
     @Setter
     public static class PostWriteRequest {
 
-        @NotBlank(message = "memberCardId@NotBlank")
+        @NotNull(message = "memberCardId@NotNull")
         private Long memberCardId;
 
         private Long count = 10L;
@@ -138,6 +138,7 @@ public class CardDto {
         private Long letterId;
         private String cardTitle;
         private String cardImg;
+        private Long writeCount;
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate postDate;
@@ -192,6 +193,11 @@ public class CardDto {
 
         public PageResponse setCardImg(String cardImg) {
             this.cardImg = cardImg;
+            return this;
+        }
+
+        public PageResponse setWriteCount(Long writeCount) {
+            this.writeCount = writeCount;
             return this;
         }
     }
