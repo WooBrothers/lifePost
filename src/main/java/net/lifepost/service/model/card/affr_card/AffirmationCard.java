@@ -35,8 +35,13 @@ public class AffirmationCard {
     @JoinColumn
     private Letter letter;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(50) DEFAULT 'title'")
+    private String title;
+
     @Column(nullable = false)
     private String contents;
+
+    private String cardImg;
 
     private String tag;
 

@@ -28,6 +28,9 @@ public class CardDto {
         private final Long id;
         private final Letter letter;
         private final String tag;
+        private final String title;
+        private final String contents;
+        private final String cardImg;
         private final CardTypeEnum type;
         private final LocalDateTime createdAt;
         private final LocalDateTime updateAt;
@@ -37,11 +40,17 @@ public class CardDto {
     @Setter
     public static class PostRequest {
 
-        @NotBlank
+        @NotBlank(message = "title@NotBlank")
+        @Size(min = 1, max = 100, message = "title@Size")
+        private String title;
+
+        @NotBlank(message = "contents@NotBlank")
         @Size(min = 1, max = 200, message = "contents@Size")
         private String contents;
 
-        @NotBlank
+        private String cardImg;
+
+        @NotBlank(message = "letterId@NotBlank")
         private Long letterId;
 
         private String tag;
@@ -53,9 +62,15 @@ public class CardDto {
 
         private Long cardId;
 
-        @NotNull(message = "contents@NotNull")
+        @NotBlank(message = "title@NotBlank")
+        @Size(min = 1, max = 100, message = "title@Size")
+        private String title;
+
         @NotBlank(message = "contents@NotBlank")
+        @Size(min = 1, max = 200, message = "contents@Size")
         private String contents;
+
+        private String cardImg;
 
         private String tag;
     }
@@ -67,6 +82,7 @@ public class CardDto {
 
         @NotNull(message = "memberCustomCardId@NotNull")
         private Long cardId;
+
         private CardTypeEnum type;
     }
 
@@ -85,7 +101,7 @@ public class CardDto {
     @Setter
     public static class PostWriteRequest {
 
-        @NotBlank
+        @NotBlank(message = "memberCardId@NotBlank")
         private Long memberCardId;
 
         private Long count = 10L;
@@ -120,12 +136,17 @@ public class CardDto {
         private FocusTypeEnum focus;
         private String letterTitle;
         private Long letterId;
+        private String cardTitle;
+        private String cardImg;
+
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate postDate;
         private final String contents;
         private final String tag;
+
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private final LocalDateTime createdAt;
+
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private final LocalDateTime updateAt;
 
@@ -161,6 +182,16 @@ public class CardDto {
 
         public PageResponse setPostDate(LocalDate postDate) {
             this.postDate = postDate;
+            return this;
+        }
+
+        public PageResponse setCardTitle(String cardTitle) {
+            this.cardTitle = cardTitle;
+            return this;
+        }
+
+        public PageResponse setCardImg(String cardImg) {
+            this.cardImg = cardImg;
             return this;
         }
     }

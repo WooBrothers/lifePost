@@ -16,7 +16,7 @@ export async function createCardListSpace(cardListSpace, page, event) {
 
     let resultResponse = null;
 
-    await getCardList(page, 10, cardType, focusType).then(response => {
+    await getCardList(page, 9, cardType, focusType).then(response => {
         createCard(response, cardListSpace);
         resultResponse = response;
     });
@@ -47,7 +47,7 @@ function getIsFocusFilter() {
 }
 
 function createCard(response, cardListSpace) {
-    const preEmptyContentDiv = document.querySelector(".empty-content");
+    const preEmptyContentDiv = document.querySelector("#card-empty-info");
 
     if (preEmptyContentDiv) {
         preEmptyContentDiv.remove();
@@ -55,16 +55,14 @@ function createCard(response, cardListSpace) {
 
     // 카드 없을 시 안내문구 출력 및 렌더링 종료
     if (response.content.length === 0) {
-        const emptyTexts = document.querySelectorAll(".card-empty-info-text")
-        emptyTexts.forEach(ele => {
-            ele.remove();
-        })
+        const emptyTexts = document.querySelectorAll("#card-empty-info")
+        emptyTexts.remove();
 
         const emptyText = new DivTag()
             .setClassName("card-empty-info-text")
+            .setId("card-empty-info")
             .setInnerHTML("카드가 없습니다. 편지을 읽거나 카드를 만들어 보세요!");
         cardListSpace.appendChild(emptyText.getTag());
-
         return;
     }
 
@@ -138,7 +136,7 @@ function setCardGridToCardSpaceByContent(content, focusInfo, cardSpace) {
                 .setInnerHTML([
                     new HTag(5)
                         .setClassName("card-title")
-                        .setInnerHTML(content.title),
+                        .setInnerHTML(content.cardTitle),
                     new PTag()
                         .setId(`card-content-${content.cardId}`)
                         .setTextContent("card-text")

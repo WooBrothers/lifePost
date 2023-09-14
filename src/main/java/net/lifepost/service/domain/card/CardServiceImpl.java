@@ -197,7 +197,7 @@ public class CardServiceImpl implements CardService {
     }
 
     /**
-     * 멤버가 직접 카드 생성하기
+     * 멤버가 직접 카드 생성/수정
      *
      * @param memberCustomCardPostDto 멤버가 직접 생성할 카드 정보
      * @param userDetails             security 멤버 정보
@@ -212,12 +212,16 @@ public class CardServiceImpl implements CardService {
         MemberCustomCard memberCustomCard;
 
         if (memberCustomCardPostDto.getCardId() != null) {
+            // 수정
             memberCustomCard = memberCustomCardRepository
                 .findById(memberCustomCardPostDto.getCardId())
                 .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
+            memberCustomCard.setTitle(memberCustomCardPostDto.getTitle());
             memberCustomCard.setContents(memberCustomCardPostDto.getContents());
+            memberCustomCard.setCardImg(memberCustomCardPostDto.getCardImg());
             memberCustomCard.setTag(memberCustomCardPostDto.getTag());
         } else {
+            // 생성
             memberCustomCard = cardMapper
                 .toMemberCustomCardEntity(memberCustomCardPostDto);
             memberCustomCard.setMember(member);
@@ -446,6 +450,8 @@ public class CardServiceImpl implements CardService {
                     .setType(memberCard.getType())
                     .setFocus(memberCard.getFocus())
                     .setCardId(affirmationCard.getId())
+                    .setCardTitle(affirmationCard.getTitle())
+                    .setCardImg(affirmationCard.getCardImg())
                     .setMemberCardId(memberCard.getId())
                     .setLetterId(letter.getId())
                     .setLetterTitle(letter.getTitleByText())
@@ -461,6 +467,8 @@ public class CardServiceImpl implements CardService {
                     .setType(memberCard.getType())
                     .setFocus(memberCard.getFocus())
                     .setCardId(memberCustomCard.getId())
+                    .setCardTitle(memberCustomCard.getTitle())
+                    .setCardImg(memberCustomCard.getCardImg())
                     .setMemberCardId(memberCard.getId())
                     .setPostDate(memberCard.getCreatedAt().toLocalDate());
 
