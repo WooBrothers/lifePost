@@ -30,8 +30,8 @@ export async function createCardListSpace(cardListSpace, page, event) {
 }
 
 function getCardTypeFilter() {
-    const isAffirmationOn = document.getElementById("affirmation-filter-btn").dataset.onOff;
-    const isCustomBtnOn = document.getElementById("custom-filter-btn").dataset.onOff;
+    const isAffirmationOn = document.querySelectorAll(".affirmation-filter")[0].dataset.onOff;
+    const isCustomBtnOn = document.querySelectorAll(".custom-filter")[0].dataset.onOff;
 
     let resultType = [];
     if (isAffirmationOn === "true") {

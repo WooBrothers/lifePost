@@ -2,8 +2,6 @@ import {animateCSS, TodayCardWriteHistory} from "../../common/utilTool.js";
 import {increaseCardWriteCount, rewardStampToUser} from "./cardWriteApi.js";
 
 export function bindInputEventTextarea() {
-    // const cardWriteContent = document.getElementById("card-write-content");
-    // cardWriteContent.addEventListener("input", inputTextarea);
     const cardWriteContent = document.getElementById("card-write-editor");
     cardWriteContent.addEventListener("input", inputText);
 

@@ -5,34 +5,78 @@
   <title>card list</title>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-        crossorigin="anonymous">
+        rel="stylesheet">
+  <link rel='stylesheet'
+        href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css'>
+  <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/css/card/cardWriteBtn.css">
 </head>
 <body>
 
 {{> layout/navigation}}
 
+<div class="float-btn-space z-3" style="width: 50px;">
+  <div class="filter-group">
+    <button class="filter btn btn-secondary flb flb-ch affirmation-filter"
+            id="affirmation-filter-btn-mb"
+            data-on-off="false">
+      <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+           class="bi bi-envelope-arrow-down" viewBox="0 0 16 16">
+        <path
+            d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4.5a.5.5 0 0 1-1 0V5.383l-7 4.2-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h5.5a.5.5 0 0 1 0 1H2a2 2 0 0 1-2-1.99V4Zm1 7.105 4.708-2.897L1 5.383v5.722ZM1 4v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1Z"/>
+        <path
+            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.354-1.646a.5.5 0 0 1-.722-.016l-1.149-1.25a.5.5 0 1 1 .737-.676l.28.305V11a.5.5 0 0 1 1 0v1.793l.396-.397a.5.5 0 0 1 .708.708l-1.25 1.25Z"/>
+      </svg>
+    </button>
+    <button class="filter btn btn-secondary flb flb-ch custom-filter" id="custom-filter-btn-mb"
+            data-on-off="false">
+      <i class="bi bi-pencil-square justify-content-center align-items-center"
+         style="font-size: 25px;"></i>
+    </button>
+    <button class="filter btn btn-secondary flb flb-ch focus-filter" id="focus-filter-btn-mb"
+            data-on-off="false">
+      <i class="bi bi-bookmark-fill justify-content-center align-items-center"
+         style="font-size: 23px;"></i>
+    </button>
+    <button class="btn btn-primary flb" id="flb-root">
+      <i class="bi bi-filter justify-content-center align-items-center"
+         style="font-size: 25px;"></i>
+    </button>
+  </div>
+  <button type="button" class="act-btn card-list-btn btn btn-primary flb mt-2"
+          id="create-card-btn">+
+  </button>
+</div>
+
 <div class="container mt-5">
-  <div class="row justify-content-end">
-    <div class="btn-group col-lg-4" role="group">
-      <button type="button" class="act-btn card-list-btn btn btn-info" id="create-card-btn">카드
-        만들기
-      </button>
-      <button type="button" class="act-btn card-list-btn filter btn btn-primary"
-              id="affirmation-filter-btn" data-on-off="false">확언 카드
-      </button>
-      <button type="button" class="act-btn card-list-btn filter btn btn-primary"
-              id="custom-filter-btn" data-on-off="false">내가 만든 카드
-      </button>
-      <button type="button" class="act-btn card-list-btn filter btn btn-primary"
-              id="focus-filter-btn" data-on-off="false">focus한 카드
+  <div class="row justify-content-end ">
+    <div class="d-flex d-none d-md-flex col-lg-4 justify-content-end mb-1">
+      <div class="flex-fill"></div>
+      <button type="button" class="act-btn card-list-btn btn btn-primary"
+              id="create-card-btn">
+        <i class="bi bi-file-plus"></i> 만들기
       </button>
     </div>
   </div>
-
-  <div class="row justify-content-center">
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-2" id="card-list-space"></div>
+  <div class="row justify-content-end" id="filter-btn-group">
+    <div class="btn-group d-md-flex d-none col-md-6 col-lg-4 mb-1" role="group">
+      <button class="btn btn-primary filter-icon">필터</button>
+      <button class="btn btn-outline-primary card-list-btn filter affirmation-filter"
+              id="affirmation-filter-btn" data-on-off="false">받은 카드
+      </button>
+      <button class="btn btn-outline-primary card-list-btn filter custom-filter"
+              id="custom-filter-btn" data-on-off="false">만든 카드
+      </button>
+      <button class="btn btn-outline-primary card-list-btn filter focus-filter"
+              id="focus-filter-btn" data-on-off="false">focus
+      </button>
+    </div>
+  </div>
+  <div class="justify-content-center">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-2 p-0"
+         id="card-list-space"></div>
   </div>
 </div>
 
@@ -40,15 +84,8 @@
 
 {{> contents/card/cardModal}}
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-        data-bs-target="#card-write-modal">
-  Launch demo modal
-</button>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module" src="/js/card/cardList/cardList.js"></script>
 </body>
 </html>

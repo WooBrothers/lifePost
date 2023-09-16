@@ -1,10 +1,5 @@
 import {authFetch} from "../../common/apiUtil.js";
-import {
-    findParentWithClass,
-    removeHTMLAndWhitespace,
-    TodayCardWriteHistory
-} from "../../common/utilTool.js";
-import {DivTag} from "../../common/tagUtil.js";
+import {findParentWithClass, TodayCardWriteHistory} from "../../common/utilTool.js";
 import {createPagination} from "../../pagination/pagination.js";
 import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
 import {createCardListSpace} from "./cardList.js";
@@ -76,13 +71,21 @@ async function clickFocusBtn() {
 
 async function filterBtnClick() {
 
+    const className = this.id.split("-btn")[0];
+    const btnList = document.querySelectorAll(`.${className}`);
+
     if (this.dataset.onOff === "true") {
-        this.dataset.onOff = "false";
-        this.classList.remove("active");
+        btnList.forEach((btn) => {
+            btn.dataset.onOff = "false";
+            btn.classList.remove("active");
+        });
     } else {
-        this.dataset.onOff = "true"
-        this.classList.add("active");
+        btnList.forEach((btn) => {
+            btn.dataset.onOff = "true"
+            btn.classList.add("active");
+        });
     }
+
     const cardListSpace = document.getElementById("card-list-space");
     const cardList = document.getElementsByClassName("card-space");
     Array.from(cardList).forEach(card => cardListSpace.removeChild(card));
@@ -97,8 +100,8 @@ async function filterBtnClick() {
 }
 
 function cardModifyBtnClick() {
-    const modal = $("#card-modal");
-    modal.modal("show");
+    const modal = document.querySelector("#card-modal");
+    new bootstrap.Modal(modal).show();
 
     const modalParent = findParentWithClass(event.target, "card");
     const cardImgUrl = modalParent.querySelector(".card-img-top").src;
@@ -115,8 +118,8 @@ function cardModifyBtnClick() {
 }
 
 function createCardBtnClick() {
-    const modal = $("#card-modal");
-    modal.modal("show");
+    const modal = document.querySelector("#card-modal");
+    new bootstrap.Modal(modal).show();
 
     document.querySelector("#card-img").value = null;
     document.querySelector("#card-title").value = null;
@@ -130,7 +133,7 @@ function writeCardBtnClick() {
     const modal = document.querySelector("#card-write-modal");
 
     const todayCardWriteHistory = new TodayCardWriteHistory();
-    
+
     const totalCount = todayCardWriteHistory.totalCount < 100 ? todayCardWriteHistory.totalCount : 100;
 
     const progressBar = document.querySelector("#write-progress")
@@ -160,113 +163,16 @@ function writeCardBtnClick() {
 }
 
 function deleteCardBtnClick() {
-    const modal = $("#card-delete-warning-modal")
-    modal.modal("show");
+    const modal = document.querySelector("#card-delete-warning-modal");
+    new bootstrap.Modal(modal).show();
 
     const cardDeleteBtn = document.querySelector("#card-delete-btn");
     cardDeleteBtn.dataset.cardId = this.dataset.cardId;
     cardDeleteBtn.dataset.type = "CUSTOM";
 }
 
-// export async function writeCardBtnClick(parentId) {
-//
-//     const cardParent = findParentWithClass(this.target, "card-space");
-//     const cardId = cardParent.dataset.cardId;
-//     const contentText = cardParent.querySelector(
-//         `#card-content-${cardId}`
-//     ).innerHTML;
-//
-//     const parent = document.getElementById(parentId);
-//
-//     const modal = new ModalTag()
-//         .setId("modal-parent")
-//         .setStyle([{
-//             position: "fixed",
-//             top: 0,
-//             left: 0,
-//         }])
-//         .addInnerHTML(
-//             new DivTag()
-//                 .setId("modal-content")
-//                 .setClassName("modal")
-//                 .setStyle([{
-//                     height: "90%",
-//                     width: "60%",
-//                     display: "block",
-//                     backgroundColor: "white",
-//                     zIndex: 1001,
-//                     margin: "1% 20% 1% 20%",
-//                     position: "fixed",
-//                     top: "5%",
-//                 }])
-//         ).getTag();
-//
-//
-//     const url = "/card/write/page";
-//     let option = {method: "GET"};
-//
-//     await authFetch(url, option)
-//         .then(res => {
-//             modal.querySelector("#modal-content").innerHTML = res;
-//             createTextEleByCardContent(modal, contentText);
-//
-//             modal.style.display = "block";
-//             parent.appendChild(modal);
-//
-//             // paenrt에 modal을 추가한 이후에 동작
-//             modal.querySelector("#card-write-content").focus();
-//             const memberCardId = cardParent.dataset.memberCardId;
-//             modal.dataset.memberCardId = memberCardId
-//
-//             const todayCardWriteHistory = new TodayCardWriteHistory();
-//             document.querySelector("#today-total-write-count").innerHTML += todayCardWriteHistory.totalCount;
-//
-//             document.querySelector("#card-write-count").innerHTML
-//                 = "이 카드를 쓴 횟수: " + todayCardWriteHistory.getMemberCardCount(memberCardId);
-//
-//             bindInputEventTextarea();
-//         });
-// }
-
 export function clickReadLetter() {
 
     localStorage.setItem("letterId", this.dataset.letterId);
     window.location = "/letter/read/page";
-}
-
-function createTextEleByCardContent(modal, tagText) {
-    const displayOutput = modal.querySelector("#display-output");
-
-    let replacedText = removeHTMLAndWhitespace(tagText);
-    replacedText = replacedText.replace(/\s{2,}/g, "<br/>");
-
-    const contentTextList = replacedText.split("<br/>");
-
-    let idx = 0;
-    contentTextList.forEach(contentText => {
-        for (let i = 0; i < contentText.length; i++) {
-            const text = new DivTag()
-                .setId("content-text-" + (i + idx))
-                .setClassName("content-text-class")
-                .setInnerHTML(contentText[i])
-                .setStyle([{
-                        backgroundColor: "transparent",
-                        zIndex: 2005
-                    }]
-                ).getTag();
-
-            if (contentText[i] === " ") {
-                text.classList.add("empty-space");
-            }
-
-            displayOutput.appendChild(text);
-        }
-        idx += contentText.length;
-        displayOutput.appendChild(new DivTag()
-            .setClassName("line-break")
-            .setId("content-text-" + idx)
-            .setInnerHTML("\n")
-            .getTag());
-        idx++;
-    });
 }
