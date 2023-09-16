@@ -16,7 +16,7 @@ export function bindEventToLetterListGrid() {
         btn.addEventListener("click", clickFocusBtn);
     })
 
-    const filterBtnList = document.querySelectorAll(".act-btn")
+    const filterBtnList = document.querySelectorAll(".filter")
     filterBtnList.forEach(filterBtn => {
         filterBtn.addEventListener("click", filterBtnClick);
     })
@@ -53,13 +53,19 @@ async function clickLetter() {
 }
 
 async function filterBtnClick() {
+    const className = this.id.split("-btn")[0];
+    const btnList = document.querySelectorAll(`.${className}`);
 
     if (this.dataset.onOff === "true") {
-        this.dataset.onOff = "false";
-        this.classList.remove("active")
+        btnList.forEach((btn) => {
+            btn.dataset.onOff = "false";
+            btn.classList.remove("active");
+        });
     } else {
-        this.dataset.onOff = "true"
-        this.classList.add("active")
+        btnList.forEach((btn) => {
+            btn.dataset.onOff = "true"
+            btn.classList.add("active");
+        });
     }
 
     const letterListSpace = document.getElementById("letter-list-space");

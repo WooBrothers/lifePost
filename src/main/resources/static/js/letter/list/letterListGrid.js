@@ -16,8 +16,8 @@ export async function createLetterListSpace(letterListSpace, page, event) {
 }
 
 function getLetterType() {
-    const isMyLetterOn = document.getElementById("my-letter-filter-btn").dataset.onOff;
-    const isMissLetterOn = document.getElementById("miss-letter-filter-btn").dataset.onOff;
+    const isMyLetterOn = document.querySelectorAll(".my-letter-filter")[0].dataset.onOff;
+    const isMissLetterOn = document.querySelectorAll(".miss-letter-filter")[0].dataset.onOff;
 
     let resultTypeList = [];
 
@@ -35,7 +35,7 @@ function getLetterType() {
 }
 
 function getFocusType() {
-    const focusFilterBtn = document.getElementById("focus-letter-filter-btn");
+    const focusFilterBtn = document.querySelectorAll(".focus-letter-filter")[0];
 
     let result = [];
     if (focusFilterBtn.dataset.onOff === "false") {
