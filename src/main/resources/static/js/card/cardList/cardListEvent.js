@@ -15,8 +15,11 @@ export function bindEventToCardListGrid() {
         btn.addEventListener("click", filterBtnClick)
     });
 
-    const createCardBtn = document.getElementById("create-card-btn");
-    createCardBtn.addEventListener("click", createCardBtnClick);
+    const createCardBtnList = document.querySelectorAll(".create-card-btn");
+    createCardBtnList.forEach(createCardBtn => {
+        createCardBtn.addEventListener("click", createCardBtnClick);
+    })
+
 
     const writeCardBtnList = document.querySelectorAll(".card-write-btn");
     writeCardBtnList.forEach(btn => {
@@ -100,6 +103,8 @@ async function filterBtnClick() {
 }
 
 function cardModifyBtnClick() {
+    deleteCardModalBackgroundImg();
+
     const modal = document.querySelector("#card-modal");
     new bootstrap.Modal(modal).show();
 
@@ -118,6 +123,8 @@ function cardModifyBtnClick() {
 }
 
 function createCardBtnClick() {
+    deleteCardModalBackgroundImg();
+
     const modal = document.querySelector("#card-modal");
     new bootstrap.Modal(modal).show();
 
@@ -132,15 +139,7 @@ function writeCardBtnClick() {
     // 모달창이 다 뜨고 나서 popover 적용한 버튼 클릭
     const modal = document.querySelector("#card-write-modal");
 
-    const todayCardWriteHistory = new TodayCardWriteHistory();
-
-    const totalCount = todayCardWriteHistory.totalCount < 100 ? todayCardWriteHistory.totalCount : 100;
-
-    const progressBar = document.querySelector("#write-progress")
-
-    progressBar.ariaValuenow = totalCount;
-    progressBar.style.width = totalCount + "%";
-    progressBar.innerHTML = totalCount + "%";
+    setCardWriteProgressBar();
 
     modal.addEventListener("shown.bs.modal", function () {
         document.querySelector("#write-correct-emoji").click();
@@ -154,7 +153,6 @@ function writeCardBtnClick() {
     const content = document.querySelector(`#card-content-${memberCardId}`).innerHTML;
     const count = this.dataset.writeCount;
 
-    document.querySelector("#write-progress")
     document.querySelector("#write-card-title").innerHTML = title;
     document.querySelector("#goal-content").innerHTML = content;
     document.querySelector("#card-write-editor").placeholder = "";
@@ -175,4 +173,25 @@ export function clickReadLetter() {
 
     localStorage.setItem("letterId", this.dataset.letterId);
     window.location = "/letter/read/page";
+}
+
+export function deleteCardModalBackgroundImg() {
+    const backgroundImgList = document.querySelectorAll(".card-modal-background");
+    backgroundImgList.forEach(backgroundImg => {
+        backgroundImg.remove();
+    })
+}
+
+export function setCardWriteProgressBar() {
+    const todayCardWriteHistory = new TodayCardWriteHistory();
+
+    const totalCount = todayCardWriteHistory.isTotalCountMoreThanGoal()
+        ? todayCardWriteHistory.goal : todayCardWriteHistory.totalCount;
+
+    const progressBar = document.querySelector("#write-progress")
+    const percentage = totalCount / todayCardWriteHistory.goal * 100;
+
+    progressBar.ariaValuenow = percentage;
+    progressBar.style.width = percentage + "%";
+    progressBar.innerHTML = percentage + "%";
 }

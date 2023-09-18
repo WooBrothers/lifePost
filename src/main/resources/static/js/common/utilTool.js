@@ -57,15 +57,17 @@ export function removeHTMLAndWhitespace(input) {
 
 export class TodayCardWriteHistory {
     constructor() {
+        this.goal = 10;
         if (this.isNeedToInitiate()) {
             this.date = getTodayDate();
             this.totalCount = 0;
             this.memberCards = {};
+            this.isGetTodayStamp = false;
         } else {
             this.date = this.getTodayCardWriteHistory()["date"];
             this.totalCount = this.getTodayCardWriteHistory()["totalCount"];
             this.memberCards = this.getTodayCardWriteHistory()["memberCards"];
-            // {12: 11, 13: 2, 14: 3...}
+            this.isGetTodayStamp = this.getTodayCardWriteHistory()["isGetTodayStamp"];
         }
     }
 
@@ -95,15 +97,24 @@ export class TodayCardWriteHistory {
         return this;
     }
 
+    achieveTodayStamp() {
+        this.isGetTodayStamp = true;
+    }
+
     isTotalCountMoreThanHundred() {
         return this.totalCount >= 100;
+    }
+
+    isTotalCountMoreThanGoal() {
+        return this.totalCount >= this.goal;
     }
 
     save() {
         this.setTodayCardWriteHistory({
             "date": this.date,
             "totalCount": this.totalCount,
-            "memberCards": this.memberCards
+            "memberCards": this.memberCards,
+            "isGetTodayStamp": this.isGetTodayStamp
         });
         return this;
     }
@@ -163,4 +174,26 @@ export const animateCSS = (element, animation, prefix = 'animate__') =>
 export function bootstrapPopover() {
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+}
+
+export function isImageUrlValid(imageUrl, callback) {
+    const image = new Image();
+
+    image.onload = function () {
+        // 이미지가 성공적으로 로드되면 URL이 유효합니다.
+        callback(true);
+    };
+
+    image.onerror = function () {
+        // 이미지 로딩에 실패하면 URL이 유효하지 않거나 이미지가 존재하지 않습니다.
+        callback(false);
+    };
+
+    image.src = imageUrl;
+}
+
+export function hideModal(modalElement) {
+    $(modalElement).modal("hide");
+    // const modal = new bootstrap.Modal(modalElement);
+    // modal.hide();
 }
