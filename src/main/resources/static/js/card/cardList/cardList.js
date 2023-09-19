@@ -198,7 +198,7 @@ function getCardActBtnListByType(content) {
             cardId: content.cardId,
             writeCount: content.writeCount
         }])
-        .setInnerHTML("확언쓰기"));
+        .setInnerHTML("카드쓰기"));
 
     return resultBtnList;
 }

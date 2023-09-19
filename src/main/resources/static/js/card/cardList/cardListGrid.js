@@ -207,7 +207,7 @@ export class CardListGrid {
         let cardActionBtnList = [new ButtonTag()
             .setClassName("card-list-btn card-action-btn card-write-btn")
             .setId("card-space-write-card-btn")
-            .setInnerHTML("확언 쓰기")
+            .setInnerHTML("카드 쓰기")
         ];
 
         if (content.type === "CUSTOM") {
