@@ -1,6 +1,5 @@
 import {authFetch} from "./common/apiUtil.js";
 import {convertHyphenToCamelCase, deleteCookie} from "./common/utilTool.js";
-import {DivTag, ModalTag} from "./common/tagUtil.js";
 
 await renderMyPageInfo();
 
@@ -18,7 +17,7 @@ async function setMemberInfo() {
 
         setInnerHtmlByResponse(res, contentsDivList);
 
-        bindEventToMyPage();
+        bindWithdrawEvent();
     });
 }
 
@@ -35,52 +34,6 @@ function setInnerHtmlByResponse(res, contentsDivList) {
             contentsDict[key].innerHTML = res[key];
         }
     }
-}
-
-function bindEventToMyPage() {
-    const withdrawBtn = document.querySelector("#withdraw-btn");
-    withdrawBtn.addEventListener("click", clickWithdrawBtn);
-}
-
-async function clickWithdrawBtn() {
-
-    const modal = new ModalTag()
-        .setId("modal-parent")
-        .setStyle([{
-            position: "fixed",
-            top: 0,
-            left: 0,
-
-        }])
-        .addInnerHTML(
-            new DivTag()
-                .setId("modal-content")
-                .setClassName("modal")
-                .setStyle([{
-                    width: "30%",
-                    height: "35%",
-                    display: "block",
-                    backgroundColor: "white",
-                    zIndex: 1001,
-                    margin: "1% 20% 1% 20%",
-                    position: "fixed",
-                    top: "30%",
-                    left: "15%"
-                }])
-        ).getTag();
-
-    const url = "/withdraw/page";
-    let option = {method: "GET"};
-
-    const parent = document.querySelector("#my-page-space");
-    await authFetch(url, option)
-        .then(res => {
-            modal.querySelector("#modal-content").innerHTML = res;
-            modal.style.display = "block";
-            parent.appendChild(modal);
-
-            bindWithdrawEvent();
-        });
 }
 
 function bindWithdrawEvent() {
@@ -109,11 +62,4 @@ async function clickWithdrawOkBtn() {
 
     deleteCookie("accessToken");
     deleteCookie("refreshToken");
-
-
-    // 스탬프 삭제
-    // 커스텀 카드 삭제
-    // 멤버 카드 삭제
-    // 멤버 레터 삭제
-    // 멤버 삭제
 }
