@@ -146,6 +146,7 @@ function setCardGridToCardSpaceByContent(content, focusInfo, cardSpace) {
                         .setId(`card-content-${content.memberCardId}`)
                         .setClassName("card-content")
                         .setTextContent(content.contents)
+                        .setStyle([{whiteSpace: "pre-line"}])
                 ]),
             new DivTag()
                 .setClassName("card-footer text-center")

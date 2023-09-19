@@ -23,8 +23,11 @@ export function bindEventToCardCreatePage() {
     cardDeleteBtn.addEventListener("click", deleteCardBtnClick);
 
     const cardWriteContent = document.getElementById("card-write-editor");
-    // cardWriteContent.addEventListener("input", inputCardWriteText);
     cardWriteContent.addEventListener("input", inputCardText);
+
+    cardWriteContent.addEventListener('paste', function (e) {
+        e.preventDefault();
+    });
 
     const cardImageInput = document.querySelector("#card-img");
     cardImageInput.addEventListener("input", inputImageUrl);
