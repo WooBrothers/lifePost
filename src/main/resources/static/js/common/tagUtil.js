@@ -318,3 +318,9 @@ export class HTag extends Tag {
         return this;
     }
 }
+
+export class SpanTag extends Tag {
+    constructor() {
+        super("span");
+    }
+}

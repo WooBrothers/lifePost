@@ -52,7 +52,8 @@ export function getCurrentUtcTime() {
 }
 
 export function removeHTMLAndWhitespace(input) {
-    return input.replace(/<\/?[^>]+(>|$)|&nbsp;|\s+/g, ' ').trim();
+    // return input.replace(/<\/?[^>]+(>|$)|&nbsp;|\s+/g, ' ').trim();
+    return input.replace(/<\/?[^>]+(>|$)/g, "");
 }
 
 export class TodayCardWriteHistory {

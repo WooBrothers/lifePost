@@ -155,7 +155,7 @@ function writeCardBtnClick() {
 
     document.querySelector("#write-card-title").innerHTML = title;
     document.querySelector("#goal-content").innerHTML = content;
-    document.querySelector("#card-write-editor").placeholder = "";
+    document.querySelector("#card-write-editor").value = "";
     document.querySelector("#card-write-editor").dataset.memberCardId = memberCardId;
     document.querySelector("#card-write-count").innerHTML = count;
 }
