@@ -26,6 +26,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private static final String NAVER = "naver";
     private static final String KAKAO = "kakao";
+    private static final String GOOGLE = "google";
+    private static final String APPLE = "apple";
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -109,6 +111,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         if (KAKAO.equals(registrationId)) {
             return SocialType.KAKAO;
+        }
+        if (APPLE.equals(registrationId)) {
+            return SocialType.APPLE;
         }
         return SocialType.GOOGLE;
     }

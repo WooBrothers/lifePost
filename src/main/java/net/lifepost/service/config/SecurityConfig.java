@@ -108,7 +108,6 @@ public class SecurityConfig {
 
         // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
         http.addFilterAfter(jwtAuthenticationProcessingFilter(), LogoutFilter.class);
-
         return http.build();
     }
 

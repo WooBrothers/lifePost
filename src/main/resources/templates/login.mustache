@@ -4,38 +4,51 @@
 <head>
   <title>Life Post</title>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
-  <link rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <meta name="appleid-signin-client-id" content="[CLIENT_ID]">
-  <meta name="appleid-signin-scope" content="[SCOPES]">
-  <meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]">
-  <meta name="appleid-signin-state" content="[STATE]">
-  <meta name="appleid-signin-use-popup" content="true"> <!-- or false defaults to false -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+  <!--  <meta name="appleid-signin-client-id" content="[CLIENT_ID]">-->
+  <!--  <meta name="appleid-signin-scope" content="[SCOPES]">-->
+  <!--  <meta name="appleid-signin-redirect-uri" content="[REDIRECT_URI]">-->
+  <!--  <meta name="appleid-signin-state" content="[STATE]">-->
+  <!--  <meta name="appleid-signin-use-popup" content="true"> &lt;!&ndash; or false defaults to false &ndash;&gt;-->
+  <!--  <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">-->
 </head>
 <body>
 {{> layout/navigation}}
 
-<section class="vh-100 mt-5" style="background-color: #E4F1FF;">
+<section class="vh-100 mt-4" style="background-color: #E4F1FF;">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-4">
         <div class="card shadow-2-strong" style="border-radius: 1rem;">
-          <div class="card-body p-5 text-center">
-            <h3 class="mb-5">Sign in</h3>
+          <div class="row card-body p-5 text-center justify-content-center">
+            <h1 class="text-primary display-4">Life Post</h1>
+            <h4 class="mb-5">Sign in</h4>
+            <p class="mb-0">간편 회원가입/로그인</p>
             <hr class="my-4">
-            <button id="kakao-btn" class="btn btn-lg btn-block btn-social btn-kakao mb-2 border-0"
-                    style="text-decoration: none;background-color: #ffe812; color:#000000; max-width:375px;"
-                    type="submit">Sign in with kakao
-            </button>
-            <div id="appleid-signin" class="signin-button btn btn-lg btn-block mb-2 border-0 p-0 "
-                 data-color="black"
-                 data-border="true"
-                 data-mode="center-align"
-                 data-type="sign in"
-                 style="height: 48px; max-width: 375px;"></div>
-            <button class="btn btn-lg btn-block btn-primary mb-2 border-0"
-                    style="background-color: #dd4b39; max-width: 375px;"
-                    type="submit"><i class="fab fa-google me-2"></i> Sign in with google
+
+            <a href="/oauth2/authorization/kakao"
+               class="btn btn-circle d-flex align-items-center justify-content-center me-2 p-0"
+               style="width: 42px; height: 42px; border-radius:50%; background-color: #FEE500"
+               type="submit">
+              <img src="/img/kakao.png" alt="..." style="height: 45%; width: 45%;">
+            </a>
+            <a href="/oauth2/authorization/google"
+               class="btn btn-circle d-flex align-items-center justify-content-center p-0"
+               style="width: 42px; height: 42px; border-radius:50%; border-color: lightgray">
+              <img src="/img/google-logo.png" alt="..."
+                   style="height: 45%; width: 45%;">
+            </a>
+            <button
+                class="btn btn-circle align-items-center justify-content-center p-0"
+                style="width: 42px;height: 42px; border-radius:50%; background-color:#000000; display:none">
+              <svg xmlns="http://www.w3.org/2000/svg" style="overflow:visible" width="100%"
+                   height="100%" viewBox="6 6 44 44">
+                <g fill="none" fill-rule="evenodd">
+                  <path fill="#fff" fill-rule="nonzero"
+                        d="M28.2226562,20.3846154 C29.0546875,20.3846154 30.0976562,19.8048315 30.71875,19.0317864 C31.28125,18.3312142 31.6914062,17.352829 31.6914062,16.3744437 C31.6914062,16.2415766 31.6796875,16.1087095 31.65625,16 C30.7304687,16.0362365 29.6171875,16.640178 28.9492187,17.4494596 C28.421875,18.06548 27.9414062,19.0317864 27.9414062,20.0222505 C27.9414062,20.1671964 27.9648438,20.3121424 27.9765625,20.3604577 C28.0351562,20.3725366 28.1289062,20.3846154 28.2226562,20.3846154 Z M25.2929688,35 C26.4296875,35 26.9335938,34.214876 28.3515625,34.214876 C29.7929688,34.214876 30.109375,34.9758423 31.375,34.9758423 C32.6171875,34.9758423 33.4492188,33.792117 34.234375,32.6325493 C35.1132812,31.3038779 35.4765625,29.9993643 35.5,29.9389701 C35.4179688,29.9148125 33.0390625,28.9122695 33.0390625,26.0979021 C33.0390625,23.6579784 34.9140625,22.5588048 35.0195312,22.474253 C33.7773438,20.6382708 31.890625,20.5899555 31.375,20.5899555 C29.9804688,20.5899555 28.84375,21.4596313 28.1289062,21.4596313 C27.3554688,21.4596313 26.3359375,20.6382708 25.1289062,20.6382708 C22.8320312,20.6382708 20.5,22.5950413 20.5,26.2911634 C20.5,28.5861411 21.3671875,31.013986 22.4335938,32.5842339 C23.3476562,33.9129053 24.1445312,35 25.2929688,35 Z"></path>
+                </g>
+              </svg>
             </button>
           </div>
         </div>
@@ -44,16 +57,8 @@
   </div>
 </section>
 
-<script>
-  const kakaoBtn = document.getElementById("kakao-btn");
-  kakaoBtn.addEventListener("click", () => {
-    window.location.href = window.location.protocol + "//" + window.location.host + "/oauth2/authorization/kakao";
-  })
-
-</script>
 <script type="text/javascript"
         src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

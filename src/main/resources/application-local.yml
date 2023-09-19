@@ -29,6 +29,10 @@ spring:
             client-authentication-method: client_secret_post
             scope: account_email, profile_image
             cleint-name: Kakao
+          google:
+            client-id: 447951962777-te10ttn4f25bven6vfsvrne94sil3o08.apps.googleusercontent.com
+            client-secret: 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
+            scope: email, profile
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
