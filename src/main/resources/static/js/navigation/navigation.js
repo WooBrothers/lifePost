@@ -15,7 +15,7 @@ export async function setMembership() {
 function setLogoutNavMenu() {
     const nameLinkDict = {
         "navLetter": ["/letter/list/page", "편지"],
-        "navIntroduction": ["/introduction", "서비스 소개"],
+        "navLanding": ["/landing/page", "서비스 소개"],
         "navLogin": ["/login/page", "로그인/회원가입"],
     };
 
