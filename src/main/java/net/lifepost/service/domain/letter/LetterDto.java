@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Builder;
 import lombok.Getter;
@@ -135,7 +136,9 @@ public class LetterDto {
     }
 
     public static String setLimitedContents(String content) {
-        StringBuilder sb = new StringBuilder(content);
+        String imgTagLessContent = removeImageTags(content);
+        StringBuilder sb = new StringBuilder(imgTagLessContent);
+
         if (sb.length() < 200) {
             sb.setLength(sb.length() / 2);
         } else {
@@ -144,6 +147,17 @@ public class LetterDto {
         sb.append("...");
 
         return sb.toString();
+    }
+
+    public static String removeImageTags(String html) {
+        // 이미지 태그를 제거하는 정규식 패턴
+        String regex = "<img[^>]*>";
+
+        // 정규식 패턴과 일치하는 부분을 찾아 제거
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(html);
+
+        return matcher.replaceAll("");
     }
 
     @Getter

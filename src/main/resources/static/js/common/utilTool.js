@@ -56,6 +56,13 @@ export function removeHTMLAndWhitespace(input) {
     return input.replace(/<\/?[^>]+(>|$)/g, "");
 }
 
+export function removeImageTags(html) {
+    // 이미지 태그를 제거하는 정규식 패턴
+
+    return html.replace(/<img[^>]*>/g, '');
+}
+
+
 export class TodayCardWriteHistory {
     constructor() {
         this.goal = 10;

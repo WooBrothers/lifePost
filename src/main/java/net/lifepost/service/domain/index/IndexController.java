@@ -75,6 +75,11 @@ public class IndexController {
         return "widthdraw";
     }
 
+    @GetMapping("/landing/page")
+    public String getLandingPage() {
+        return "introduce/landing";
+    }
+
     @GetMapping("/api/v1/letter/auth/stamp/popup")
     public String getStampUsePopUpPage(Model model,
         @AuthenticationPrincipal UserDetails userDetails) {

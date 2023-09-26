@@ -1,5 +1,6 @@
 import {getLetterList} from "./letterListApi.js";
 import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
+import {removeImageTags} from "../../common/utilTool.js";
 
 export async function createLetterListSpace(letterListSpace, page, event) {
     const type = getLetterType();
@@ -98,12 +99,12 @@ function createLetter(response, letterListSpace) {
 
 function createLetterCard(responseContent, letterSpace, focusInfo) {
     const cardDiv = new DivTag()
-        .setClassName("card h-100 p-0")
+        .setClassName("card h-100 p-0");
 
     const imgSrc = responseContent.letterImage ? responseContent.letterImage : '/img/letter-img.png';
 
     const cardImgDiv = new DivTag()
-        .setClassName("col")
+        .setClassName("col");
     const cardImg = new ImgTag()
         .setSrc(imgSrc)
         .setClassName("card-img-top img-fluid")
@@ -157,9 +158,12 @@ function createCardBody(responseContent) {
     const cardTitle = new HTag(5)
         .setClassName("card-title")
         .setInnerHTML(responseContent.title);
+
+    const content = removeImageTags(responseContent.content);
+
     const cardText = new PTag()
         .setClassName("card-text")
-        .setTextContent(responseContent.content);
+        .setTextContent(content);
 
     return cardBody.setInnerHTML([
         cardTitle,
