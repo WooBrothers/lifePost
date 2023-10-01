@@ -21,10 +21,12 @@ public interface LetterRepository extends JpaRepository<Letter, Long> {
 
     Page<Letter> findByIdLessThanOrderByIdDesc(Long letterId, PageRequest pageRequest);
 
-    @Query("SELECT l FROM Letter l WHERE l.id NOT IN (SELECT ml.letter.id FROM MemberLetter ml WHERE ml.member.id = :memberId ) ORDER BY l.id DESC")
-    Page<Letter> findMissLetter(Long memberId, Pageable pageable);
+    @Query("SELECT l FROM Letter l WHERE l.postDate <= :now AND l.id NOT IN (SELECT ml.letter.id FROM MemberLetter ml WHERE ml.member.id = :memberId ) ORDER BY l.id DESC")
+    Page<Letter> findMissLetter(LocalDate now, Long memberId, Pageable pageable);
 
     Page<Letter> findAllByOrderByIdDesc(Pageable pageable);
+
+    Page<Letter> findByPostDateBeforeOrderByIdDesc(LocalDate postDate, Pageable pageable);
 
     List<Letter> findByIdIn(List<Long> ids);
 

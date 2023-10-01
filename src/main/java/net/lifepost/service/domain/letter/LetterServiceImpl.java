@@ -100,13 +100,15 @@ public class LetterServiceImpl implements LetterService {
     @Override
     public Page<PageResponse> getMissLetterList(int pageNo, int size,
         UserDetails userDetails) {
+
         pageNo = common.verifyPageNo(pageNo);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
         Member member = common.getMemberByUserDetail(userDetails);
 
-        Page<Letter> letters = letterRepository.findMissLetter(member.getId(), pageable);
+        LocalDate now = LocalDate.now();
+        Page<Letter> letters = letterRepository.findMissLetter(now, member.getId(), pageable);
 
         List<PageResponse> pageResponses = getPageResponse(letters);
 
@@ -122,7 +124,8 @@ public class LetterServiceImpl implements LetterService {
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
-        Page<Letter> letters = letterRepository.findAllByOrderByIdDesc(pageable);
+        LocalDate now = LocalDate.now();
+        Page<Letter> letters = letterRepository.findByPostDateBeforeOrderByIdDesc(now, pageable);
 
         List<Long> letterIds = letters.stream().map(Letter::getId)
             .collect(Collectors.toList());
