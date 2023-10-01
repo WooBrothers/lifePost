@@ -1,66 +1,37 @@
 import {authFetch} from "../common/apiUtil.js";
 
-export class LetterApi {
-    /* letter 관련 API class */
+const LETTER_OPEN_API_URL = "/api/v1/letter/open";
+const LETTER_AUTH_API_URL = "/api/v1/letter/auth";
 
-    // letter api url 상수
-    static LETTER_OPEN_API_URL = "/api/v1/letter/open";
-    static LETTER_AUTH_API_URL = "/api/v1/letter/auth";
+export async function getLatestLetter() {
+    /* 가장 최신의 편지 조회 */
 
-    // 스크롤 시 letter-grid-containers 에 추가할 편지 수
-    static LETTER_LOAD_SIZE = 3;
+    const url = LETTER_OPEN_API_URL + "/latest";
 
-    static async getLatestLetter() {
-        /* 가장 최신의 편지 조회 */
-
-        const url = LetterApi.LETTER_OPEN_API_URL + "/latest";
-
-        return await fetch(url).then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            return response.text().then(text => {
-                throw new Error(text);
-            });
-        });
-    }
-
-    static async getLatestContentById(letterId) {
-        const url = LetterApi.LETTER_AUTH_API_URL + `/${letterId}`;
-        let option = {
-            method: "GET"
+    return await fetch(url).then(response => {
+        if (response.ok) {
+            return response.json();
         }
-        return await authFetch(url, option);
-    }
-
-    static async getLetterContentById(letterId) {
-        const url = LetterApi.LETTER_AUTH_API_URL + `/stamp/${letterId}`;
-        let option = {
-            method: "GET"
-        }
-        return await authFetch(url, option);
-
-    }
-
-    static async getNextLettersByPageId(pageId) {
-        /* 입력받은 page id 이후의 편지 리스트 조회 */
-
-        const url = LetterApi.LETTER_OPEN_API_URL + "/page/"
-            + LetterApi.LETTER_LOAD_SIZE + "/" + pageId;
-
-        return await fetch(url).then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            return response.text().then(text => {
-                throw new Error(text);
-            })
+        return response.text().then(text => {
+            throw new Error(text);
         });
+    });
+}
+
+export async function getLetterContentById(letterId) {
+    const url = `${LETTER_AUTH_API_URL}/stamp/${letterId}`;
+    let option = {
+        method: "GET"
     }
 
-    static async getLetterContentsById(letterId) {
-        /* 입력받은 letterId 에 해당하는 편지 내용 조회 */
+    return await authFetch(url, option);
+}
 
-        const url = LetterApi.LETTER_AUTH_API_URL + ""
+export async function getLimitedLetterContentToLogoutMember(letterId) {
+    const url = `${LETTER_OPEN_API_URL}/${letterId}`;
+    let option = {
+        method: "GET"
     }
+
+    return await authFetch(url, option);
 }

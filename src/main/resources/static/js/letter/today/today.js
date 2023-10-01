@@ -1,10 +1,10 @@
-import {LetterApi} from "../letterApi.js";
+import {getLatestLetter} from "../letterApi.js";
 
 await renderTodayComp();
 
 async function renderTodayComp() {
 
-    await LetterApi.getLatestLetter().then(res => {
+    await getLatestLetter().then(res => {
         setLetterInfoByResponse(res);
     });
 

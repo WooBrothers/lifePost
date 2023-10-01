@@ -176,12 +176,13 @@ public class LetterDto {
         Matcher matcher = pattern.matcher(letterContent);
 
         List<Map<String, Object>> imgTagList = new ArrayList<>();
+
         // 이미지 태그 내용 및 인덱스 추가
-        for (int i = 1; i <= matcher.groupCount(); i++) {
+        while (matcher.find()) {
             Map<String, Object> tagMap = new HashMap<>();
 
-            tagMap.put("imgTag", matcher.group(i));
-            tagMap.put("stIdx", matcher.start(i));
+            tagMap.put("imgTag", matcher.group());
+            tagMap.put("stIdx", matcher.start());
 
             imgTagList.add(tagMap);
         }
