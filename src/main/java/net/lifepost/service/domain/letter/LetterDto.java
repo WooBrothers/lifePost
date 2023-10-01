@@ -8,6 +8,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Builder;
@@ -95,6 +99,10 @@ public class LetterDto {
             return result.trim().replace("_", " ");
         }
 
+        public ReadResponse setLimitedContentToLogoutMember() {
+            this.contents = LetterDto.setLetterContentToLogoutMember(this.contents);
+            return this;
+        }
     }
 
     @Getter
@@ -158,6 +166,44 @@ public class LetterDto {
         Matcher matcher = pattern.matcher(html);
 
         return matcher.replaceAll("");
+    }
+
+    public static String setLetterContentToLogoutMember(String letterContent) {
+        // 이미지 태그를 제거하는 정규식 패턴
+        String regex = "<img[^>]*>";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(letterContent);
+
+        List<Map<String, Object>> imgTagList = new ArrayList<>();
+        // 이미지 태그 내용 및 인덱스 추가
+        for (int i = 1; i <= matcher.groupCount(); i++) {
+            Map<String, Object> tagMap = new HashMap<>();
+
+            tagMap.put("imgTag", matcher.group(i));
+            tagMap.put("stIdx", matcher.start(i));
+
+            imgTagList.add(tagMap);
+        }
+
+        // 이미지 태그 제거
+        String imgTagLessContent = matcher.replaceAll("");
+        StringBuilder sb = new StringBuilder(imgTagLessContent);
+
+        // 컨텐츠 제한
+        sb.setLength(imgTagLessContent.length() / 2);
+
+        // 이미지 태그 위치가 제한된 컨텐츠의 총 길이보다 작다면 이미지 태그 추가
+        imgTagList.forEach(imgTagMap -> {
+            int stIdx = (int) imgTagMap.get("stIdx");
+            if (sb.length() > stIdx) {
+                sb.insert(stIdx, imgTagMap.get("imgTag"));
+            }
+        });
+
+        sb.append("...");
+
+        return sb.toString();
     }
 
     @Getter

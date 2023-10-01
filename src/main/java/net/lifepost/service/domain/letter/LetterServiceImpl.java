@@ -212,6 +212,21 @@ public class LetterServiceImpl implements LetterService {
     }
 
     /**
+     * [open] 비로그인 편지 읽기 시 제한된 컨텐츠 전달
+     *
+     * @param letterId - 읽으려는 편지의 아이디
+     */
+    @Override
+    public LetterDto.ReadResponse getLimitedLetterContents(Long letterId) {
+
+        Letter letter = letterRepository.findById(letterId)
+            .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
+
+        LetterDto.ReadResponse letterResponse = letterMapper.toResponseDto(letter);
+        return letterResponse.setLimitedContentToLogoutMember();
+    }
+
+    /**
      * 오늘의 편지 혹은 가장 마지막 편지 조회
      */
     private Letter getTodayOrLatestLetter() {

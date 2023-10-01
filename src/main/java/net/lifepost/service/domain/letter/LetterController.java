@@ -68,6 +68,13 @@ public class LetterController {
         return ResponseEntity.ok(letterService.getLetterContentsByLetterId(letterId, userDetails));
     }
 
+    @GetMapping("/open/{letterId}")
+    public ResponseEntity<LetterDto.ReadResponse> getLimitedLetterContents(
+        @PathVariable Long letterId) {
+
+        return ResponseEntity.ok(letterService.getLimitedLetterContents(letterId));
+    }
+
     @PostMapping("/auth/focus")
     public ResponseEntity<String> postFocusMemberLetter(
         @Valid @RequestBody LetterDto.PostFocusRequest letterReqDto,

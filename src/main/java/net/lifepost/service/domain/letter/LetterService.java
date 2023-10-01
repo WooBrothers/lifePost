@@ -22,6 +22,8 @@ public interface LetterService {
     LetterDto.ReadResponse getLetterContentsByLetterId(Long letterId,
         UserDetails userDetails);
 
+    LetterDto.ReadResponse getLimitedLetterContents(Long letterId);
+
     void postFocusLetter(PostFocusRequest focusCardRequest, UserDetails userDetails);
 
 }
