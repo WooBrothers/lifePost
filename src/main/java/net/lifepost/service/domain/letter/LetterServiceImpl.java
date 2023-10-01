@@ -212,8 +212,9 @@ public class LetterServiceImpl implements LetterService {
      * 오늘의 편지 혹은 가장 마지막 편지 조회
      */
     private Letter getTodayOrLatestLetter() {
-        return letterRepository.findByPostDate(LocalDate.now()).orElseGet(
-            () -> letterRepository.findTopByOrderByPostDateDesc()
+        LocalDate now = LocalDate.now();
+        return letterRepository.findByPostDate(now).orElseGet(
+            () -> letterRepository.findFirstByPostDateBeforeOrderByPostDateDesc(now)
                 .orElseThrow(
                     () -> new CommonException(ErrorEnum.NOT_FOUND)
                 )

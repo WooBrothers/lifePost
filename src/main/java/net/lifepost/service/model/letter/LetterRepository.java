@@ -17,6 +17,8 @@ public interface LetterRepository extends JpaRepository<Letter, Long> {
 
     Optional<Letter> findTopByOrderByPostDateDesc();
 
+    Optional<Letter> findFirstByPostDateBeforeOrderByPostDateDesc(LocalDate now);
+
     Page<Letter> findByIdLessThanOrderByIdDesc(Long letterId, PageRequest pageRequest);
 
     @Query("SELECT l FROM Letter l WHERE l.id NOT IN (SELECT ml.letter.id FROM MemberLetter ml WHERE ml.member.id = :memberId ) ORDER BY l.id DESC")
