@@ -52,18 +52,18 @@ export function getCurrentUtcTime() {
 }
 
 export function removeHTMLAndWhitespace(input) {
-    // return input.replace(/<\/?[^>]+(>|$)|&nbsp;|\s+/g, ' ').trim();
+    // 태그 및 공백 제거
     return input.replace(/<\/?[^>]+(>|$)/g, "");
 }
 
 export function removeImageTags(html) {
     // 이미지 태그를 제거하는 정규식 패턴
-
     return html.replace(/<img[^>]*>/g, '');
 }
 
 
 export class TodayCardWriteHistory {
+    // local storage 로 관리되는 카드 쓰기 관련 정보를 다루는 클래스
     constructor() {
         this.goal = 10;
         if (this.isNeedToInitiate()) {
@@ -162,7 +162,7 @@ export function convertHyphenToCamelCase(target) {
 }
 
 export const animateCSS = (element, animation, prefix = 'animate__') =>
-    // We create a Promise and return it
+    // 애니메이트 css를 쉽게 사용하기 위한 함수 객체
     new Promise((resolve, reject) => {
         const animationName = `${prefix}${animation}`;
         const node = document.querySelector(element);
@@ -180,6 +180,7 @@ export const animateCSS = (element, animation, prefix = 'animate__') =>
     });
 
 export function bootstrapPopover() {
+    // 부트스트랩 팝오버를 쓰기 위한 함수
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 }
@@ -198,10 +199,4 @@ export function isImageUrlValid(imageUrl, callback) {
     };
 
     image.src = imageUrl;
-}
-
-export function hideModal(modalElement) {
-    $(modalElement).modal("hide");
-    // const modal = new bootstrap.Modal(modalElement);
-    // modal.hide();
 }

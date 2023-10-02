@@ -60,6 +60,11 @@ public class IndexController {
         return "contents/letter/letterList";
     }
 
+    @GetMapping("/letter/list/open/page")
+    public String getLetterOpenListPage() {
+        return "contents/letter/letterOpenList";
+    }
+
     @GetMapping("/letter/read/page")
     public String getLetterReadPage() {
         return "contents/letter/letterRead";

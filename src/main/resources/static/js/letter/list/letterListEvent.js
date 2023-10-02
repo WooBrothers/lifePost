@@ -1,7 +1,7 @@
 import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
-import {createLetterListSpace} from "./letterListGrid.js";
+import {createLetterListSpace} from "./letterList.js";
 import {createPagination} from "../../pagination/pagination.js";
-import {findParentWithClass} from "../../common/utilTool.js";
+import {findParentWithClass, isTokenExpired} from "../../common/utilTool.js";
 import {authFetch} from "../../common/apiUtil.js";
 import {bindEventToLetterStampUsePage} from "./letterStampUseModal.js";
 
@@ -23,33 +23,38 @@ export function bindEventToLetterListGrid() {
 }
 
 async function clickLetter() {
-    const modal = $('#letterReadInfoModal');
-    modal.modal("show");
-
     const letterId = this.dataset.letterId;
     localStorage.setItem("letterId", letterId);
 
-    if (this.dataset.memberLetterId === "undefined") {
-
-        const url = "/api/v1/member/auth/info";
-        let options = {method: "GET"};
-
-        await authFetch(url, options).then(res => {
-            const modalBody = document.querySelector("#modal-content-body");
-            modalBody.querySelector("#email").innerHTML = res.email;
-            modalBody.querySelector("#stamp").innerHTML = res.stampCount;
-
-            if (res.stampCount === 0) {
-                document.querySelector("#letter-read-btn").classList.add("disabled");
-            } else {
-                document.querySelector("#letter-read-btn").classList.remove("disabled");
-            }
-            bindEventToLetterStampUsePage();
-        });
-
-    } else {
+    if (isTokenExpired()) {
         window.location = "/letter/read/page";
+    } else {
+        const modal = $('#letterReadInfoModal');
+        modal.modal("show");
+
+        if (this.dataset.memberLetterId === "undefined") {
+
+            const url = "/api/v1/member/auth/info";
+            let options = {method: "GET"};
+
+            await authFetch(url, options).then(res => {
+                const modalBody = document.querySelector("#modal-content-body");
+                modalBody.querySelector("#email").innerHTML = res.email;
+                modalBody.querySelector("#stamp").innerHTML = res.stampCount;
+
+                if (parseInt(res.stampCount) === 0) {
+                    document.querySelector("#letter-read-btn").classList.add("disabled");
+                } else {
+                    document.querySelector("#letter-read-btn").classList.remove("disabled");
+                }
+                bindEventToLetterStampUsePage();
+            });
+
+        } else {
+            window.location = "/letter/read/page";
+        }
     }
+
 }
 
 async function filterBtnClick() {

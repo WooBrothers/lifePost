@@ -3,6 +3,7 @@ package net.lifepost.service.domain.letter;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.lifepost.service.common.exception.CommonException;
@@ -53,11 +54,21 @@ public class LetterController {
             responses = letterService.getMissLetterList(pageNo, size, userDetails);
         } else if (type.size() == 2 && type.contains(LetterTypeEnum.MY_LETTER) && type
             .contains(LetterTypeEnum.MISS) && focusTypeList.size() == 2) {
-            responses = letterService.getAllLetterList(pageNo, size, userDetails);
+            responses = letterService
+                .getAllLetterList(pageNo, size, Optional.of(userDetails));
         } else {
             throw new CommonException(ErrorEnum.LETTER_REQUEST_INVALID);
         }
         return responses;
+    }
+
+    @GetMapping("/open/{pageNo}/{size}")
+    public Page<LetterDto.PageResponse> getAllLetters(
+        @PathVariable int pageNo,
+        @PathVariable int size) {
+
+        return letterService
+            .getAllLetterList(pageNo, size, Optional.empty());
     }
 
     @GetMapping("/auth/stamp/{letterId}")

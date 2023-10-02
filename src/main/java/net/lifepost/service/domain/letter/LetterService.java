@@ -1,6 +1,7 @@
 package net.lifepost.service.domain.letter;
 
 import java.util.List;
+import java.util.Optional;
 import net.lifepost.service.domain.card.FocusTypeEnum;
 import net.lifepost.service.domain.letter.LetterDto.PageResponse;
 import net.lifepost.service.domain.letter.LetterDto.PostFocusRequest;
@@ -17,7 +18,7 @@ public interface LetterService {
     Page<PageResponse> getMissLetterList(int pageNo, int size,
         UserDetails userDetails);
 
-    Page<PageResponse> getAllLetterList(int pageNo, int size, UserDetails userDetails);
+    Page<PageResponse> getAllLetterList(int pageNo, int size, Optional<UserDetails> userDetails);
 
     LetterDto.ReadResponse getLetterContentsByLetterId(Long letterId,
         UserDetails userDetails);

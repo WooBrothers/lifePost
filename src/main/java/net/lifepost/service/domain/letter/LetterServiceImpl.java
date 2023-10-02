@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -117,10 +118,8 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     public Page<PageResponse> getAllLetterList(int pageNo, int size,
-        UserDetails userDetails) {
+        Optional<UserDetails> userDetails) {
         pageNo = common.verifyPageNo(pageNo);
-
-        Member member = common.getMemberByUserDetail(userDetails);
 
         Pageable pageable = PageRequest.of(pageNo, size);
 
@@ -130,33 +129,36 @@ public class LetterServiceImpl implements LetterService {
         List<Long> letterIds = letters.stream().map(Letter::getId)
             .collect(Collectors.toList());
 
-        List<MemberLetter> memberLetters = memberLetterRepository
-            .findByMemberIdAndLetterIdInOrderByLetterIdDesc(
-                member.getId(), letterIds);
-
-        Map<Long, Map<String, Object>> memberLetterMap = new HashMap<>();
-
-        memberLetters.forEach(memberLetter -> {
-            Long letterId = memberLetter.getLetter().getId();
-
-            Map<String, Object> memberLetterInfoMap = new HashMap<>();
-            memberLetterInfoMap.put("memberLetterId", memberLetter.getId());
-            memberLetterInfoMap.put("focusType", memberLetter.getFocus());
-
-            memberLetterMap.put(letterId, memberLetterInfoMap);
-        });
-
         List<PageResponse> pageResponses = getPageResponse(letters);
 
-        pageResponses.forEach(pageResponse -> {
-            if (memberLetterMap.containsKey(pageResponse.getId())) {
-                pageResponse
-                    .setMemberLetterId(
-                        (Long) memberLetterMap.get(pageResponse.getId()).get("memberLetterId"))
-                    .setFocusType(
-                        (FocusTypeEnum) memberLetterMap.get(pageResponse.getId()).get("focusType"));
-            }
-        });
+        // 멤버 정보가 있을 경우 조회한 편지와 유저가 소유한 편지 정보를 매핑한다.
+        if (userDetails.isPresent()) {
+            Member member = common.getMemberByUserDetail(userDetails.get());
+
+            // 조회한 편지 리스트 중 멤버가 소유한 편지 조회
+            List<MemberLetter> memberLetters = memberLetterRepository
+                .findByMemberIdAndLetterIdInOrderByLetterIdDesc(
+                    member.getId(), letterIds);
+
+            Map<Long, MemberLetter> memberLetterMap = new HashMap<>();
+
+            // 편지들중 멤버가 소유했다면 정보 매핑 준비
+            memberLetters.forEach(memberLetter -> {
+                Long letterId = memberLetter.getLetter().getId();
+                memberLetterMap.put(letterId, memberLetter);
+            });
+
+            // 멤버 편지의 아이디와 focus 여부를 매핑
+            pageResponses.forEach(pageResponse -> {
+                if (memberLetterMap.containsKey(pageResponse.getId())) {
+                    pageResponse
+                        .setMemberLetterId(
+                            memberLetterMap.get(pageResponse.getId()).getId())
+                        .setFocusType(
+                            memberLetterMap.get(pageResponse.getId()).getFocus());
+                }
+            });
+        }
 
         return new PageImpl<>(pageResponses, pageable, letters.getTotalElements());
     }
