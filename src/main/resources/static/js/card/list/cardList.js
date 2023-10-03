@@ -1,14 +1,6 @@
 import {getCardList} from "./cardListApi.js";
 import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
-import {bindEventToCardListGrid} from "./cardListEvent.js";
-import {createPagination} from "../../pagination/pagination.js";
-import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
 import {bootstrapPopover} from "../../common/utilTool.js";
-
-const cardListSpace = document.getElementById("card-list-space");
-const response = await createCardListSpace(cardListSpace, 1, bindEventToCardListGrid);
-await createPagination(response);
-bindPaginationBtnEvent("card-list-space", "card-space", createCardListSpace, bindEventToCardListGrid);
 
 export async function createCardListSpace(cardListSpace, page, event) {
 
@@ -50,7 +42,8 @@ function getIsFocusFilter() {
     return isFocusBtnOn === "true" ? "ATTENTION" : null;
 }
 
-function createCard(response, cardListSpace) {
+export function createCard(response, cardListSpace) {
+
     const preEmptyContentDiv = document.querySelector("#card-empty-info");
 
     if (preEmptyContentDiv) {
@@ -58,9 +51,12 @@ function createCard(response, cardListSpace) {
     }
 
     // 카드 없을 시 안내문구 출력 및 렌더링 종료
-    if (response.content.length === 0) {
+    if ((!response || response.content.length === 0) && cardListSpace.childNodes.length === 0) {
         const emptyTexts = document.querySelectorAll("#card-empty-info")
-        emptyTexts.remove();
+
+        if (emptyTexts.length !== 0) {
+            emptyTexts.remove();
+        }
 
         const emptyText = new DivTag()
             .setClassName("card-empty-info-text")

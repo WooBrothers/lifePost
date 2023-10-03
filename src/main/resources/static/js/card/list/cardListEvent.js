@@ -134,7 +134,7 @@ function createCardBtnClick() {
     document.querySelector("#card-submit-btn").dataset.memberCardId = null;
 }
 
-function writeCardBtnClick() {
+export function writeCardBtnClick() {
 
     // 모달창이 다 뜨고 나서 popover 적용한 버튼 클릭
     const modal = document.querySelector("#card-write-modal");

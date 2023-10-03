@@ -11,7 +11,7 @@ import {
     TodayCardWriteHistory
 } from "../../common/utilTool.js";
 import {DivTag, SpanTag} from "../../common/tagUtil.js";
-import {deleteCardModalBackgroundImg, setCardWriteProgressBar} from "../cardList/cardListEvent.js";
+import {deleteCardModalBackgroundImg, setCardWriteProgressBar} from "../list/cardListEvent.js";
 
 bindEventToCardCreatePage();
 

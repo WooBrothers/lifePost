@@ -12,7 +12,7 @@ window.onload = async () => {
     const letterListSpace = document.getElementById("letter-list-space");
 
     let response, renderFunction;
-    debugger
+
     if (isTokenExpired()) {
         // 비로그인 편지 리스트 출력
         response = await createOpenLetterListSpace(letterListSpace, 1, bindEventToLetterListGrid);

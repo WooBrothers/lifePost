@@ -1,7 +1,8 @@
-import {CardListGrid} from "../cardList/cardListGrid.js";
-import {clickReadLetter, writeCardBtnClick} from "../cardList/cardListEvent.js";
+import {clickReadLetter, writeCardBtnClick} from "../list/cardListEvent.js";
 import {getCardListAfterCardId} from "../cardApi.js";
 import {getAccessToken} from "../../common/apiUtil.js";
+import {createCard} from "../list/cardList.js";
+import {isTokenExpired} from "../../common/utilTool.js";
 
 const space = document.querySelector("#focus-card-contents-space");
 await renderFocusCard(space, 0, bindFocusCard);
@@ -10,14 +11,18 @@ async function renderFocusCard(focusSpace, memberCardId, event) {
 
     let resultResponse = null;
 
-    await getCardListAfterCardId(memberCardId, 5).then(response => {
-        resultResponse = response;
-        CardListGrid.createCard(response, focusSpace);
-    });
+    if (!isTokenExpired()) {
+        document.querySelector("#focus-card-space").style.display = "block";
 
-    setEmptyFocusCardStyle();
+        await getCardListAfterCardId(memberCardId, 4).then(response => {
+            resultResponse = response;
+            createCard(response, focusSpace);
+        });
 
-    event();
+        setEmptyFocusCardStyle();
+
+        event();
+    }
     return resultResponse;
 }
 
@@ -45,25 +50,25 @@ function bindFocusCard() {
 
 async function scrollFocusCardLoad() {
 
-    const maxWidth = window.innerWidth;
-    if (maxWidth >= 991) {
-        if (this.scrollLeft + this.clientWidth >= this.scrollWidth) {
-            const space = document.querySelector("#focus-card-contents-space");
-            const memberCardId = space.lastElementChild.dataset.memberCardId;
-            if (memberCardId) {
-                await renderFocusCard(space, memberCardId, bindFocusCard);
-            }
-
-        }
-    } else {
-        if (this.scrollTop + this.clientHeight >= this.scrollHeight) {
-            const space = document.querySelector("#focus-card-contents-space");
-            const memberCardId = space.lastElementChild.dataset.memberCardId;
-            if (memberCardId) {
-                await renderFocusCard(space, memberCardId, bindFocusCard);
-            }
+    // const maxWidth = window.innerWidth;
+    // if (maxWidth >= 991) {
+    //     if (this.scrollLeft + this.clientWidth >= this.scrollWidth) {
+    //         const space = document.querySelector("#focus-card-contents-space");
+    //         const memberCardId = space.lastElementChild.dataset.memberCardId;
+    //         if (memberCardId) {
+    //             await renderFocusCard(space, memberCardId, bindFocusCard);
+    //         }
+    //
+    //     }
+    // } else {
+    if (this.scrollTop + this.clientHeight >= this.scrollHeight) {
+        const space = document.querySelector("#focus-card-contents-space");
+        const memberCardId = space.lastElementChild.dataset.memberCardId;
+        if (memberCardId) {
+            await renderFocusCard(space, memberCardId, bindFocusCard);
         }
     }
+    // }
 }
 
 function clickGoToLoginPageBtn() {
