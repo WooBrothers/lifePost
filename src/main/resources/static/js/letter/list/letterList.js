@@ -126,6 +126,8 @@ function createLetterCard(responseContent, letterSpace, focusInfo) {
         .setAlt("no img")
         .setStyle([{objectFit: "cover", height: "12rem"}]);
 
+    let cardImgChildren = [cardImg];
+
     if (focusInfo) {
         const letterInfoSpace = new DivTag()
             .setClassName("card-img-overlay p-0 d-flex justify-content-between");
@@ -134,9 +136,9 @@ function createLetterCard(responseContent, letterSpace, focusInfo) {
         const focusBtn = createFocusBtn(focusInfo);
 
         letterInfoSpace.setInnerHTML([myLetterText, focusBtn]);
-        cardImgDiv.setInnerHTML([cardImg, letterInfoSpace]);
+        cardImgChildren.push(letterInfoSpace);
     }
-
+    cardImgDiv.setInnerHTML(cardImgChildren);
     const cardBody = createCardBody(responseContent);
 
     cardDiv.setInnerHTML([cardImgDiv, cardBody]);
