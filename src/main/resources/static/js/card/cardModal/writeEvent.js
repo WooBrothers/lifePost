@@ -1,72 +1,17 @@
-import {
-    createCardApiCall,
-    deleteCardApiCall,
-    increaseCardWriteCount,
-    rewardStampToUser
-} from "./cardModalApi.js";
-import {
-    animateCSS,
-    isImageUrlValid,
-    removeHTMLAndWhitespace,
-    TodayCardWriteHistory
-} from "../../common/utilTool.js";
-import {DivTag, SpanTag} from "../../common/tagUtil.js";
-import {deleteCardModalBackgroundImg, setCardWriteProgressBar} from "../list/cardListEvent.js";
+import {increaseCardWriteCount, rewardStampToUser} from "./cardModalApi.js";
+import {animateCSS, removeHTMLAndWhitespace, TodayCardWriteHistory} from "../../common/utilTool.js";
+import {SpanTag} from "../../common/tagUtil.js";
+import {setCardWriteProgressBar} from "../list/cardListEvent.js";
 
-bindEventToCardCreatePage();
+bindEventToCardWriteModal();
 
-export function bindEventToCardCreatePage() {
-    const cardCreateBtn = document.getElementById("card-submit-btn");
-    cardCreateBtn.addEventListener("click", createCardClick);
-
-    const cardDeleteBtn = document.querySelector("#card-delete-btn");
-    cardDeleteBtn.addEventListener("click", deleteCardBtnClick);
-
+export function bindEventToCardWriteModal() {
     const cardWriteContent = document.getElementById("card-write-editor");
     cardWriteContent.addEventListener("input", inputCardText);
 
-    cardWriteContent.addEventListener('paste', function (e) {
+    cardWriteContent.addEventListener("paste", function (e) {
         e.preventDefault();
     });
-
-    const cardImageInput = document.querySelector("#card-img");
-    cardImageInput.addEventListener("input", inputImageUrl);
-}
-
-async function createCardClick() {
-    const dataset = this.dataset;
-    const cardImgUrl = document.querySelector("#card-img").value;
-    const cardTitle = document.querySelector("#card-title").value;
-    const cardContent = document.querySelector("#card-content").value;
-
-    if (!cardTitle) {
-        alert("card title 값은 필수입니다.");
-        return;
-    }
-
-    if (!cardContent) {
-        alert("card content 값은 필수입니다.");
-        return;
-    }
-
-    if (cardContent.length <= 250) {
-        await createCardApiCall(cardTitle, cardImgUrl, cardContent, dataset.memberCardId, dataset.type);
-        location.reload();
-        alert("카드 수정/생성 성공했습니다.");
-
-    } else {
-        alert("card content는 길이가 250 이하로 작성이 가능합니다.")
-    }
-}
-
-async function deleteCardBtnClick() {
-    const cardId = this.dataset.cardId;
-    const type = this.dataset.type;
-
-    await deleteCardApiCall(cardId, type);
-    location.reload();
-
-    alert("카드를 삭제했습니다.");
 }
 
 async function inputCardText() {
@@ -139,6 +84,8 @@ async function inputCardWriteText(target) {
     const input = document.querySelector("#card-write-editor").value;
 
     if (goal === input) {
+        target.value = "";
+
         await increaseWriteCount(target.dataset.memberCardId);
 
         setCardWriteProgressBar();
@@ -158,8 +105,6 @@ async function inputCardWriteText(target) {
             popover.innerHTML = "위 카드 본문을 아래에 써보세요!";
             popover.style.color = "black";
         });
-
-        target.value = "";
 
         if (isGoalAchieved() && !isGetTodayStamp()) {
             getTodayStamp();
@@ -192,39 +137,6 @@ async function increaseWriteCount(cardId) {
 
     document.querySelector("#card-write-count").innerHTML
         = todayCardWriteHistory.memberCards[memberCardId];
-}
-
-function inputImageUrl() {
-
-    // 기존에 추가한 이미지 삭제
-    deleteCardModalBackgroundImg();
-
-    const imgUrl = this.value;
-    isImageUrlValid(imgUrl, function (isValid) {
-        if (isValid) {
-            const virtualImageBox = new DivTag()
-                .setClassName("card-modal-background");
-
-            virtualImageBox.setStyle([{
-                backgroundImage: `url(${imgUrl})`,
-                objectFit: "cover",
-                position: "absolute",
-                top: "0px",
-                left: "0px",
-                right: "0px",
-                bottom: "0px",
-                opacity: 0.3
-            }]);
-
-            document.querySelector("#modal-img-content")
-                .appendChild(virtualImageBox.getTag());
-
-        } else if (!imgUrl) {
-
-        } else {
-            alert('이미지 URL이 유효하지 않거나 이미지가 존재하지 않습니다.');
-        }
-    });
 }
 
 function isGoalAchieved() {

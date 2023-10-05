@@ -6,12 +6,34 @@
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
         rel="stylesheet">
+  <link rel='stylesheet'
+        href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css'>
+  <link rel="stylesheet" type="text/css" href="/css/letter/letterRead.css">
 </head>
 <body>
 
 {{> layout/navigation}}
 
 <div class="my-5"></div>
+
+<div class="float-btn-space z-3" style="width: 50px;">
+  <div class="filter-group">
+    <button class="filter btn btn-secondary flb flb-ch" id="copy-link-btn-mb"
+            data-on-off="false">
+      <i class="bi bi-link-45deg justify-content-center align-items-center"
+         style="font-size: 25px;"></i>
+    </button>
+    <button class="filter btn btn-secondary flb flb-ch" id="card-write-btn-mb"
+            data-on-off="false">
+      <i class="bi bi-pencil-square justify-content-center align-items-center"
+         style="font-size: 23px;"></i>
+    </button>
+    <button class="btn btn-primary flb" id="flb-root">
+      <i class="bi bi-plus-lg justify-content-center align-items-center"
+         style="font-size: 25px;"></i>
+    </button>
+  </div>
+</div>
 
 <div class="container col-lg-6 col-md-9 justify-content-center" id="read-letter-space">
   <div class="row ">
@@ -50,6 +72,19 @@
   </div>
 </div>
 
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        링크 복사 완료!
+      </div>
+      <button type="button" class="btn-close btn-close-primary me-2 m-auto" data-bs-dismiss="toast"
+              aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+{{> contents/card/modal/create}}
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module" src="/js/letter/read/letterRead.js"></script>

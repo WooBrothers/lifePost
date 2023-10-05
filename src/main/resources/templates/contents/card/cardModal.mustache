@@ -11,124 +11,16 @@
 <body>
 
 <!-- 카드 수정/생성 모달 -->
-<div class="modal fade" id="card-modal" tabindex="-1"
-     aria-labelledby="card-modal-label"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" id="modal-img-content">
-      <div class="modal-header z-3">
-        <h1 class="modal-title fs-3 text-primary" id="card-modal-label">Card</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body z-3" id="modal-content-body">
-        <div class="form-floating mb-3">
-          <input type="url" class="form-control" id="card-img"
-                 placeholder="이미지 url 입력">
-          <label for="card-img">Image URL</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="card-title" placeholder="카드 title 입력">
-          <label for="card-title"><span class="text-danger">*</span>Card title</label>
-        </div>
-        <div class="form-floating">
-          <textarea type="text" class="form-control" id="card-content" placeholder="카드 내용 입력"
-                    style="height: 100px"></textarea>
-          <label for="card-content"><span class="text-danger">*</span>Card Content</label>
-        </div>
-      </div>
-      <div class="modal-footer z-3">
-        <button type="button" class="btn btn-primary" id="card-submit-btn">저장</button>
-      </div>
-    </div>
-  </div>
-</div>
+{{> contents/card/modal/create}}
 
 <!-- 카드 삭제 경고 모달 -->
-<div class="modal fade" id="card-delete-warning-modal" tabindex="-1"
-     aria-labelledby="card-modal-label"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-3 text-danger" id="card-modal-label">Warning</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="modal-content-body">
-        <h3>경고</h3>
-        <h6>정말 카드를 삭제하겠습니까?</h6>
-        <h6>삭제한 카드는 복구가 불가합니다.</h6>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" id="card-delete-btn">삭제</button>
-      </div>
-    </div>
-  </div>
-</div>
+{{> contents/card/modal/warning}}
 
 <!-- 카드 쓰기 모달 -->
-<div class="modal fade" id="card-write-modal" tabindex="-1"
-     aria-labelledby="card-write-label"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-3 text-primary" id="card-write-label">Write Card</h1>
-        <button type="button" class="btn-close" id="write-modal-close-btn" data-bs-dismiss="modal"
-                aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="modal-content-body">
-        <h4>카드 쓰기 달성량</h4>
-        <div class="progress mb-3">
-          <div id="write-progress" class="progress-bar" role="progressbar" style="width: 5%;"
-               aria-valuenow="0"
-               aria-valuemin="0" aria-valuemax="100">0%
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="goal-content" class="form-label h5" id="write-card-title"></label>
-          <div class="form-control" id="goal-content" style="white-space: pre-line;"></div>
-        </div>
-        <div class="mb-3">
-          <button type="button" id="write-correct-emoji"
-                  class="btn bi h5 bi-emoji-neutral" data-bs-container="body"
-                  data-bs-toggle="popover" data-bs-placement="right"
-                  data-bs-content="위 카드 본문을 아래에 써보세요!"
-                  style="border:solid 1px black">
-          </button>
-          <textarea class="form-control" id="card-write-editor" rows="3"></textarea>
-        </div>
-      </div>
-      <div class="modal-footer justify-content-start">
-        <h6>이 카드를 쓴 횟수: </h6>
-        <h6 id="card-write-count">5</h6>
-      </div>
-    </div>
-  </div>
-</div>
+{{> contents/card/modal/write}}
 
 <!-- 카드 목표치 달성 모달 -->
-<div class="modal fade" id="card-goal-achieve-modal" tabindex="-1"
-     aria-labelledby="card-goal-achieve-label"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-3 text-primary" id="card-modal-label">Great</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="modal-content-body">
-        <h3>훌륭해요! 🎉</h3>
-        <p>오늘의 카드쓰기 목표를 달성했어요!</p>
-        <p>보상으로 놓친 편지를 읽을 수 있는 🎁stamp를 드려요!</p>
-        <p><span class="text-secondary">stamp는 하루에 한번 획득 가능합니다.</span></p>
-      </div>
-      <div class="modal-footer">
-        <a href="/letter/list/page" class="btn btn-primary">편지읽기</a>
-      </div>
-    </div>
-  </div>
-</div>
+{{> contents/card/modal/reward}}
 
-<script type="module" src="/js/card/cardModal/cardModalEvent.js"></script>
 </body>
 </html>

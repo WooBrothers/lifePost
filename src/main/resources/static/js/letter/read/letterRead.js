@@ -1,5 +1,6 @@
 import {getLetterContentById, getLimitedLetterContentToLogoutMember} from "../letterApi.js";
-import {isTokenExpired} from "../../common/utilTool.js";
+import {copyToClipboard, isTokenExpired} from "../../common/utilTool.js";
+import {createCardBtnClick} from "../../card/list/cardListEvent.js";
 
 setLetterInfo();
 
@@ -10,6 +11,8 @@ function setLetterInfo() {
         getLetterContentById(letterId).then(res => {
             setLetterPageByResponse(res);
         });
+
+        bindEventIfLogin();
     } else {
         getLimitedLetterContentToLogoutMember(letterId).then(res => {
             setLetterPageByResponse(res);
@@ -17,8 +20,8 @@ function setLetterInfo() {
             renderLoginInduce();
         });
 
-        // 로그인 페이지 이동 버튼 이벤트
-        bindEventToLetterReadPage();
+        // 로그아웃 시 로그인 페이지 이동 버튼 이벤트
+        bindEventIfLogout();
     }
 }
 
@@ -62,9 +65,39 @@ function wrapImgTagInContentsDiv(contentsDiv) {
     });
 }
 
-function bindEventToLetterReadPage() {
+function bindEventIfLogout() {
     const MoveLoginPageBtn = document.querySelector("#go-to-login-page-btn");
     MoveLoginPageBtn.addEventListener("click", () => {
         window.location = "/login/page";
     });
+
+    const copyLinkBtn = document.querySelector("#copy-link-btn-mb");
+    copyLinkBtn.addEventListener("click", clickCopyLinkBtn);
+
+    const writeCardBtn = document.querySelector("#card-write-btn-mb");
+    writeCardBtn.addEventListener("click", () => {
+        window.location = "/login/page";
+    });
+}
+
+function bindEventIfLogin() {
+    const copyLinkBtn = document.querySelector("#copy-link-btn-mb");
+    copyLinkBtn.addEventListener("click", clickCopyLinkBtn);
+
+    const writeCardBtn = document.querySelector("#card-write-btn-mb");
+    writeCardBtn.addEventListener("click", clickWriteCardBtn);
+}
+
+function clickCopyLinkBtn() {
+    const currentURL = window.location.href;
+    copyToClipboard(currentURL);
+
+    const toastLiveExample = document.getElementById('liveToast')
+
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+    toastBootstrap.show()
+}
+
+function clickWriteCardBtn() {
+    createCardBtnClick();
 }

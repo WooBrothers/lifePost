@@ -122,7 +122,7 @@ function cardModifyBtnClick() {
         = event.target.dataset.cardId;
 }
 
-function createCardBtnClick() {
+export function createCardBtnClick() {
     deleteCardModalBackgroundImg();
 
     const modal = document.querySelector("#card-modal");

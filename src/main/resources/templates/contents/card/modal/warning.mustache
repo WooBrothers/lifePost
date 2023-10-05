@@ -1,0 +1,23 @@
+<!-- 카드 삭제 경고 모달 -->
+<div class="modal fade" id="card-delete-warning-modal" tabindex="-1"
+     aria-labelledby="card-modal-label"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-3 text-danger" id="card-modal-label">Warning</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-content-body">
+        <h3>경고</h3>
+        <h6>정말 카드를 삭제하겠습니까?</h6>
+        <h6>삭제한 카드는 복구가 불가합니다.</h6>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" id="card-delete-btn">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/js/card/cardModal/deleteEvent.js"></script>

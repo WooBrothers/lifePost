@@ -44,16 +44,16 @@
 
   .filter-group:hover .flb-ch:nth-child(1) {
     opacity: 1;
-    bottom: 135px;
+    bottom: 140px;
   }
 
   .filter-group:hover .flb-ch:nth-child(2) {
     opacity: 1;
-    bottom: 190px;
+    bottom: 195px;
   }
 
   .filter-group:hover .flb-ch:nth-child(3) {
     opacity: 1;
-    bottom: 245px;
+    bottom: 250px;
   }
 }
