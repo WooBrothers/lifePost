@@ -27,6 +27,7 @@ function setLetterInfo() {
 
 function setLetterPageByResponse(res) {
     const letterImage = res.letterImage;
+    document.title = res.title + " - Life Post";
     const title = res.title;
     const postDate = res.postDate;
     const writer = res.writer;
