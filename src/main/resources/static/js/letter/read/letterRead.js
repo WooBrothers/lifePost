@@ -5,21 +5,21 @@ import {createCardBtnClick} from "../../card/list/cardListEvent.js";
 setLetterInfo();
 
 function setLetterInfo() {
-    const letterId = localStorage.getItem("letterId");
+    // const letterId = localStorage.getItem("letterId");
+    const letterId = document.querySelector("#read-letter-space").dataset.letterId;
 
     if (!isTokenExpired()) {
         getLetterContentById(letterId).then(res => {
             setLetterPageByResponse(res);
+            setJsonLdInfo(res);
         });
-
         bindEventIfLogin();
     } else {
         getLimitedLetterContentToLogoutMember(letterId).then(res => {
             setLetterPageByResponse(res);
-            // 로그인 페이지 이동 안내 div 출력
-            renderLoginInduce();
+            renderLoginInduce(); // 로그인 페이지 이동 안내 div 출력
+            setJsonLdInfo(res);
         });
-
         // 로그아웃 시 로그인 페이지 이동 버튼 이벤트
         bindEventIfLogout();
     }
@@ -80,6 +80,40 @@ function bindEventIfLogout() {
         window.location = "/login/page";
     });
 }
+
+function setJsonLdInfo(res) {
+
+    const jsonLdData = {
+        "@context": "http://schema.org", // Schema.org 컨텍스트 URL
+        "@type": "Article", // 아티클 유형
+        "headline": res.title, // 아티클 제목
+        "image": res.letterImage, // 이미지 URL
+        "datePublished": res.postDate, // 게시 날짜
+        "description": res.description, // 아티클 설명
+        "author": {
+            "@type": "Person",
+            "name": res.writer // 작성자 이름
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Life Post", // 웹사이트 이름
+            "logo": {
+                "@type": "ImageObject",
+                "url": `https://${window.location.hostname}/img/full-logo` // 웹사이트 로고 URL
+            }
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `https://${window.location.hostname}` // 웹사이트 URL
+        }
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.innerHTML = JSON.stringify(jsonLdData);
+    document.head.appendChild(script);
+}
+
 
 function bindEventIfLogin() {
     const copyLinkBtn = document.querySelector("#copy-link-btn-mb");
