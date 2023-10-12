@@ -10,4 +10,19 @@ window.onload = async () => {
     if (isTokenExpired()) {
         await checkAndRefreshToken();
     }
+
+    const head = document.head;
+
+    const url = `https://${window.location.hostname}`;
+    // og:title 메타 태그 생성
+    const ogUrlTag = document.createElement("meta");
+    ogUrlTag.setAttribute("property", "og:url");
+    ogUrlTag.setAttribute("content", url);
+    head.appendChild(ogUrlTag);
+
+    // og:image 메타 태그 생성
+    const ogImageTag = document.createElement("meta");
+    ogImageTag.setAttribute("property", "og:image");
+    ogImageTag.setAttribute("content", url + "/img/full-logo.png");
+    head.appendChild(ogImageTag);
 }
