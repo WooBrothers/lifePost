@@ -83,7 +83,7 @@ public class IndexController {
         model.addAttribute("ogTitle", letter.getTitle());
         model.addAttribute("ogDescription", letter.getContents());
         model.addAttribute("ogImage", letter.getLetterImage());
-        model.addAttribute("ogUrl", url);
+        model.addAttribute("ogUrl", url + "/letter/read/page/" + letterId);
 
         return "contents/letter/letterRead";
     }
