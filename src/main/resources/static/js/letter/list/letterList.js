@@ -3,6 +3,7 @@ import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
 import {removeImageTags} from "../../common/utilTool.js";
 
 export async function createLetterListSpace(letterListSpace, page, event) {
+
     const type = getLetterType();
     const focusType = getFocusType();
 
@@ -13,13 +14,16 @@ export async function createLetterListSpace(letterListSpace, page, event) {
     });
 
     event();
-
     return resultResponse
 }
 
 export async function createOpenLetterListSpace(letterListSpace, page, event) {
 
     let resultResponse = null;
+
+    document.querySelectorAll(".filter-group").forEach(filterGroup => {
+        filterGroup.remove();
+    })
 
     await getOpenLetterList(page, 8).then(response => {
         createLetter(response, letterListSpace);
