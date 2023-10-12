@@ -1,15 +1,17 @@
 package net.lifepost.service.domain.index;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.lifepost.service.common.exception.CommonException;
 import net.lifepost.service.common.exception.ErrorEnum;
+import net.lifepost.service.model.letter.Letter;
+import net.lifepost.service.model.letter.LetterRepository;
 import net.lifepost.service.model.member.Member;
 import net.lifepost.service.model.member.MemberRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,9 +27,15 @@ public class IndexController {
 
     /* beans */
     private final MemberRepository memberRepository;
+    private final LetterRepository letterRepository;
+
+    @Value("${url}")
+    private String url;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request) throws JsonProcessingException {
+    public String index(Model model) throws JsonProcessingException {
+        model.addAttribute("ogImage", url + "/img/full-logo.png");
+        model.addAttribute("ogUrl", url);
         return "index";
     }
 
@@ -68,9 +76,15 @@ public class IndexController {
 
     @GetMapping("/letter/read/page/{letterId}")
     public String getLetterReadPage(@PathVariable Long letterId, Model model) {
+        Letter letter = letterRepository.findById(letterId)
+            .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
 
         model.addAttribute("letterId", letterId);
-        
+        model.addAttribute("ogTitle", letter.getTitle());
+        model.addAttribute("ogDescription", letter.getContents());
+        model.addAttribute("ogImage", letter.getLetterImage());
+        model.addAttribute("ogUrl", url);
+
         return "contents/letter/letterRead";
     }
 

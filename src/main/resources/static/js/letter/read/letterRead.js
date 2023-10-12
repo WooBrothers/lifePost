@@ -2,20 +2,21 @@ import {getLetterContentById, getLimitedLetterContentToLogoutMember} from "../le
 import {copyToClipboard, isTokenExpired} from "../../common/utilTool.js";
 import {createCardBtnClick} from "../../card/list/cardListEvent.js";
 
-setLetterInfo();
+window.onload = async () => {
+    await setLetterInfo();
+}
 
-function setLetterInfo() {
-    // const letterId = localStorage.getItem("letterId");
+async function setLetterInfo() {
     const letterId = document.querySelector("#read-letter-space").dataset.letterId;
     if (!isTokenExpired()) {
-        getLetterContentById(letterId).then(res => {
+        await getLetterContentById(letterId).then(res => {
             setLetterPageByResponse(res);
             setJsonLdInfo(res);
             setOGMetaTag(res, letterId);
         });
         bindEventIfLogin();
     } else {
-        getLimitedLetterContentToLogoutMember(letterId).then(res => {
+        await getLimitedLetterContentToLogoutMember(letterId).then(res => {
             setLetterPageByResponse(res);
             renderLoginInduce(); // 로그인 페이지 이동 안내 div 출력
             setJsonLdInfo(res);
