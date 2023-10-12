@@ -12,7 +12,6 @@ async function setLetterInfo() {
         await getLetterContentById(letterId).then(res => {
             setLetterPageByResponse(res);
             setJsonLdInfo(res);
-            setOGMetaTag(res, letterId);
         });
         bindEventIfLogin();
     } else {
@@ -20,7 +19,6 @@ async function setLetterInfo() {
             setLetterPageByResponse(res);
             renderLoginInduce(); // 로그인 페이지 이동 안내 div 출력
             setJsonLdInfo(res);
-            setOGMetaTag(res, letterId);
         });
         // 로그아웃 시 로그인 페이지 이동 버튼 이벤트
         bindEventIfLogout();
@@ -137,38 +135,4 @@ function clickCopyLinkBtn() {
 
 function clickWriteCardBtn() {
     createCardBtnClick();
-}
-
-function setOGMetaTag(response, letterId) {
-    const title = response.title;
-    const content = response.description;
-    const image = response.letterImage;
-    const url = `https://${window.location.hostname}/letter/raed/page/${letterId}`;
-
-    const head = document.head;
-
-    // og:title 메타 태그 생성
-    const ogTitleTag = document.createElement("meta");
-    ogTitleTag.setAttribute("property", "og:title");
-    ogTitleTag.setAttribute("content", title);
-    head.appendChild(ogTitleTag);
-
-    // og:description 메타 태그 생성
-    const ogDescriptionTag = document.createElement("meta");
-    ogDescriptionTag.setAttribute("property", "og:description");
-    const description = content ? content : "당신의 생각을 바꿀 편지.";
-    ogDescriptionTag.setAttribute("content", description);
-    head.appendChild(ogDescriptionTag);
-
-    // og:url 메타 태그 생성
-    const ogUrlTag = document.createElement("meta");
-    ogUrlTag.setAttribute("property", "og:url");
-    ogUrlTag.setAttribute("content", url);
-    head.appendChild(ogUrlTag);
-
-    // og:image 메타 태그 생성
-    const ogImageTag = document.createElement("meta");
-    ogImageTag.setAttribute("property", "og:image");
-    ogImageTag.setAttribute("content", image);
-    head.appendChild(ogImageTag);
 }
