@@ -55,3 +55,5 @@ jwt:
   refresh:
     header: Authorization-refresh
     expiration: 604800
+
+url: https://dev.life-post.net

@@ -58,3 +58,5 @@ jwt:
   refresh:
     header: Authorization-refresh
     expiration: 604800
+
+url: http://localhost:8080
