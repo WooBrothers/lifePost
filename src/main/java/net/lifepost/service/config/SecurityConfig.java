@@ -75,10 +75,9 @@ public class SecurityConfig {
                         new AntPathRequestMatcher("/templates/**"),
                         new AntPathRequestMatcher("/css/**"),
                         new AntPathRequestMatcher("/js/**"),
-                        new AntPathRequestMatcher("/favicon.ico"),
+                        new AntPathRequestMatcher("/img/**"),
                         new AntPathRequestMatcher("/h2/**"),
                         new AntPathRequestMatcher("/api/v1/**/open/**"),
-                        new AntPathRequestMatcher("/img/**"),
                         new AntPathRequestMatcher("/auth/new/token"),
                         new AntPathRequestMatcher("/**/page/**")
                     )

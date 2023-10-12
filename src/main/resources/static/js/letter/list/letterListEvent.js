@@ -1,7 +1,12 @@
 import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
 import {createLetterListSpace} from "./letterList.js";
 import {createPagination} from "../../pagination/pagination.js";
-import {findParentWithClass, isTokenExpired} from "../../common/utilTool.js";
+import {
+    findParentWithClass,
+    isTokenExpired,
+    readLetterPage,
+    setFilterBtnOnOff
+} from "../../common/utilTool.js";
 import {authFetch} from "../../common/apiUtil.js";
 import {bindEventToLetterStampUsePage} from "./letterStampUseModal.js";
 
@@ -24,10 +29,9 @@ export function bindEventToLetterListGrid() {
 
 async function clickLetter() {
     const letterId = this.dataset.letterId;
-    localStorage.setItem("letterId", letterId);
 
     if (isTokenExpired()) {
-        window.location = "/letter/read/page";
+        readLetterPage(letterId);
     } else {
         const modal = $('#letterReadInfoModal');
         modal.modal("show");
@@ -47,31 +51,17 @@ async function clickLetter() {
                 } else {
                     document.querySelector("#letter-read-btn").classList.remove("disabled");
                 }
-                bindEventToLetterStampUsePage();
+                bindEventToLetterStampUsePage(letterId);
             });
 
         } else {
-            window.location = "/letter/read/page";
+            readLetterPage(letterId);
         }
     }
-
 }
 
 async function filterBtnClick() {
-    const className = this.id.split("-btn")[0];
-    const btnList = document.querySelectorAll(`.${className}`);
-
-    if (this.dataset.onOff === "true") {
-        btnList.forEach((btn) => {
-            btn.dataset.onOff = "false";
-            btn.classList.remove("active");
-        });
-    } else {
-        btnList.forEach((btn) => {
-            btn.dataset.onOff = "true"
-            btn.classList.add("active");
-        });
-    }
+    setFilterBtnOnOff();
 
     const letterListSpace = document.getElementById("letter-list-space");
     const letterList = document.getElementsByClassName("letter-space");

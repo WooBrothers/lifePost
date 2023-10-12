@@ -1,13 +1,16 @@
-export function bindEventToLetterStampUsePage() {
+import {readLetterPage} from "../../common/utilTool.js";
+
+export function bindEventToLetterStampUsePage(letterId) {
     const letterReadBtn = document.getElementById("letter-read-btn");
-    letterReadBtn.addEventListener("click", useStampAndReadLetter);
+    letterReadBtn.addEventListener("click", (event) =>
+        useStampAndReadLetter.call(event, letterId));
 
     const goToCardListBtn = document.getElementById("go-to-card-list-btn");
     goToCardListBtn.addEventListener("click", clickGoToCardListPage);
 }
 
-async function useStampAndReadLetter() {
-    window.location = "/letter/read/page";
+async function useStampAndReadLetter(letterId) {
+    readLetterPage(letterId);
 }
 
 function clickGoToCardListPage() {

@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -65,8 +66,11 @@ public class IndexController {
         return "contents/letter/letterOpenList";
     }
 
-    @GetMapping("/letter/read/page")
-    public String getLetterReadPage() {
+    @GetMapping("/letter/read/page/{letterId}")
+    public String getLetterReadPage(@PathVariable Long letterId, Model model) {
+
+        model.addAttribute("letterId", letterId);
+        
         return "contents/letter/letterRead";
     }
 

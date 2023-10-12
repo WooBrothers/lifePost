@@ -1,5 +1,10 @@
 import {authFetch} from "../../common/apiUtil.js";
-import {findParentWithClass, TodayCardWriteHistory} from "../../common/utilTool.js";
+import {
+    findParentWithClass,
+    readLetterPage,
+    setFilterBtnOnOff,
+    TodayCardWriteHistory
+} from "../../common/utilTool.js";
 import {createPagination} from "../../pagination/pagination.js";
 import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
 import {createCardListSpace} from "./cardList.js";
@@ -20,7 +25,6 @@ export function bindEventToCardListGrid() {
         createCardBtn.addEventListener("click", createCardBtnClick);
     })
 
-
     const writeCardBtnList = document.querySelectorAll(".card-write-btn");
     writeCardBtnList.forEach(btn => {
         btn.addEventListener("click", writeCardBtnClick);
@@ -28,7 +32,7 @@ export function bindEventToCardListGrid() {
 
     const readLetterBtnList = document.querySelectorAll(".letter-read-btn");
     readLetterBtnList.forEach(btn => {
-        btn.addEventListener("click", clickReadLetter);
+        btn.addEventListener("click", readLetterBtnClick);
     });
 
     const modifyCustomCardBtnList = document.querySelectorAll(".card-modify-btn");
@@ -73,21 +77,7 @@ async function clickFocusBtn() {
 }
 
 async function filterBtnClick() {
-
-    const className = this.id.split("-btn")[0];
-    const btnList = document.querySelectorAll(`.${className}`);
-
-    if (this.dataset.onOff === "true") {
-        btnList.forEach((btn) => {
-            btn.dataset.onOff = "false";
-            btn.classList.remove("active");
-        });
-    } else {
-        btnList.forEach((btn) => {
-            btn.dataset.onOff = "true"
-            btn.classList.add("active");
-        });
-    }
+    setFilterBtnOnOff();
 
     const cardListSpace = document.getElementById("card-list-space");
     const cardList = document.getElementsByClassName("card-space");
@@ -169,17 +159,16 @@ function deleteCardBtnClick() {
     cardDeleteBtn.dataset.type = "CUSTOM";
 }
 
-export function clickReadLetter() {
-
-    localStorage.setItem("letterId", this.dataset.letterId);
-    window.location = "/letter/read/page";
-}
-
 export function deleteCardModalBackgroundImg() {
     const backgroundImgList = document.querySelectorAll(".card-modal-background");
     backgroundImgList.forEach(backgroundImg => {
         backgroundImg.remove();
     })
+}
+
+function readLetterBtnClick() {
+    const letterId = this.dataset.letterId;
+    readLetterPage(letterId);
 }
 
 export function setCardWriteProgressBar() {

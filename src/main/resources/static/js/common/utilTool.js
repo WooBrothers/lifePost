@@ -207,7 +207,28 @@ export function copyToClipboard(text) {
 
     dummy.value = text;
     dummy.select();
-    
+
     document.execCommand("copy");
     document.body.removeChild(dummy);
+}
+
+export function readLetterPage(letterId) {
+    window.location = `/letter/read/page/${letterId}`;
+}
+
+export function setFilterBtnOnOff() {
+    const className = this.id.split("-btn")[0];
+    const btnList = document.querySelectorAll(`.${className}`);
+
+    if (this.dataset.onOff === "true") {
+        btnList.forEach((btn) => {
+            btn.dataset.onOff = "false";
+            btn.classList.remove("active");
+        });
+    } else {
+        btnList.forEach((btn) => {
+            btn.dataset.onOff = "true"
+            btn.classList.add("active");
+        });
+    }
 }

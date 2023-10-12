@@ -1,4 +1,5 @@
 import {getLatestLetter} from "../letterApi.js";
+import {readLetterPage} from "../../common/utilTool.js";
 
 await renderTodayComp();
 
@@ -47,7 +48,6 @@ function getTime() {
 
 function setTime() {
     const timeDiv = document.getElementById("today-timer");
-
     timeDiv.innerHTML = getTime();
 }
 
@@ -57,7 +57,6 @@ function bindTodayLetterEvent() {
 }
 
 function clickTodaySpace() {
-    const todaySpace = document.querySelector("#today-space");
-    localStorage.setItem("letterId", todaySpace.dataset.letterId);
-    window.location = "/letter/read/page";
+    const letterId = document.querySelector("#today-space").dataset.letterId;
+    readLetterPage(letterId);
 }
