@@ -35,7 +35,8 @@ export class CardGrid {
         const tile = new DivTag()
             .setClassName("focus-card-container")
             .setId("focus-card-title")
-            .setInnerHTML("Focus Card");
+            .setInnerHTML("Focus Card")
+            .setStyle([{fontFamily: "serif"}]);
 
         const focusCardDivs = CardGrid.getFocusCardListElementByResponse(response);
 

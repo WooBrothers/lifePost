@@ -151,9 +151,16 @@ function createLetterCard(responseContent, letterSpace, focusInfo) {
 
 function createMyLetterText() {
     return new PTag()
-        .setClassName("bg-primary text-white text-center h4 py-1")
-        .setTextContent("My Letter")
-        .setStyle([{width: "108px", height: "40px"}]);
+        .setClassName("bg-primary text-white h4")
+        .setTextContent("My letter")
+        .setStyle([{
+            width: "108px",
+            height: "40px",
+            fontFamily: "serif",
+            fontSize: "23px",
+            textAlign: "center",
+            paddingTop: "6px"
+        }]);
 }
 
 function createFocusBtn(focusInfo) {
