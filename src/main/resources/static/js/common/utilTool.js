@@ -216,11 +216,11 @@ export function readLetterPage(letterId) {
     window.location = `/letter/read/page/${letterId}`;
 }
 
-export function setFilterBtnOnOff() {
-    const className = this.id.split("-btn")[0];
+export function setFilterBtnOnOff(target) {
+    const className = target.id.split("-btn")[0];
     const btnList = document.querySelectorAll(`.${className}`);
 
-    if (this.dataset.onOff === "true") {
+    if (target.dataset.onOff === "true") {
         btnList.forEach((btn) => {
             btn.dataset.onOff = "false";
             btn.classList.remove("active");
