@@ -5,6 +5,9 @@ await setMembership();
 bindNavigationEvent();
 
 export async function setMembership() {
+    const height = window.innerHeight * 0.08;
+    document.querySelector("#nav").style.height = `${height}px`;
+
     if (!getAccessToken()) {
         setLogoutNavMenu();
     } else {

@@ -1,15 +1,23 @@
-import {clickReadLetter, writeCardBtnClick} from "../list/cardListEvent.js";
+import {
+    cardModifyBtnClick,
+    deleteCardBtnClick,
+    readLetterBtnClick,
+    writeCardBtnClick
+} from "../list/cardListEvent.js";
 import {getCardListAfterCardId} from "../cardApi.js";
 import {getAccessToken} from "../../common/apiUtil.js";
 import {createCard} from "../list/cardList.js";
 import {isTokenExpired} from "../../common/utilTool.js";
 
 const space = document.querySelector("#focus-card-contents-space");
-await renderFocusCard(space, 0, bindFocusCard);
+await renderFocusCard(space, 0, bindEventToFocusCard);
 
 async function renderFocusCard(focusSpace, memberCardId, event) {
 
     let resultResponse = null;
+
+    const height = window.innerHeight * 0.75;
+    focusSpace.style.height = `${height}px`;
 
     if (!isTokenExpired()) {
         document.querySelector("#focus-card-space").style.display = "block";
@@ -26,18 +34,26 @@ async function renderFocusCard(focusSpace, memberCardId, event) {
     return resultResponse;
 }
 
-function bindFocusCard() {
+function bindEventToFocusCard() {
     const writeCardBtnList = document.querySelectorAll(".card-write-btn");
     writeCardBtnList.forEach(btn => {
-        btn.addEventListener("click", (event) => {
-            writeCardBtnClick.call(event, "focus-card-contents-space")
-        });
-    })
+        btn.addEventListener("click", writeCardBtnClick);
+    });
+
+    const modifyCustomCardBtnList = document.querySelectorAll(".card-modify-btn");
+    modifyCustomCardBtnList.forEach(modifyCustomCardBtn => {
+        modifyCustomCardBtn.addEventListener("click", cardModifyBtnClick);
+    });
+
+    const deleteCustomCardBtnList = document.querySelectorAll(".card-delete-btn");
+    deleteCustomCardBtnList.forEach(deleteCustomCardBtn => {
+        deleteCustomCardBtn.addEventListener("click", deleteCardBtnClick);
+    });
 
     const readLetterBtnList = document.querySelectorAll(".letter-read-btn");
     readLetterBtnList.forEach(btn => {
-        btn.addEventListener("click", clickReadLetter);
-    })
+        btn.addEventListener("click", readLetterBtnClick);
+    });
 
     const focusCardContentsSpace = document.querySelector("#focus-card-contents-space");
     focusCardContentsSpace.addEventListener("scroll", scrollFocusCardLoad);
@@ -49,26 +65,13 @@ function bindFocusCard() {
 }
 
 async function scrollFocusCardLoad() {
-
-    // const maxWidth = window.innerWidth;
-    // if (maxWidth >= 991) {
-    //     if (this.scrollLeft + this.clientWidth >= this.scrollWidth) {
-    //         const space = document.querySelector("#focus-card-contents-space");
-    //         const memberCardId = space.lastElementChild.dataset.memberCardId;
-    //         if (memberCardId) {
-    //             await renderFocusCard(space, memberCardId, bindFocusCard);
-    //         }
-    //
-    //     }
-    // } else {
     if (this.scrollTop + this.clientHeight >= this.scrollHeight) {
         const space = document.querySelector("#focus-card-contents-space");
         const memberCardId = space.lastElementChild.dataset.memberCardId;
         if (memberCardId) {
-            await renderFocusCard(space, memberCardId, bindFocusCard);
+            await renderFocusCard(space, memberCardId, bindEventToFocusCard);
         }
     }
-    // }
 }
 
 function clickGoToLoginPageBtn() {
