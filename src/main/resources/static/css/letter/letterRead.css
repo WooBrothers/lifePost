@@ -19,8 +19,9 @@
 }
 
 #flb-root {
+  position: fixed;
   right: 20px;
-  bottom: 140px;
+  bottom: 85px;
 }
 
 .flb-ch {

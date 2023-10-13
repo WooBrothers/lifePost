@@ -30,8 +30,9 @@
   }
 
   #flb-root {
+    position: fixed;
     right: 20px;
-    bottom: 70px;
+    bottom: 85px;
   }
 
   .flb-ch {
