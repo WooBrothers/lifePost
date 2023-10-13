@@ -30,8 +30,9 @@
   }
 
   #flb-root {
+    position: fixed;
     right: 20px;
-    bottom: 20px;
+    bottom: 85px;
   }
 
   .flb-ch {
@@ -44,16 +45,16 @@
 
   .filter-group:hover .flb-ch:nth-child(1) {
     opacity: 1;
-    bottom: 80px;
+    bottom: 140px;
   }
 
   .filter-group:hover .flb-ch:nth-child(2) {
     opacity: 1;
-    bottom: 140px;
+    bottom: 195px;
   }
 
   .filter-group:hover .flb-ch:nth-child(3) {
     opacity: 1;
-    bottom: 200px;
+    bottom: 250px;
   }
 }
