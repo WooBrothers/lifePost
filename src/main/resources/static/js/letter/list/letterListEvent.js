@@ -61,7 +61,7 @@ async function clickLetter() {
 }
 
 async function filterBtnClick() {
-    setFilterBtnOnOff();
+    setFilterBtnOnOff(this);
 
     const letterListSpace = document.getElementById("letter-list-space");
     const letterList = document.getElementsByClassName("letter-space");

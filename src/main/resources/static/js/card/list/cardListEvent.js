@@ -23,7 +23,7 @@ export function bindEventToCardListGrid() {
     const createCardBtnList = document.querySelectorAll(".create-card-btn");
     createCardBtnList.forEach(createCardBtn => {
         createCardBtn.addEventListener("click", createCardBtnClick);
-    })
+    });
 
     const writeCardBtnList = document.querySelectorAll(".card-write-btn");
     writeCardBtnList.forEach(btn => {
@@ -38,12 +38,12 @@ export function bindEventToCardListGrid() {
     const modifyCustomCardBtnList = document.querySelectorAll(".card-modify-btn");
     modifyCustomCardBtnList.forEach(modifyCustomCardBtn => {
         modifyCustomCardBtn.addEventListener("click", cardModifyBtnClick);
-    })
+    });
 
     const deleteCustomCardBtnList = document.querySelectorAll(".card-delete-btn");
     deleteCustomCardBtnList.forEach(deleteCustomCardBtn => {
         deleteCustomCardBtn.addEventListener("click", deleteCardBtnClick);
-    })
+    });
 }
 
 async function clickFocusBtn() {
@@ -77,7 +77,7 @@ async function clickFocusBtn() {
 }
 
 async function filterBtnClick() {
-    setFilterBtnOnOff();
+    setFilterBtnOnOff(this);
 
     const cardListSpace = document.getElementById("card-list-space");
     const cardList = document.getElementsByClassName("card-space");
