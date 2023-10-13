@@ -100,7 +100,7 @@ function createLetter(response, letterListSpace) {
 
     response.content.forEach(responseContent => {
         const letterSpace = new DivTag()
-            .setClassName("letter-space col")
+            .setClassName("letter-space col mb-4")
             .setId(`letter-space-${responseContent.id}`)
             .setDataset([{
                 memberLetterId: responseContent.memberLetterId,

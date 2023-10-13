@@ -92,7 +92,7 @@ async function filterBtnClick() {
     bindPaginationBtnEvent("card-list-space", "card-space", createCardListSpace, bindEventToCardListGrid);
 }
 
-function cardModifyBtnClick() {
+export function cardModifyBtnClick() {
     deleteCardModalBackgroundImg();
 
     const modal = document.querySelector("#card-modal");
@@ -150,7 +150,7 @@ export function writeCardBtnClick() {
     document.querySelector("#card-write-count").innerHTML = count;
 }
 
-function deleteCardBtnClick() {
+export function deleteCardBtnClick() {
     const modal = document.querySelector("#card-delete-warning-modal");
     new bootstrap.Modal(modal).show();
 
@@ -166,7 +166,7 @@ export function deleteCardModalBackgroundImg() {
     })
 }
 
-function readLetterBtnClick() {
+export function readLetterBtnClick() {
     const letterId = this.dataset.letterId;
     readLetterPage(letterId);
 }
