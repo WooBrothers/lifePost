@@ -7,3 +7,13 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    environment:
+      DB_URL: ${DB_URL}
+      DB_USER_ID: ${DB_USER_ID}
+      DB_USER_PW: ${DB_USER_PW}
+      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
+      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
+      KAKAO_REDIRECT_URI: ${KAKAO_REDIRECT_URI}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
