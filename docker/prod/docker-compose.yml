@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  lifepost-service:
+    image: lifepost-service:latest
+    container_name: lifepost-service
+    restart: always
+    ports:
+      - "8080:8080"

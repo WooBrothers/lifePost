@@ -1,0 +1,11 @@
+#index-letter-space {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#index-card-space {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

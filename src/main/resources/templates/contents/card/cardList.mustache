@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+
+<html lang="ko">
+<head>
+  <title>카드 목록 보기 - Life Post</title>
+  <meta http-equiv="Content-Type" charset="UTF-8"
+        name="description" content="인생을 바꿀 당신을 위한 카드. 직접 만들거나 다른 이들에게 공유해보세요!"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+  <link rel='stylesheet'
+        href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css'>
+  <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/css/card/cardList.css">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PVX87W8KPF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PVX87W8KPF');
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({
+      'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+    });
+    var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+    j.async = true;
+    j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', 'GTM-M84XHXGR');</script>
+  <!-- End Google Tag Manager -->
+</head>
+<body>
+
+{{> layout/navigation}}
+
+<div class="float-btn-space z-3" style="width: 50px;">
+  <div class="filter-group">
+    <button class="filter btn btn-secondary flb flb-ch z-1 affirmation-filter"
+            id="affirmation-filter-btn-mb"
+            data-on-off="false">
+      <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
+           class="bi bi-envelope-arrow-down" viewBox="0 0 16 16">
+        <path
+            d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4.5a.5.5 0 0 1-1 0V5.383l-7 4.2-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h5.5a.5.5 0 0 1 0 1H2a2 2 0 0 1-2-1.99V4Zm1 7.105 4.708-2.897L1 5.383v5.722ZM1 4v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1Z"/>
+        <path
+            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.354-1.646a.5.5 0 0 1-.722-.016l-1.149-1.25a.5.5 0 1 1 .737-.676l.28.305V11a.5.5 0 0 1 1 0v1.793l.396-.397a.5.5 0 0 1 .708.708l-1.25 1.25Z"/>
+      </svg>
+    </button>
+    <button class="filter btn btn-secondary flb flb-ch z-1 custom-filter" id="custom-filter-btn-mb"
+            data-on-off="false">
+      <i class="bi bi-pencil-square justify-content-center align-items-center"
+         style="font-size: 25px;"></i>
+    </button>
+    <button class="filter btn btn-secondary flb flb-ch z-1 focus-filter" id="focus-filter-btn-mb"
+            data-on-off="false">
+      <i class="bi bi-bookmark-fill justify-content-center align-items-center"
+         style="font-size: 23px;"></i>
+    </button>
+    <button class="btn btn-primary flb  z-3" id="flb-root">
+      <i class="bi bi-filter justify-content-center align-items-center"
+         style="font-size: 25px;"></i>
+    </button>
+  </div>
+  <button type="button" class="act-btn card-list-btn btn btn-primary create-card-btn flb mt-2 h3">
+    <i class="bi bi-plus-lg justify-content-center align-items-center"
+       style="font-size: 25px;"></i>
+  </button>
+</div>
+
+<div class="container">
+  <div class="row justify-content-end ">
+    <div class="mb-2">
+      <h1 class="text-primary mt-3 mb-0" style="font-family: serif;">Card List</h1>
+      <hr class="mt-1 mb-0">
+      <p class="text-primary mt-0 mb-0">받은카드, 만든카드 모아보기</p>
+    </div>
+    <div class="d-flex d-none d-md-flex col-lg-4 justify-content-end mb-1">
+      <div class="flex-fill"></div>
+      <button type="button" class="act-btn card-list-btn btn btn-primary create-card-btn me-2">
+        카드 만들기
+      </button>
+      <button class="btn btn-primary filter-icon" data-bs-toggle="collapse"
+              data-bs-target="#filter-btn-group" aria-expanded="false"
+              aria-controls="filter-btn-group">
+        <i class="bi bi-filter justify-content-center align-items-center"
+           style="font-size: 20px;"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row justify-content-end collapse" id="filter-btn-group">
+    <div class="btn-group d-md-flex d-none col-md-6 col-lg-4 mb-1" role="group">
+      <button class="btn btn-outline-primary card-list-btn filter affirmation-filter"
+              id="affirmation-filter-btn" data-on-off="false">받은 카드
+      </button>
+      <button class="btn btn-outline-primary card-list-btn filter custom-filter"
+              id="custom-filter-btn" data-on-off="false">만든 카드
+      </button>
+      <button class="btn btn-outline-primary card-list-btn filter focus-filter"
+              id="focus-filter-btn" data-on-off="false">focus
+      </button>
+    </div>
+  </div>
+  <div class="justify-content-center">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-2 p-0"
+         id="card-list-space"></div>
+  </div>
+</div>
+
+{{> layout/pagination}}
+
+{{> contents/card/cardModal}}
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/js/cardListPage.js"></script>
+</body>
+</html>
+

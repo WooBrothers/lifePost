@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+
+<html lang="ko">
+<head>
+  <title>Life Post 서비스란?</title>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/css/landing.css">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PVX87W8KPF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PVX87W8KPF');
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({
+      'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+    });
+    var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+    j.async = true;
+    j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', 'GTM-M84XHXGR');</script>
+  <!-- End Google Tag Manager -->
+</head>
+
+<body>
+{{> layout/navigation}}
+<div class="container-fluid p-0 h-100"
+     style="margin-top:150px;">
+  <div class=" row d-flex justify-content-center" style="margin-bottom:250px;">
+    <iframe width="1920" height="580"
+            src="https://www.youtube.com/embed/OlGaRCfep0c?autoplay=1&mute=1&loop=1&playlist=OlGaRCfep0c&controls=0"
+            title="Life Post 소개 영상" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+  </div>
+  <div class="container-fluid p-0" id="carouse" style="margin-bottom:150px;">
+    <div class="row">
+      <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0"
+                  class="bg-white active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                  class="bg-white" aria-label="Slide 2"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="d-flex justify-content-center">
+              <img src="/img/letter-group.png" class="d-block h-100" alt="...">
+            </div>
+            <div class="carousel-caption d-block d-md-block text-white bg-primary">
+              <h5>무엇보다 중요한 생각</h5>
+              <p>그 생각의 전환점이 될 편지들을 읽어보세요!</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="d-flex justify-content-center">
+              <img src="/img/card-group.png" class="d-block h-100" alt="...">
+            </div>
+            <div class="carousel-caption d-block d-md-block text-white bg-primary">
+              <h5>한번 읽고 끝난다?</h5>
+              <p>당신이 원하는 내용을 카드로 만들고 반복해서 읽으세요!</p>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button"
+                data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button"
+                data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+          crossorigin="anonymous"></script>
+</body>
+</html>
+

@@ -1,0 +1,35 @@
+<!-- 카드 수정/생성 모달 -->
+<div class="modal fade" id="card-modal" tabindex="-1"
+     aria-labelledby="card-modal-label"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" id="modal-img-content">
+      <div class="modal-header z-3">
+        <h1 class="modal-title fs-3 text-primary" id="card-modal-label" style="font-family: serif">
+          Card</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body z-3" id="modal-content-body">
+        <div class="form-floating mb-3">
+          <input type="url" class="form-control" id="card-img"
+                 placeholder="이미지 url 입력">
+          <label for="card-img">Image URL</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="card-title" placeholder="카드 title 입력">
+          <label for="card-title"><span class="text-danger">*</span>Card title</label>
+        </div>
+        <div class="form-floating">
+          <textarea type="text" class="form-control" id="card-content" placeholder="카드 내용 입력"
+                    style="height: 100px"></textarea>
+          <label for="card-content"><span class="text-danger">*</span>Card Content</label>
+        </div>
+      </div>
+      <div class="modal-footer z-3">
+        <button type="button" class="btn btn-primary" id="card-submit-btn">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/js/card/cardModal/createAndModifyEvent.js"></script>

@@ -1,0 +1,24 @@
+.info-title-class {
+  color: black;
+  font-size: 35px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.box-class {
+  border: 1px solid black;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+}
+
+.info-class {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.info-contents-class {
+  font-size: 18px;
+  font-weight: normal;
+  margin-bottom: 15px;
+  margin-left: 5px;
+}

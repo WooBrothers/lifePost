@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### 도커 환경변수 파일 무시 .env ###
+docker/env/

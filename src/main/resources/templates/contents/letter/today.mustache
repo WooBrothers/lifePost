@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <link href="https://fonts.cdnfonts.com/css/bebas-neue" rel="stylesheet">
+</head>
+<body>
+
+<div id="today-space" class="container" style="margin-top:5%; margin-bottom: 5%">
+  <div class="card mb-3 mt-5">
+    <div class="row g-0">
+      <div class="col-lg-6">
+        <img id="today-img" class="img-fluid" style="object-fit: cover;"
+             alt="">
+        <div class="card-img-overlay p-0">
+          <div class="bg-primary text-white text-center h2 py-1"
+               style="width: 108px; font-family: serif;">
+            Today
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card-body">
+          <div id="today-letter-timer"
+               class="d-flex flex-row justify-content-start align-items-center">
+            <img id="hourglass" class="me-3" src="/img/alarm.svg" alt="" style="width: 35px">
+            <div id="today-timer" class="mt-2"
+                 style="font-size: 50px; font-family: Bebas Neue, sans-serif; font-weight: bold;"></div>
+          </div>
+          <hr>
+          <h4 class="ms-1 mb-3 text-secondary" style="margin-top: 8%;">오늘의 편지</h4>
+          <h1 id="today-letter-title" class="mb-3"></h1>
+          <div id="today-letter-contents" class="h5 p-1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/js/letter/today/today.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    container_name: lifepost-member-db
+    restart: always
+    platform: linux/arm64/v8 # ec2에서는 해당 옵션 지워야함
+    volumes:
+      - /Users/gimgyeong-u/IdeaProjects/mysqlData:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB}
+      MYSQL_USER: ${DB_USER_ID}
+      MYSQL_PASSWORD: ${DB_USER_PW}
+    ports:
+      - "3306:3306"
+    networks:
+      - localnet
+
+  lifepost-service:
+    image: lifepost-service:latest
+    container_name: lifepost-service
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: ${DB_URL}
+      DB_USER_ID: ${DB_USER_ID}
+      DB_USER_PW: ${DB_USER_PW}
+      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
+      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
+      KAKAO_REDIRECT_URI: ${KAKAO_REDIRECT_URI}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    networks:
+      - localnet
+
+networks:
+  localnet:

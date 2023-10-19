@@ -3,9 +3,11 @@ version: '3.8'
 services:
   db:
     image: mysql:latest
-    container_name: woobros-member-db
+    container_name: lifepost-member-db
     restart: always
-    platform: linux/arm64/v8
+    platform: linux/arm64/v8 # ec2에서는 해당 옵션 지워야함
+    volumes:
+      - /Users/gimgyeong-u/IdeaProjects/mysqlData:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: 2023
       MYSQL_DATABASE: member
@@ -13,3 +15,8 @@ services:
       MYSQL_PASSWORD: member2023
     ports:
       - "3306:3306"
+    networks:
+      - localnet
+
+networks:
+  localnet:

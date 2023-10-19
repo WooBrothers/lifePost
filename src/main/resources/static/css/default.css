@@ -1,1 +1,35 @@
+.card:hover {
+  cursor: pointer;
+}
 
+.bg-primary {
+  background-color: #004AAD !important;
+}
+
+.text-primary {
+  color: #004AAD !important;
+}
+
+.btn-primary {
+  background-color: #004AAD !important;
+}
+
+.border-primary {
+  border-color: #004AAD !important;
+}
+
+.btn-outline-primary {
+  border-color: #004AAD !important;
+}
+
+.btn.active {
+  background-color: #004AAD !important;
+}
+
+.btn.btn-outline-primary {
+  color: #004AAD !important;
+}
+
+.btn.btn-outline-primary.active {
+  color: white !important;
+}

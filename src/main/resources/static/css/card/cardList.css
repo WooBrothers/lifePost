@@ -1,0 +1,60 @@
+/* 버튼 그룹은 bootstrap d-none, d-flex 사용 */
+
+.flb-ch {
+  background-color: darkgray !important;
+  border: none !important;
+}
+
+.flb-ch.active {
+  background-color: #0d6efd !important;
+}
+
+@media (min-width: 768px) {
+  .float-btn-space {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .float-btn-space {
+    display: block;
+    position: fixed;
+    right: 20px;
+    bottom: 20px
+  }
+
+  .flb {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  #flb-root {
+    position: fixed;
+    right: 20px;
+    bottom: 85px;
+  }
+
+  .flb-ch {
+    position: fixed;
+    right: 20px;
+    bottom: 70px;
+    opacity: 0;
+    transition: 0.3s;
+  }
+
+  .filter-group:hover .flb-ch:nth-child(1) {
+    opacity: 1;
+    bottom: 140px;
+  }
+
+  .filter-group:hover .flb-ch:nth-child(2) {
+    opacity: 1;
+    bottom: 195px;
+  }
+
+  .filter-group:hover .flb-ch:nth-child(3) {
+    opacity: 1;
+    bottom: 250px;
+  }
+}

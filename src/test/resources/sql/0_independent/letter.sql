@@ -1,0 +1,32 @@
+/* 편지 삽입 */
+insert into letter (title, contents, writer, tag, post_date, created_at, updated_at)
+values ('test1', 'test1', 'wk', 'TEST', CURDATE() - INTERVAL '14' DAY, now() - INTERVAL '14' DAY,
+        now() - INTERVAL '14' DAY),
+       ('test2', 'test2', 'wk', 'TEST', CURDATE() - INTERVAL '13' DAY, now() - INTERVAL '13' DAY,
+        now() - INTERVAL '13' DAY),
+       ('test3', 'test3', 'wk', 'TEST', CURDATE() - INTERVAL '12' DAY, now() - INTERVAL '12' DAY,
+        now() - INTERVAL '12' DAY),
+       ('test4', 'test4', 'wk', 'TEST', CURDATE() - INTERVAL '11' DAY, now() - INTERVAL '11' DAY,
+        now() - INTERVAL '11' DAY),
+       ('test5', 'test5', 'wk', 'TEST', CURDATE() - INTERVAL '10' DAY, now() - INTERVAL '10' DAY,
+        now() - INTERVAL '10' DAY),
+       ('test6', 'test6', 'wk', 'TEST', CURDATE() - INTERVAL '9' DAY, now() - INTERVAL '9' DAY,
+        now() - INTERVAL '9' DAY),
+       ('test7', 'test7', 'wk', 'TEST', CURDATE() - INTERVAL '8' DAY, now() - INTERVAL '8' DAY,
+        now() - INTERVAL '8' DAY),
+       ('test8', 'test8', 'wk', 'TEST', CURDATE() - INTERVAL '7' DAY, now() - INTERVAL '7' DAY,
+        now() - INTERVAL '7' DAY),
+       ('test9', 'test9', 'wk', 'TEST', CURDATE() - INTERVAL '6' DAY, now() - INTERVAL '6' DAY,
+        now() - INTERVAL '6' DAY),
+       ('test10', 'test10', 'wk', 'TEST', CURDATE() - INTERVAL '5' DAY,
+        now() - INTERVAL '5' DAY, now() - INTERVAL '5' DAY),
+       ('test11', 'test11', 'wk', 'TEST', CURDATE() - INTERVAL '4' DAY,
+        now() - INTERVAL '4' DAY, now() - INTERVAL '4' DAY),
+       ('test12', 'test12', 'wk', 'TEST', CURDATE() - INTERVAL '3' DAY,
+        now() - INTERVAL '3' DAY, now() - INTERVAL '3' DAY),
+       ('test13', 'test13', 'wk', 'TEST', CURDATE() - INTERVAL '2' DAY,
+        now() - INTERVAL '2' DAY, now() - INTERVAL '2' DAY),
+       ('test14', 'test14', 'wk', 'TEST', CURDATE() - INTERVAL '1' DAY,
+        now() - INTERVAL '1' DAY, now() - INTERVAL '1' DAY);
+--        ('test15', 'test15', 'wk', 'TEST', CURDATE(), now(), now());
+
