@@ -1,10 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://internal.life-post.net:3306/member
-      username: member_app
-      password: member2023
+    url: ${DB_URL}
+    username: ${DB_USER_ID}
+    password: ${DB_USER_PW}
   jpa:
     hibernate:
       ddl-auto: none
@@ -23,16 +22,16 @@ spring:
       client:
         registration:
           kakao:
-            client-id: 822708e283cc40a5d5c543e066ad52ec
-            client-secret: ZqRqgD8KXju4n1HkV09iVpsXjrosoO5t
-            redirect-uri: https://life-post.net/login/oauth2/code/kakao
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
             authorization_grant_type: authorization_code
             client-authentication-method: client_secret_post
             scope: account_email, profile_image
             cleint-name: Kakao
           google:
-            client-id: 946359125310-9dm9pkrfthesqhutjuhr9eq786jkd477.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: email, profile
         provider:
           kakao:
@@ -50,7 +49,7 @@ spring:
     suffix: .mustache
 
 jwt:
-  secretKey: bGlmZXBvc3QtcHJvZC1qd3Qta2V5LWdlbi0yMDIzMTAxOTEyNDYtY3JlYXRlLWJ5LXdvb2tpbQo=
+  secretKey: ${JWT_SECRET_KEY}
   access:
     header: Authorization
     expiration: 1800
