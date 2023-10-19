@@ -103,6 +103,16 @@ public class IndexController {
         return "introduce/landing";
     }
 
+    @GetMapping("/terms/service/page")
+    public String getTermsServicePage() {
+        return "terms/serviceInfo";
+    }
+
+    @GetMapping("/terms/privacy/policy/page")
+    public String getTermsPrivacyPolicyPage() {
+        return "terms/privacyPolicyInfo";
+    }
+
     @GetMapping("/api/v1/letter/auth/stamp/popup")
     public String getStampUsePopUpPage(Model model,
         @AuthenticationPrincipal UserDetails userDetails) {
