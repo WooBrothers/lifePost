@@ -40,7 +40,7 @@ jobs:
           elif [[ "$GITHUB_REF" == "refs/heads/master" ]]; then
             echo "Setting profile=prod"
             echo "profile=prod" >> $GITHUB_ENV
-          else; then
+          else
             echo "Setting profile=dev"
             echo "profile=dev" >> $GITHUB_ENV
           fi
