@@ -45,9 +45,9 @@ jobs:
 
       - name: Set Env value when pr
         if: ${{ github.event_name == 'pull_request' }}
-          run: |
-            echo "Setting profile=prod"
-            echo "profile=prod" >> $GITHUB_ENV
+        run: |
+          echo "Setting profile=prod"
+          echo "profile=prod" >> $GITHUB_ENV
 
       - name: Cache Maven dependencies
         uses: actions/cache@v2
