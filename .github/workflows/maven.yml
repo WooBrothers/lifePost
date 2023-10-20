@@ -30,6 +30,8 @@ jobs:
 
       - name: Set Env value
         run: |
+          echo $GITHUB_REF
+
           if [[ "$GITHUB_REF" == "refs/heads/develop" ]]; then
             echo "Setting profile=dev"
             echo "profile=dev" >> $GITHUB_ENV
