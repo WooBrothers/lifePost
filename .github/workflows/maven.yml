@@ -10,7 +10,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "develop", "master" ]
+    branches: [ "develop" ]
   pull_request:
     branches: [ "develop", "master" ]
 
@@ -37,6 +37,8 @@ jobs:
             echo "Setting profile=prod"
             echo "profile=prod" >> $GITHUB_ENV
           fi
+
+          echo $profile
 
       - name: Cache Maven dependencies
         uses: actions/cache@v2
