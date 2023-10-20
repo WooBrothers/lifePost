@@ -31,6 +31,8 @@ jobs:
       - name: Set Env value
         run: |
           echo $GITHUB_REF
+          echo ${{ github.head_ref }}
+          echo ${{ github.base_ref }}
 
           if [[ "$GITHUB_REF" == "refs/heads/develop" ]]; then
             echo "Setting profile=dev"
@@ -38,6 +40,9 @@ jobs:
           elif [[ "$GITHUB_REF" == "refs/heads/master" ]]; then
             echo "Setting profile=prod"
             echo "profile=prod" >> $GITHUB_ENV
+          else; then
+            echo "Setting profile=dev"
+            echo "profile=dev" >> $GITHUB_ENV
           fi
 
       - name: Cache Maven dependencies
