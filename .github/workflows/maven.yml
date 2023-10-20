@@ -44,7 +44,7 @@ jobs:
           fi
 
       - name: Set Env value when pr
-          if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' }}
           run: |
             echo "Setting profile=prod"
             echo "profile=prod" >> $GITHUB_ENV
