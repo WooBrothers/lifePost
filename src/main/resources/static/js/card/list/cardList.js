@@ -12,7 +12,7 @@ export async function createCardListSpace(cardListSpace, page, event) {
 
     let resultResponse = null;
 
-    await getCardList(page, 9, cardType, focusType).then(response => {
+    await getCardList(page, 8, cardType, focusType).then(response => {
         createCard(response, cardListSpace);
         resultResponse = response;
     });
