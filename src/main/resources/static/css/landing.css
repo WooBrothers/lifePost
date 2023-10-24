@@ -11,3 +11,39 @@
 #carouselExampleCaptions {
   background-color: rgba(0, 0, 0, 0.3); /* 투명한 검은 배경색 설정 */
 }
+
+@media screen and (max-width: 991px ) {
+  #video-mobile-div {
+    overflow: hidden;
+  }
+
+  #video-mobile-div::-webkit-scrollbar {
+    width: 0.01px;
+  }
+
+  #intro-video-mobile {
+    display: block;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  #intro-video {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 991px) {
+  #intro-video-mobile {
+    display: none;
+  }
+
+  #intro-video {
+    display: block;
+  }
+}
+
