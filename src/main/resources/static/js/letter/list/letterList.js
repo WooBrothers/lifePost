@@ -25,7 +25,7 @@ export async function createOpenLetterListSpace(letterListSpace, page, event) {
         filterGroup.remove();
     })
 
-    await getOpenLetterList(page, 8).then(response => {
+    await getOpenLetterList(page, 7).then(response => {
         createLetter(response, letterListSpace);
         resultResponse = response;
     });
