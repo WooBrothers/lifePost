@@ -1,6 +1,5 @@
-import {bindEventToLetterListGrid} from "./letterListEvent.js";
-
 import {createOpenLetterListSpace} from "./letterList.js";
+import {bindEventToIndexLetterPage} from "./indexLetterEvent.js";
 
 await createIndexLetterList()
 
@@ -11,6 +10,6 @@ async function createIndexLetterList() {
     // 편지 조회하기
 
     // 편지 그리기
-    await createOpenLetterListSpace(indexLetterSpace, 1, bindEventToLetterListGrid);
+    await createOpenLetterListSpace(indexLetterSpace, 0, bindEventToIndexLetterPage);
 }
 

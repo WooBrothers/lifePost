@@ -1,4 +1,4 @@
-import {getLetterList, getOpenLetterList} from "./letterListApi.js";
+import {getIndexLetterList, getLetterList} from "./letterListApi.js";
 import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
 import {getTodayDate, removeImageTags} from "../../common/utilTool.js";
 
@@ -17,14 +17,10 @@ export async function createLetterListSpace(letterListSpace, page, event) {
     return resultResponse
 }
 
-export async function createOpenLetterListSpace(letterListSpace, page, event) {
+export async function createOpenLetterListSpace(letterListSpace, letterId, event) {
     let resultResponse = null;
 
-    document.querySelectorAll(".filter-group").forEach(filterGroup => {
-        filterGroup.remove();
-    })
-
-    await getOpenLetterList(page, 7).then(response => {
+    await getIndexLetterList(letterId, 7).then(response => {
         createIndexLetter(response, letterListSpace);
         resultResponse = response;
     });

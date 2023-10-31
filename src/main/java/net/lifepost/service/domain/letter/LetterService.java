@@ -20,6 +20,8 @@ public interface LetterService {
 
     Page<PageResponse> getAllLetterList(int pageNo, int size, Optional<UserDetails> userDetails);
 
+    Page<PageResponse> getIndexLetterList(Long letterId, int size);
+
     LetterDto.ReadResponse getLetterContentsByLetterId(Long letterId,
         UserDetails userDetails);
 

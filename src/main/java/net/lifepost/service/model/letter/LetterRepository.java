@@ -30,4 +30,6 @@ public interface LetterRepository extends JpaRepository<Letter, Long> {
 
     List<Letter> findByIdIn(List<Long> ids);
 
+    Page<Letter> findByIdLessThanOrderByPostDateDesc(Long id, Pageable pageable);
+
 }

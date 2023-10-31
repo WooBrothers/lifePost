@@ -99,4 +99,12 @@ public class LetterController {
             .created(URI.create("/api/v1/letter/auth/" + letterReqDto.getLetterId()))
             .body("member letter is focus request success.");
     }
+
+    @GetMapping("/open/index/{letterId}/{size}")
+    public Page<LetterDto.PageResponse> getIndexLetters(
+        @PathVariable Long letterId,
+        @PathVariable int size
+    ) {
+        return letterService.getIndexLetterList(letterId, size);
+    }
 }

@@ -22,3 +22,15 @@ export async function getOpenLetterList(pageNo, size) {
         return res.json();
     });
 }
+
+export async function getIndexLetterList(letterId, size) {
+    const url = `/api/v1/letter/open/index/${letterId}/${size}`;
+
+    let option = {
+        method: "GET"
+    }
+
+    return await fetch(url, option).then(res => {
+        return res.json();
+    })
+}

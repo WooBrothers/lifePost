@@ -164,6 +164,25 @@ public class LetterServiceImpl implements LetterService {
     }
 
     @Override
+    public Page<PageResponse> getIndexLetterList(Long letterId, int size) {
+        Pageable pageable = PageRequest.of(0, size);
+
+        Page<Letter> letters;
+        if (letterId == 0) {
+            LocalDate tomorrow = LocalDate.now().plusDays(1);
+            letters = letterRepository
+                .findByPostDateBeforeOrderByIdDesc(tomorrow, pageable);
+        } else {
+            letters = letterRepository
+                .findByIdLessThanOrderByPostDateDesc(letterId, pageable);
+        }
+
+        List<PageResponse> pageResponses = getPageResponse(letters);
+
+        return new PageImpl<>(pageResponses, pageable, letters.getTotalElements());
+    }
+
+    @Override
     public void postFocusLetter(PostFocusRequest focusCardRequest, UserDetails userDetails) {
         Member member = common.getMemberByUserDetail(userDetails);
 

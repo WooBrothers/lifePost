@@ -27,7 +27,7 @@ export function bindEventToLetterListGrid() {
     })
 }
 
-async function clickLetter() {
+export async function clickLetter() {
     const letterId = this.dataset.letterId;
 
     if (isTokenExpired()) {
