@@ -15,6 +15,7 @@ export async function createCardListSpace(cardListSpace, page, event) {
     await getCardList(page, 8, cardType, focusType).then(response => {
         createCard(response, cardListSpace);
         resultResponse = response;
+        ifNoHaveCardPlayCoachMark(response);
     });
 
     event();
@@ -197,4 +198,20 @@ function getCardActBtnListByType(content) {
         .setInnerHTML("카드쓰기"));
 
     return resultBtnList;
+}
+
+function ifNoHaveCardPlayCoachMark(response) {
+    if (response.content.length === 0) {
+        // 화면 어둡게 하기
+        // 기능들을 설명할 순서 정하기
+        // 필터 기능 설명
+        // 카드 만들기 설명
+        // 카드 만들기 url, title, contents 입력 안내
+        // 카드 만들기 저장 버튼 클릭 안내
+        // 만들어진 내가 만든 카드 수정, 삭제 버튼 안내
+        // 카드 쓰기 기능 안내
+        // 카드를 받아 쓰고 하루에 10번 입력하면 스탬프 지급 안내
+        
+
+    }
 }
