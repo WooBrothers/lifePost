@@ -31,12 +31,14 @@ public class LetterController {
     /* beans */
     private final LetterService letterService;
 
+    // TODO 삭제 -> 편지 무료화
     @GetMapping("/open/latest")
     public ResponseEntity<LetterDto.ReadResponse> getTodayLetter() {
 
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
 
+    // TODO 삭제 -> 편지 무료화
     @GetMapping("/auth/member/{pageNo}/{size}")
     public Page<LetterDto.PageResponse> getLetters(
         @PathVariable int pageNo,
@@ -71,6 +73,7 @@ public class LetterController {
             .getAllLetterList(pageNo, size, Optional.empty());
     }
 
+    // TODO 삭제 -> 편지 무료화
     @GetMapping("/auth/stamp/{letterId}")
     public ResponseEntity<LetterDto.ReadResponse> getLetterContentsUsingStamp(
         @PathVariable Long letterId,

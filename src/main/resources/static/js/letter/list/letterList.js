@@ -1,6 +1,6 @@
 import {getLetterList, getOpenLetterList} from "./letterListApi.js";
 import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
-import {removeImageTags} from "../../common/utilTool.js";
+import {getTodayDate, removeImageTags} from "../../common/utilTool.js";
 
 export async function createLetterListSpace(letterListSpace, page, event) {
 
@@ -18,7 +18,6 @@ export async function createLetterListSpace(letterListSpace, page, event) {
 }
 
 export async function createOpenLetterListSpace(letterListSpace, page, event) {
-
     let resultResponse = null;
 
     document.querySelectorAll(".filter-group").forEach(filterGroup => {
@@ -26,7 +25,7 @@ export async function createOpenLetterListSpace(letterListSpace, page, event) {
     })
 
     await getOpenLetterList(page, 7).then(response => {
-        createLetter(response, letterListSpace);
+        createIndexLetter(response, letterListSpace);
         resultResponse = response;
     });
 
@@ -116,11 +115,30 @@ function createLetter(response, letterListSpace) {
     });
 }
 
-function createLetterCard(responseContent, letterSpace, focusInfo) {
-    const cardDiv = new DivTag()
-        .setClassName("card h-100 p-0");
+function createIndexLetter(response, letterListSpace) {
 
-    const imgSrc = responseContent.letterImage ? responseContent.letterImage : '/img/letter-img.png';
+    response.content.forEach(responseContent => {
+        const letterSpace = new DivTag()
+            .setClassName("letter-space col mb-4")
+            .setId(`letter-space-${responseContent.id}`)
+            .setDataset([{
+                memberLetterId: responseContent.memberLetterId,
+                letterId: responseContent.id,
+                type: responseContent.type,
+                postDate: responseContent.postDate,
+            }])
+            .getTag();
+
+        // 카드 리스트 생성 메서드
+        createIndexLetterCard(responseContent, letterSpace, getFocusImgByContent(responseContent))
+        letterListSpace.appendChild(letterSpace);
+    });
+}
+
+function createLetterCard(responseContent, letterSpace, focusInfo) {
+    const cardDiv = createCardDiv();
+
+    const imgSrc = getImgSrc(responseContent);
 
     const cardImgDiv = new DivTag()
         .setClassName("col");
@@ -128,7 +146,12 @@ function createLetterCard(responseContent, letterSpace, focusInfo) {
         .setSrc(imgSrc)
         .setClassName("card-img-top img-fluid")
         .setAlt("no img")
-        .setStyle([{objectFit: "cover", height: "12rem"}]);
+        .setStyle([{
+            objectFit: "cover",
+            height: "12rem",
+            borderTopLeftRadius: "6px",
+            borderTopRightRadius: "6px",
+        }]);
 
     let cardImgChildren = [cardImg];
 
@@ -149,6 +172,51 @@ function createLetterCard(responseContent, letterSpace, focusInfo) {
     letterSpace.appendChild(cardDiv.getTag());
 }
 
+function createIndexLetterCard(responseContent, letterSpace, focusInfo) {
+    const cardDiv = createCardDiv()
+
+    const imgSrc = getImgSrc(responseContent);
+
+    const cardImgDiv = new DivTag()
+        .setClassName("col");
+    const cardImg = new ImgTag()
+        .setSrc(imgSrc)
+        .setClassName("card-img-top img-fluid")
+        .setAlt("no img")
+        .setStyle([{
+            objectFit: "cover",
+            height: "12rem",
+            borderTopLeftRadius: "6px",
+            borderTopRightRadius: "6px",
+        }]);
+
+    let cardImgChildren = [cardImg];
+
+    if (responseContent.postDate === getTodayDate()) {
+        const letterInfoSpace = new DivTag()
+            .setClassName("card-img-overlay p-0 d-flex justify-content-between");
+
+        const todayText = createTodayLetterText();
+
+        letterInfoSpace.setInnerHTML([todayText]);
+        cardImgChildren.push(letterInfoSpace);
+    }
+    cardImgDiv.setInnerHTML(cardImgChildren);
+    const cardBody = createCardBody(responseContent);
+
+    cardDiv.setInnerHTML([cardImgDiv, cardBody]);
+    letterSpace.appendChild(cardDiv.getTag());
+}
+
+function createCardDiv() {
+    return new DivTag()
+        .setClassName("card h-100 p-0");
+}
+
+function getImgSrc(responseContent) {
+    return responseContent.letterImage ? responseContent.letterImage : '/img/letter-img.png';
+}
+
 function createMyLetterText() {
     return new PTag()
         .setClassName("bg-primary text-white h4")
@@ -161,6 +229,21 @@ function createMyLetterText() {
             textAlign: "center",
             paddingTop: "6px"
         }]);
+}
+
+function createTodayLetterText() {
+    return new DivTag()
+        .setClassName("bg-primary text-white text-center h2 py-1")
+        .setStyle([{
+            width: "100px",
+            height: "45px",
+            fontSize: "30px",
+            fontFamily: "KoPubWorldBatang",
+            borderTopLeftRadius: "6px",
+            paddingTop: "5px",
+            alignItems: "center",
+        }])
+        .setInnerHTML("Today");
 }
 
 function createFocusBtn(focusInfo) {
