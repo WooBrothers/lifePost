@@ -81,3 +81,22 @@
 .btn.btn-outline-primary.active {
   color: white !important;
 }
+
+.dot-indicator {
+  text-align: center;
+  padding: 10px;
+}
+
+.dot {
+  width: 10px; /* 각 점의 너비 */
+  height: 10px; /* 각 점의 높이 */
+  background-color: #ddd; /* 비활성화된 점의 색상 */
+  border-radius: 50%; /* 원형 점으로 만들기 */
+  display: inline-block;
+  margin: 0 5px; /* 각 점 사이의 간격 */
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #004AAD; /* 활성화된 점의 색상 */
+}

@@ -17,7 +17,7 @@ async function setLetterInfo() {
     } else {
         await getOpenLetterContents(letterId).then(res => {
             setLetterPageByResponse(res);
-            renderLoginInduce(); // 로그인 페이지 이동 안내 div 출력
+            renderLoginIntroduce(); // 로그인 페이지 이동 안내 div 출력
             setJsonLdInfo(res);
         });
         // 로그아웃 시 로그인 페이지 이동 버튼 이벤트
@@ -52,7 +52,7 @@ function setLetterPageByResponse(res) {
     wrapImgTagInContentsDiv(contentsDiv);
 }
 
-function renderLoginInduce() {
+function renderLoginIntroduce() {
     const loginInduceDiv = document.querySelector("#login-page-div");
     loginInduceDiv.style.display = "block";
 }
@@ -79,6 +79,9 @@ function bindEventIfLogout() {
     writeCardBtn.addEventListener("click", () => {
         window.location = "/login/page";
     });
+
+    const onBoardingBtn = document.querySelector("#letter-on-boarding-btn");
+    onBoardingBtn.addEventListener("click", clickOnBoardingBtn);
 }
 
 function setJsonLdInfo(res) {
@@ -121,6 +124,9 @@ function bindEventIfLogin() {
 
     const writeCardBtn = document.querySelector("#card-write-btn-mb");
     writeCardBtn.addEventListener("click", clickWriteCardBtn);
+
+    const onBoardingBtn = document.querySelector("#letter-on-boarding-btn");
+    onBoardingBtn.addEventListener("click", clickOnBoardingBtn);
 }
 
 function clickCopyLinkBtn() {
@@ -130,9 +136,14 @@ function clickCopyLinkBtn() {
     const toastLiveExample = document.getElementById('liveToast')
 
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-    toastBootstrap.show()
+    toastBootstrap.show();
 }
 
 function clickWriteCardBtn() {
     createCardBtnClick();
+}
+
+function clickOnBoardingBtn() {
+    const modal = document.querySelector("#letter-read-on-boarding-modal");
+    new bootstrap.Modal(modal).show();
 }
