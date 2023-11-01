@@ -1,4 +1,4 @@
-import {getLetterContentById, getLimitedLetterContentToLogoutMember} from "../letterApi.js";
+import {getLetterContentById, getOpenLetterContents} from "../letterApi.js";
 import {copyToClipboard, isTokenExpired} from "../../common/utilTool.js";
 import {createCardBtnClick} from "../../card/list/cardListEvent.js";
 
@@ -15,7 +15,7 @@ async function setLetterInfo() {
         });
         bindEventIfLogin();
     } else {
-        await getLimitedLetterContentToLogoutMember(letterId).then(res => {
+        await getOpenLetterContents(letterId).then(res => {
             setLetterPageByResponse(res);
             renderLoginInduce(); // 로그인 페이지 이동 안내 div 출력
             setJsonLdInfo(res);

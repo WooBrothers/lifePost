@@ -238,13 +238,14 @@ public class LetterServiceImpl implements LetterService {
      * @param letterId - 읽으려는 편지의 아이디
      */
     @Override
-    public LetterDto.ReadResponse getLimitedLetterContents(Long letterId) {
+    public LetterDto.ReadResponse getOpenLetterContents(Long letterId) {
 
         Letter letter = letterRepository.findById(letterId)
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
 
-        LetterDto.ReadResponse letterResponse = letterMapper.toResponseDto(letter);
-        return letterResponse.setLimitedContentToLogoutMember();
+//        LetterDto.ReadResponse letterResponse = letterMapper.toResponseDto(letter);
+//        return letterResponse.setLimitedContentToLogoutMember();
+        return letterMapper.toResponseDto(letter);
     }
 
     /**
