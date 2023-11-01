@@ -1,14 +1,8 @@
 import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
 import {createLetterListSpace} from "./letterList.js";
 import {createPagination} from "../../pagination/pagination.js";
-import {
-    findParentWithClass,
-    isTokenExpired,
-    readLetterPage,
-    setFilterBtnOnOff
-} from "../../common/utilTool.js";
+import {findParentWithClass, readLetterPage, setFilterBtnOnOff} from "../../common/utilTool.js";
 import {authFetch} from "../../common/apiUtil.js";
-import {bindEventToLetterStampUsePage} from "./letterStampUseModal.js";
 
 export function bindEventToLetterListGrid() {
     const letterSpaceList = document.querySelectorAll(".letter-space");
@@ -29,35 +23,39 @@ export function bindEventToLetterListGrid() {
 
 export async function clickLetter() {
     const letterId = this.dataset.letterId;
+    readLetterPage(letterId);
 
-    if (isTokenExpired()) {
-        readLetterPage(letterId);
-    } else {
-        const modal = $('#letterReadInfoModal');
-        modal.modal("show");
-
-        if (this.dataset.memberLetterId === "undefined") {
-
-            const url = "/api/v1/member/auth/info";
-            let options = {method: "GET"};
-
-            await authFetch(url, options).then(res => {
-                const modalBody = document.querySelector("#modal-content-body");
-                modalBody.querySelector("#email").innerHTML = res.email;
-                modalBody.querySelector("#stamp").innerHTML = res.stampCount;
-
-                if (parseInt(res.stampCount) === 0) {
-                    document.querySelector("#letter-read-btn").classList.add("disabled");
-                } else {
-                    document.querySelector("#letter-read-btn").classList.remove("disabled");
-                }
-                bindEventToLetterStampUsePage(letterId);
-            });
-
-        } else {
-            readLetterPage(letterId);
-        }
-    }
+    // if (isTokenExpired()) {
+    //     readLetterPage(letterId);
+    // } else {
+    //
+    //     const modal = document.querySelector("#letterReadInfoModal");
+    //     new bootstrap.Modal(modal).show();
+    // const modal = $('#letterReadInfoModal');
+    // modal.modal("show");
+    //
+    // if (this.dataset.memberLetterId === "undefined") {
+    //
+    //     const url = "/api/v1/member/auth/info";
+    //     let options = {method: "GET"};
+    //
+    //     await authFetch(url, options).then(res => {
+    //         const modalBody = document.querySelector("#modal-content-body");
+    //         modalBody.querySelector("#email").innerHTML = res.email;
+    //         modalBody.querySelector("#stamp").innerHTML = res.stampCount;
+    //
+    //         if (parseInt(res.stampCount) === 0) {
+    //             document.querySelector("#letter-read-btn").classList.add("disabled");
+    //         } else {
+    //             document.querySelector("#letter-read-btn").classList.remove("disabled");
+    //         }
+    //         bindEventToLetterStampUsePage(letterId);
+    //     });
+    //
+    // } else {
+    //     readLetterPage(letterId);
+    // }
+    // }
 }
 
 async function filterBtnClick() {
