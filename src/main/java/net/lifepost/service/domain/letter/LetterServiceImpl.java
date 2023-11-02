@@ -123,7 +123,7 @@ public class LetterServiceImpl implements LetterService {
 
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         Page<Letter> letters = letterRepository
-            .findByPostDateBeforeOrderByIdDesc(tomorrow, pageable);
+            .findByPostDateBeforeOrderByPostDateDesc(tomorrow, pageable);
 //        Page<Letter> letters = letterRepository.findAllByOrderByIdDesc(pageable);
 
 //        List<Long> letterIds = letters.stream().map(Letter::getId)
@@ -171,7 +171,7 @@ public class LetterServiceImpl implements LetterService {
         if (letterId == 0) {
             LocalDate tomorrow = LocalDate.now().plusDays(1);
             letters = letterRepository
-                .findByPostDateBeforeOrderByIdDesc(tomorrow, pageable);
+                .findByPostDateBeforeOrderByPostDateDesc(tomorrow, pageable);
         } else {
             letters = letterRepository
                 .findByIdLessThanOrderByPostDateDesc(letterId, pageable);
