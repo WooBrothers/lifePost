@@ -232,3 +232,74 @@ export function setFilterBtnOnOff(target) {
         });
     }
 }
+
+export class OnboardingManager {
+    constructor() {
+        // 로컬 스토리지 키
+        this.storageKey = "onboardingData";
+        this.firstVisit = "firstVisit";
+        this.firstLetterRead = "firstLetterRead";
+        this.firstCardPageVisit = "firstCardPageVisit";
+
+        // 기본 데이터 구조 (예: 페이지별로 방문 여부)
+        this.data = {
+            firstVisit: false,
+            firstLetterRead: false,
+            firstCardPageVisit: false,
+        };
+
+        // 로컬 스토리지에서 데이터 불러오기
+        this.loadData();
+    }
+
+    // 데이터 불러오기
+    loadData() {
+        const storedData = localStorage.getItem(this.storageKey);
+        if (storedData) {
+            this.data = JSON.parse(storedData);
+        }
+    }
+
+    // 데이터 저장
+    saveData() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+    }
+
+    // 페이지 방문 여부 설정
+    setVisited(pageName) {
+        if (this.data.hasOwnProperty(pageName)) {
+            this.data[pageName] = true;
+            this.saveData();
+        }
+    }
+
+    // 페이지 방문 여부 확인
+    hasVisited(pageName) {
+        return this.data[pageName];
+    }
+
+    // 각 페이지 방문 여부 설정 메서드
+    setFirstVisitVisited() {
+        this.setVisited(this.firstVisit);
+    }
+
+    setFirstReadVisited() {
+        this.setVisited(this.firstLetterRead);
+    }
+
+    setFirstCardPageVisited() {
+        this.setVisited(this.firstCardPageVisit);
+    }
+
+    isFirstVisit() {
+        return !this.data.firstVisit;
+    }
+
+    isFirstLetterReadVisit() {
+        return !this.data.firstLetterRead;
+    }
+
+    isFirstCardPageVisit() {
+        return !this.data.firstCardPageVisit;
+    }
+}

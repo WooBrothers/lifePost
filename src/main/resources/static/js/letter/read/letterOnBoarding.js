@@ -10,17 +10,12 @@ function bindEventToOnBoardingModal() {
 
 function nextBtnClick() {
     let pageId = parseInt(document.querySelector(".dot.active").dataset.dotId);
-
     const maxPageId = document.querySelectorAll(".on-boarding").length;
-    console.log('next')
-    console.log(pageId)
-    console.log(maxPageId)
-    if (pageId < maxPageId) {
-        dotHandle(pageId, pageId + 1);
-        modalPageHandle(pageId, pageId + 1);
 
-        const previousBtn = document.querySelector("#previous-btn");
-        previousBtn.classList.remove("disabled");
+    if (pageId < maxPageId) {
+        handleDot(pageId, pageId + 1);
+        handleModalPage(pageId, pageId + 1);
+        handlePreviousBtn();
 
         pageId++;
     }
@@ -30,19 +25,19 @@ function nextBtnClick() {
     }
 }
 
+function handlePreviousBtn() {
+    const previousBtn = document.querySelector("#previous-btn");
+    previousBtn.classList.remove("disabled");
+}
+
 function previousClick() {
     let pageId = parseInt(document.querySelector(".dot.active").dataset.dotId);
-
     const minPageId = 1;
-    console.log('pre')
-    console.log(pageId)
-    console.log(minPageId)
-    if (pageId > minPageId) {
-        dotHandle(pageId, pageId - 1);
-        modalPageHandle(pageId, pageId - 1);
 
-        const previousBtn = document.querySelector("#next-btn");
-        previousBtn.classList.remove("disabled");
+    if (pageId > minPageId) {
+        handleDot(pageId, pageId - 1);
+        handleModalPage(pageId, pageId - 1);
+        handleNextBtn();
 
         pageId--;
     }
@@ -51,8 +46,13 @@ function previousClick() {
     }
 }
 
+function handleNextBtn() {
+    const nextBtn = document.querySelector("#next-btn");
+    nextBtn.classList.remove("disabled");
+}
 
-function dotHandle(pageId, resultId) {
+
+function handleDot(pageId, resultId) {
     const activeDot = document.querySelector(`#dot-${pageId}`);
     activeDot.classList.remove("active");
 
@@ -60,10 +60,18 @@ function dotHandle(pageId, resultId) {
     nextDot.classList.add("active");
 }
 
-function modalPageHandle(pageId, resultId) {
+function handleModalPage(pageId, resultId) {
     const activeModal = document.querySelector(`#modal-content-body-${pageId}`);
-    activeModal.classList.add("d-none");
-
     const nextModal = document.querySelector(`#modal-content-body-${resultId}`);
-    nextModal.classList.remove("d-none");
+
+    activeModal.classList.remove("active");
+
+    setTimeout(() => {
+        activeModal.classList.add("d-none");
+        nextModal.classList.remove("d-none");
+
+        setTimeout(() => {
+            nextModal.classList.add("active");
+        }, 150);
+    }, 150);
 }

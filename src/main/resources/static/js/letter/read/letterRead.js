@@ -1,5 +1,5 @@
 import {getLetterContentById, getOpenLetterContents} from "../letterApi.js";
-import {copyToClipboard, isTokenExpired} from "../../common/utilTool.js";
+import {copyToClipboard, isTokenExpired, OnboardingManager} from "../../common/utilTool.js";
 import {createCardBtnClick} from "../../card/list/cardListEvent.js";
 
 window.onload = async () => {
@@ -23,6 +23,8 @@ async function setLetterInfo() {
         // 로그아웃 시 로그인 페이지 이동 버튼 이벤트
         bindEventIfLogout();
     }
+
+    ifFirstLetterReadRunOnboarding();
 }
 
 function setLetterPageByResponse(res) {
@@ -146,4 +148,13 @@ function clickWriteCardBtn() {
 function clickOnBoardingBtn() {
     const modal = document.querySelector("#letter-read-on-boarding-modal");
     new bootstrap.Modal(modal).show();
+}
+
+function ifFirstLetterReadRunOnboarding() {
+    const onboardingManager = new OnboardingManager();
+
+    if (onboardingManager.isFirstLetterReadVisit()) {
+        clickOnBoardingBtn();
+        onboardingManager.setFirstReadVisited();
+    }
 }
