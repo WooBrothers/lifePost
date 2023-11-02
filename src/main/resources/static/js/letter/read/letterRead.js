@@ -146,7 +146,7 @@ function clickWriteCardBtn() {
 }
 
 function clickOnBoardingBtn() {
-    const modal = document.querySelector("#letter-read-on-boarding-modal");
+    const modal = document.querySelector("#letter-read-onboarding-modal");
     new bootstrap.Modal(modal).show();
 }
 

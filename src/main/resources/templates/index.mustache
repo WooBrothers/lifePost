@@ -55,6 +55,12 @@
 {{> layout/introduceLoading}}
 {{> layout/navigation}}
 
+<button class="btn btn-primary" id="service-onboarding-btn">
+  <i class="bi bi-question-circle-fill justify-content-center align-items-center"
+     style="font-size: 20px;"></i>
+  <span class="text-center" style="font-size: 20px;">도움말</span>
+</button>
+
 <div id="index-letter-space" class="container">
   <div id="letter-parent-space">
     <div class="row justify-content-center mt-0">
@@ -65,10 +71,9 @@
   </div>
 </div>
 
-
-
 {{> contents/card/focus}}
 {{> contents/card/cardModal}}
+{{> onboarding/lifePostOnboarding}}
 
 <script type="module" src="/js/indexPage.js"></script>
 <script
