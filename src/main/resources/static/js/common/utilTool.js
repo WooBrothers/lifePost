@@ -237,13 +237,13 @@ export class OnboardingManager {
     constructor() {
         // 로컬 스토리지 키
         this.storageKey = "onboardingData";
-        this.firstVisit = "firstVisit";
+        this.firstTimeVisit = "firstTimeVisit";
         this.firstLetterRead = "firstLetterRead";
         this.firstCardPageVisit = "firstCardPageVisit";
 
         // 기본 데이터 구조 (예: 페이지별로 방문 여부)
         this.data = {
-            firstVisit: false,
+            firstTimeVisit: false,
             firstLetterRead: false,
             firstCardPageVisit: false,
         };
@@ -279,8 +279,8 @@ export class OnboardingManager {
     }
 
     // 각 페이지 방문 여부 설정 메서드
-    setFirstVisitVisited() {
-        this.setVisited(this.firstVisit);
+    setFirstTimeVisited() {
+        this.setVisited(this.firstTimeVisit);
     }
 
     setFirstReadVisited() {
@@ -291,8 +291,8 @@ export class OnboardingManager {
         this.setVisited(this.firstCardPageVisit);
     }
 
-    isFirstVisit() {
-        return !this.data.firstVisit;
+    isFirstTimeVisit() {
+        return !this.data.firstTimeVisit;
     }
 
     isFirstLetterReadVisit() {

@@ -50,9 +50,10 @@ function previousClick() {
 function endBtnClick() {
     this.innerHTML = "다음";
     this.removeEventListener("click", endBtnClick);
+    const maxPageId = document.querySelectorAll(".on-boarding").length;
 
-    handleDot(6, 1);
-    handleModalPage(6, 1);
+    handleDot(maxPageId, 1);
+    handleModalPage(maxPageId, 1);
     ableNextBtn();
     disablePreviousBtn();
 

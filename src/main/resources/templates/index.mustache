@@ -14,6 +14,8 @@
   <meta property="og:locale" content="ko_KR">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
         rel="stylesheet">
+  <link rel='stylesheet'
+        href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css'>
   <link rel="stylesheet" type="text/css" href="/css/index.css">
   <link rel="stylesheet" type="text/css" href="/css/letter/letterList.css">
   <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
@@ -55,11 +57,15 @@
 {{> layout/introduceLoading}}
 {{> layout/navigation}}
 
-<button class="btn btn-primary" id="service-onboarding-btn">
-  <i class="bi bi-question-circle-fill justify-content-center align-items-center"
-     style="font-size: 20px;"></i>
-  <span class="text-center" style="font-size: 20px;">도움말</span>
-</button>
+<div class="container mt-4">
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" id="service-onboarding-btn">
+      <i class="bi bi-question-circle-fill justify-content-center align-items-center"
+         style="font-size: 15px;"></i>
+      <span class="text-center" style="font-size: 15px;">도움말</span>
+    </button>
+  </div>
+</div>
 
 <div id="index-letter-space" class="container">
   <div id="letter-parent-space">

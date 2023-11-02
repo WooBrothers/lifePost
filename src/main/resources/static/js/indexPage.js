@@ -1,4 +1,4 @@
-import {isTokenExpired} from "./common/utilTool.js";
+import {isTokenExpired, OnboardingManager} from "./common/utilTool.js";
 import {checkAndRefreshToken} from "./common/apiUtil.js";
 
 
@@ -10,4 +10,22 @@ window.onload = async () => {
     if (isTokenExpired()) {
         await checkAndRefreshToken();
     }
+
+    ifFirstTimeRunOnboarding();
+}
+
+
+function ifFirstTimeRunOnboarding() {
+    const onboardingManager = new OnboardingManager();
+    console.log(onboardingManager.isFirstTimeVisit());
+    if (onboardingManager.isFirstTimeVisit()) {
+        onboardingManager.setFirstTimeVisited();
+        console.log(onboardingManager.isFirstTimeVisit());
+        clickOnBoardingBtn();
+    }
+}
+
+function clickOnBoardingBtn() {
+    const modal = document.querySelector("#lifepost-onboarding-modal");
+    new bootstrap.Modal(modal).show();
 }

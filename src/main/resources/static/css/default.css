@@ -100,3 +100,16 @@
 .dot.active {
   background-color: #004AAD; /* 활성화된 점의 색상 */
 }
+
+/* 애니메이션 클래스 */
+.on-boarding {
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.on-boarding.active {
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  opacity: 1;
+  visibility: visible;
+}
