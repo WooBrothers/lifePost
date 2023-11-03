@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.lifepost.service.common.Common;
@@ -67,100 +66,29 @@ public class LetterServiceImpl implements LetterService {
     }
 
     @Override
-    public Page<LetterDto.PageResponse> getMyLetterList(int pageNo, int size,
+    public Page<PageResponse> getMemberLetterList(int pageNo, int size,
         List<FocusTypeEnum> focusTypeList, UserDetails userDetails) {
-
         pageNo = common.verifyPageNo(pageNo);
-
-        Pageable pageable = PageRequest.of(pageNo, size);
 
         Member member = common.getMemberByUserDetail(userDetails);
 
-        // 해당 repo 메소드 > entityGraph 처리 : 즉시 로딩 (n+1해결)
+        Pageable pageable = PageRequest.of(pageNo, size);
+
         Page<MemberLetter> memberLetters = memberLetterRepository
-            .findByMemberIdAndFocusInOrderByCreatedAtDesc(
-                member.getId(), focusTypeList, pageable);
+            .findByMemberIdAndFocusInOrderByCreatedAtDesc(member.getId(), focusTypeList, pageable);
 
         List<PageResponse> pageResponses = new ArrayList<>();
         memberLetters.forEach(memberLetter -> {
-                Letter letter = memberLetter.getLetter();
-                PageResponse pageResponse = letterMapper.toPageResponseDto(letter)
-                    .setLimitedContent(letter.getContents())
-                    .setMemberLetterId(memberLetter.getId())
-                    .setFocusType(memberLetter.getFocus());
-                pageResponses.add(pageResponse);
-            }
-        );
+            PageResponse pageResponse = letterMapper.toPageResponseDto(memberLetter.getLetter());
+            pageResponse
+                .setFocusType(memberLetter.getFocus())
+                .setLimitedContent(memberLetter.getLetter().getContents())
+                .setMemberLetterId(memberLetter.getId());
+
+            pageResponses.add(pageResponse);
+        });
 
         return new PageImpl<>(pageResponses, pageable, memberLetters.getTotalElements());
-    }
-
-    @Override
-    public Page<PageResponse> getMissLetterList(int pageNo, int size,
-        UserDetails userDetails) {
-
-        pageNo = common.verifyPageNo(pageNo);
-
-        Pageable pageable = PageRequest.of(pageNo, size);
-
-        Member member = common.getMemberByUserDetail(userDetails);
-
-        LocalDate now = LocalDate.now();
-        Page<Letter> letters = letterRepository.findMissLetter(now, member.getId(), pageable);
-
-        List<PageResponse> pageResponses = getPageResponse(letters);
-
-        return new PageImpl<>(pageResponses, pageable, letters.getTotalElements());
-    }
-
-    @Override
-    public Page<PageResponse> getAllLetterList(int pageNo, int size,
-        Optional<UserDetails> userDetails) {
-
-        pageNo = common.verifyPageNo(pageNo);
-
-        Pageable pageable = PageRequest.of(pageNo, size);
-
-        LocalDate tomorrow = LocalDate.now().plusDays(1);
-        Page<Letter> letters = letterRepository
-            .findByPostDateBeforeOrderByPostDateDesc(tomorrow, pageable);
-//        Page<Letter> letters = letterRepository.findAllByOrderByIdDesc(pageable);
-
-//        List<Long> letterIds = letters.stream().map(Letter::getId)
-//            .collect(Collectors.toList());
-
-        List<PageResponse> pageResponses = getPageResponse(letters);
-
-        // 멤버 정보가 있을 경우 조회한 편지와 유저가 소유한 편지 정보를 매핑한다.
-//        if (userDetails.isPresent()) {
-//            Member member = common.getMemberByUserDetail(userDetails.get());
-//
-//            // 조회한 편지 리스트 중 멤버가 소유한 편지 조회
-//            List<MemberLetter> memberLetters = memberLetterRepository
-//                .findByMemberIdAndLetterIdInOrderByLetterIdDesc(
-//                    member.getId(), letterIds);
-//
-//            Map<Long, MemberLetter> memberLetterMap = new HashMap<>();
-//
-//            // 편지들중 멤버가 소유했다면 정보 매핑 준비
-//            memberLetters.forEach(memberLetter -> {
-//                Long letterId = memberLetter.getLetter().getId();
-//                memberLetterMap.put(letterId, memberLetter);
-//            });
-//
-//            // 멤버 편지의 아이디와 focus 여부를 매핑
-//            pageResponses.forEach(pageResponse -> {
-//                if (memberLetterMap.containsKey(pageResponse.getId())) {
-//                    pageResponse
-//                        .setMemberLetterId(
-//                            memberLetterMap.get(pageResponse.getId()).getId())
-//                        .setFocusType(
-//                            memberLetterMap.get(pageResponse.getId()).getFocus());
-//                }
-//            });
-//        }
-
-        return new PageImpl<>(pageResponses, pageable, letters.getTotalElements());
     }
 
     @Override
@@ -243,8 +171,6 @@ public class LetterServiceImpl implements LetterService {
         Letter letter = letterRepository.findById(letterId)
             .orElseThrow(() -> new CommonException(ErrorEnum.LETTER_REQUEST_INVALID));
 
-//        LetterDto.ReadResponse letterResponse = letterMapper.toResponseDto(letter);
-//        return letterResponse.setLimitedContentToLogoutMember();
         return letterMapper.toResponseDto(letter);
     }
 

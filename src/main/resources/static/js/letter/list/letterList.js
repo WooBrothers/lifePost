@@ -4,11 +4,11 @@ import {getTodayDate, removeImageTags} from "../../common/utilTool.js";
 
 export async function createLetterListSpace(letterListSpace, page, event) {
 
-    const type = getLetterType();
+    // const type = getLetterType();
     const focusType = getFocusType();
 
     let resultResponse = null;
-    await getLetterList(page, 8, type, focusType).then(response => {
+    await getLetterList(page, 8, focusType).then(response => {
         createLetter(response, letterListSpace);
         resultResponse = response;
     });
@@ -30,24 +30,24 @@ export async function createOpenLetterListSpace(letterListSpace, letterId, event
     return resultResponse
 }
 
-function getLetterType() {
-    const isMyLetterOn = document.querySelectorAll(".my-letter-filter")[0].dataset.onOff;
-    const isMissLetterOn = document.querySelectorAll(".miss-letter-filter")[0].dataset.onOff;
+// function getLetterType() {
+// const isMyLetterOn = document.querySelectorAll(".my-letter-filter")[0].dataset.onOff;
+// const isMissLetterOn = document.querySelectorAll(".miss-letter-filter")[0].dataset.onOff;
 
-    let resultTypeList = [];
+// let resultTypeList = ["MY_LETTER"];
 
-    if (isMyLetterOn === "true") {
-        resultTypeList.push("MY_LETTER");
-    }
-    if (isMissLetterOn === "true") {
-        resultTypeList.push("MISS");
-    }
-    if (resultTypeList.length === 0) {
-        resultTypeList.push("MY_LETTER");
-    }
+// if (isMyLetterOn === "true") {
+//     resultTypeList.push("MY_LETTER");
+// }
+// if (isMissLetterOn === "true") {
+//     resultTypeList.push("MISS");
+// }
+// if (resultTypeList.length === 0) {
+// resultTypeList.push("MY_LETTER");
+// }
 
-    return resultTypeList;
-}
+// return ["MY_LETTER"];
+// }
 
 function getFocusType() {
     const focusFilterBtn = document.querySelectorAll(".focus-letter-filter")[0];

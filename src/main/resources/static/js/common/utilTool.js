@@ -58,7 +58,9 @@ export function removeHTMLAndWhitespace(input) {
 
 export function removeImageTags(html) {
     // 이미지 태그를 제거하는 정규식 패턴
-    return html.replace(/<img[^>]*>/g, '');
+    const newRegex = /<p[^>]*>[\s\S]*?(<br\s*\/?>)[\s\S]*?<\/p>/gi;
+    const oldRegex = /<img[^>]*>/g;
+    return html.replace(newRegex, '');
 }
 
 

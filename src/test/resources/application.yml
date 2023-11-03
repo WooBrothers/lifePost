@@ -57,3 +57,5 @@ jwt:
 
 test:
   accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MjY4NjYyMTMyMCwiZW1haWwiOiJnb2phbGFuaTQ1NkBnbWFpbC5jb20ifQ.sTOS_CwIydiJyZC8sh-RvDQPSO6sXRKBqwIv0qXi0alLMeakCmY_-kN4_7jbFUCqdt3z4jkWEn5vlO11ajybMQ
+
+url: localhost
