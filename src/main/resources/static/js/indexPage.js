@@ -17,10 +17,8 @@ window.onload = async () => {
 
 function ifFirstTimeRunOnboarding() {
     const onboardingManager = new OnboardingManager();
-    console.log(onboardingManager.isFirstTimeVisit());
     if (onboardingManager.isFirstTimeVisit()) {
         onboardingManager.setFirstTimeVisited();
-        console.log(onboardingManager.isFirstTimeVisit());
         clickOnBoardingBtn();
     }
 }

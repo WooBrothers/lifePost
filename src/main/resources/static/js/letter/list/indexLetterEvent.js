@@ -2,7 +2,6 @@ import {clickLetter} from "./letterListEvent.js";
 import {createOpenLetterListSpace} from "./letterList.js";
 
 export function bindEventToIndexLetterPage() {
-
     // 편지들
     const letterSpaceList = document.querySelectorAll(".letter-space");
     letterSpaceList.forEach(space => {
@@ -19,6 +18,7 @@ async function scrollIndexLetters() {
         const indexLetterSpace = document.querySelector("#letter-list-space");
 
         const letterId = getLastLetterIdFromLetterSpace(indexLetterSpace);
+        console.log(letterId);
         await createOpenLetterListSpace(indexLetterSpace, letterId, bindEventToIndexLetterPage);
     }
 }

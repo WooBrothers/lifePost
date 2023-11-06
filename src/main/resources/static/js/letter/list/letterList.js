@@ -1,14 +1,13 @@
 import {getIndexLetterList, getLetterList} from "./letterListApi.js";
 import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
-import {getTodayDate, removeImageTags} from "../../common/utilTool.js";
+import {createCoupangAdBannerInFeed, getTodayDate, removeImageTags} from "../../common/utilTool.js";
 
-export async function createLetterListSpace(letterListSpace, page, event) {
+export async function createLetterListSpace(letterListSpace, letterId, event) {
 
-    // const type = getLetterType();
     const focusType = getFocusType();
 
     let resultResponse = null;
-    await getLetterList(page, 8, focusType).then(response => {
+    await getLetterList(letterId, 7, focusType).then(response => {
         createLetter(response, letterListSpace);
         resultResponse = response;
     });
@@ -29,25 +28,6 @@ export async function createOpenLetterListSpace(letterListSpace, letterId, event
 
     return resultResponse
 }
-
-// function getLetterType() {
-// const isMyLetterOn = document.querySelectorAll(".my-letter-filter")[0].dataset.onOff;
-// const isMissLetterOn = document.querySelectorAll(".miss-letter-filter")[0].dataset.onOff;
-
-// let resultTypeList = ["MY_LETTER"];
-
-// if (isMyLetterOn === "true") {
-//     resultTypeList.push("MY_LETTER");
-// }
-// if (isMissLetterOn === "true") {
-//     resultTypeList.push("MISS");
-// }
-// if (resultTypeList.length === 0) {
-// resultTypeList.push("MY_LETTER");
-// }
-
-// return ["MY_LETTER"];
-// }
 
 function getFocusType() {
     const focusFilterBtn = document.querySelectorAll(".focus-letter-filter")[0];
@@ -85,50 +65,60 @@ function createLetter(response, letterListSpace) {
         preEmptyContentDiv.remove();
     }
 
-    if (response.content.length === 0) {
-        const emptyContentDiv = new DivTag()
-            .setClassName("empty-content mt-5 h3")
-            .setInnerHTML("편지가 없습니다. 편지을 읽어 보세요!")
-        letterListSpace.appendChild(emptyContentDiv.getTag());
-        return;
-    }
+    for (let idx = 0; idx < response.content.length; idx++) {
+        if (idx === 2) {
+            // 쿠팡 광고 피드 생성
+            const targetFeed = letterListSpace.querySelector(`#letter-space-${response.content[0].id}`);
+            const coupangPartnerAdSpace = createCoupangAdBannerInFeed(targetFeed);
 
-    response.content.forEach(responseContent => {
+            letterListSpace.appendChild(coupangPartnerAdSpace);
+        }
+
+        const content = response.content[idx];
+
         const letterSpace = new DivTag()
             .setClassName("letter-space col mb-4")
-            .setId(`letter-space-${responseContent.id}`)
+            .setId(`letter-space-${content.id}`)
             .setDataset([{
-                memberLetterId: responseContent.memberLetterId,
-                letterId: responseContent.id,
-                type: responseContent.type,
-                postDate: responseContent.postDate,
+                memberLetterId: content.memberLetterId,
+                letterId: content.id,
+                type: content.type,
+                postDate: content.postDate,
             }])
             .getTag();
 
         // 카드 리스트 생성 메서드
-        createLetterCard(responseContent, letterSpace, getFocusImgByContent(responseContent))
+        createLetterCard(content, letterSpace, getFocusImgByContent(content))
         letterListSpace.appendChild(letterSpace);
-    });
+    }
 }
 
 function createIndexLetter(response, letterListSpace) {
 
-    response.content.forEach(responseContent => {
+    for (let idx = 0; idx < response.content.length; idx++) {
+        if (idx === 2) {
+            // 쿠팡 광고 피드 생성
+            const targetFeed = letterListSpace.querySelector(`#letter-space-${response.content[0].id}`);
+            const coupangPartnerAdSpace = createCoupangAdBannerInFeed(targetFeed);
+
+            letterListSpace.appendChild(coupangPartnerAdSpace);
+        }
+
         const letterSpace = new DivTag()
             .setClassName("letter-space col mb-4")
-            .setId(`letter-space-${responseContent.id}`)
+            .setId(`letter-space-${response.content[idx].id}`)
             .setDataset([{
-                memberLetterId: responseContent.memberLetterId,
-                letterId: responseContent.id,
-                type: responseContent.type,
-                postDate: responseContent.postDate,
+                memberLetterId: response.content[idx].memberLetterId,
+                letterId: response.content[idx].id,
+                type: response.content[idx].type,
+                postDate: response.content[idx].postDate,
             }])
             .getTag();
 
         // 카드 리스트 생성 메서드
-        createIndexLetterCard(responseContent, letterSpace, getFocusImgByContent(responseContent))
+        createIndexLetterCard(response.content[idx], letterSpace, getFocusImgByContent(response.content[idx]));
         letterListSpace.appendChild(letterSpace);
-    });
+    }
 }
 
 function createLetterCard(responseContent, letterSpace, focusInfo) {
@@ -220,8 +210,9 @@ function createMyLetterText() {
         .setStyle([{
             width: "108px",
             height: "40px",
-            fontFamily: "serif",
             fontSize: "23px",
+            fontFamily: "KoPubWorldBatang",
+            borderTopLeftRadius: "6px",
             textAlign: "center",
             paddingTop: "6px"
         }]);

@@ -1,6 +1,4 @@
-import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
 import {createLetterListSpace} from "./letterList.js";
-import {createPagination} from "../../pagination/pagination.js";
 import {findParentWithClass, readLetterPage, setFilterBtnOnOff} from "../../common/utilTool.js";
 import {authFetch} from "../../common/apiUtil.js";
 
@@ -8,70 +6,68 @@ export function bindEventToLetterListGrid() {
     const letterSpaceList = document.querySelectorAll(".letter-space");
     letterSpaceList.forEach(space => {
         space.addEventListener("click", clickLetter);
-    })
+    });
 
     const focusBtnList = document.querySelectorAll(".focus-btn");
     focusBtnList.forEach(btn => {
         btn.addEventListener("click", clickFocusBtn);
-    })
+    });
 
     const filterBtnList = document.querySelectorAll(".filter")
     filterBtnList.forEach(filterBtn => {
         filterBtn.addEventListener("click", filterBtnClick);
-    })
+    });
+
+    window.addEventListener("scroll", scrollLetters);
+}
+
+async function scrollLetters() {
+    if (isScrolledToBottom()) {
+
+        const letterSpace = document.querySelector("#letter-list-space");
+        const letterId = getLastLetterIdFromLetterSpace(letterSpace);
+
+        await createLetterListSpace(letterSpace, letterId, bindEventToLetterListGrid);
+    }
+}
+
+function isScrolledToBottom() {
+    // 맨 아래로 스크롤되었는지 여부를 확인하는 로직
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollPosition = window.scrollY;
+    return windowHeight + scrollPosition >= documentHeight;
+}
+
+function getLastLetterIdFromLetterSpace(letterSpace) {
+
+    const lastLetter = letterSpace.lastChild;
+
+    let letterId;
+    if (lastLetter) {
+        letterId = lastLetter.dataset.letterId;
+    } else {
+        letterId = 0;
+    }
+
+    return letterId;
 }
 
 export async function clickLetter() {
     const letterId = this.dataset.letterId;
     readLetterPage(letterId);
-
-    // if (isTokenExpired()) {
-    //     readLetterPage(letterId);
-    // } else {
-    //
-    //     const modal = document.querySelector("#letterReadInfoModal");
-    //     new bootstrap.Modal(modal).show();
-    // const modal = $('#letterReadInfoModal');
-    // modal.modal("show");
-    //
-    // if (this.dataset.memberLetterId === "undefined") {
-    //
-    //     const url = "/api/v1/member/auth/info";
-    //     let options = {method: "GET"};
-    //
-    //     await authFetch(url, options).then(res => {
-    //         const modalBody = document.querySelector("#modal-content-body");
-    //         modalBody.querySelector("#email").innerHTML = res.email;
-    //         modalBody.querySelector("#stamp").innerHTML = res.stampCount;
-    //
-    //         if (parseInt(res.stampCount) === 0) {
-    //             document.querySelector("#letter-read-btn").classList.add("disabled");
-    //         } else {
-    //             document.querySelector("#letter-read-btn").classList.remove("disabled");
-    //         }
-    //         bindEventToLetterStampUsePage(letterId);
-    //     });
-    //
-    // } else {
-    //     readLetterPage(letterId);
-    // }
-    // }
 }
 
 async function filterBtnClick() {
     setFilterBtnOnOff(this);
 
     const letterListSpace = document.getElementById("letter-list-space");
-    const letterList = document.getElementsByClassName("letter-space");
-    Array.from(letterList).forEach(letter => letterListSpace.removeChild(letter));
 
-    const response = await createLetterListSpace(letterListSpace, 1, bindEventToLetterListGrid);
+    while (letterListSpace.firstChild) {
+        letterListSpace.removeChild(letterListSpace.firstChild);
+    }
 
-    const paginationSpace = document.getElementById("pagination-space");
-    paginationSpace.replaceChildren();
-
-    await createPagination(response, paginationSpace);
-    bindPaginationBtnEvent("letter-list-space", "letter-space", createLetterListSpace, bindEventToLetterListGrid);
+    await createLetterListSpace(letterListSpace, 0, bindEventToLetterListGrid);
 }
 
 async function clickFocusBtn() {

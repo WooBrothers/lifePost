@@ -1,8 +1,8 @@
 import {authFetch} from "../../common/apiUtil.js";
 
-export async function getLetterList(pageNo, size, focusTypeList) {
+export async function getLetterList(letterId, size, focusTypeList) {
     // 로그인한 유저가 볼 편지 리스트 조회
-    const url = `/api/v1/letter/auth/member/${pageNo}/${size}?focusType=${focusTypeList}`;
+    const url = `/api/v1/letter/auth/member/${letterId}/${size}?focusType=${focusTypeList}`;
     let option = {
         method: "GET",
     }

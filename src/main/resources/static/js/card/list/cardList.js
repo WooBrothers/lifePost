@@ -1,6 +1,6 @@
 import {getCardList} from "./cardListApi.js";
 import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
-import {bootstrapPopover} from "../../common/utilTool.js";
+import {bootstrapPopover, createCoupangAdBannerInFeed} from "../../common/utilTool.js";
 
 export async function createCardListSpace(cardListSpace, page, event) {
 
@@ -67,8 +67,16 @@ export function createCard(response, cardListSpace) {
         return;
     }
 
-    // API 응답 결과에 따른 카드 렌더링
-    response.content.forEach(content => {
+    for (let idx = 0; idx < response.content.length; idx++) {
+        const content = response.content[idx];
+
+        if (idx === 2) {
+            const firstCard = document.querySelector(`#card-space-${response.content[0].cardId}`);
+            const coupangAdFeed = createCoupangAdBannerInFeed(firstCard);
+
+            cardListSpace.appendChild(coupangAdFeed);
+        }
+
         const cardSpace = new DivTag()
             .setClassName("card-space col")
             .setId(`card-space-${content.cardId}`)
@@ -86,7 +94,7 @@ export function createCard(response, cardListSpace) {
         setCardGridToCardSpaceByContent(content, focusInfo, cardSpace);
 
         cardListSpace.appendChild(cardSpace);
-    });
+    }
 }
 
 function getFocusImgByContent(content) {
@@ -211,7 +219,7 @@ function ifNoHaveCardPlayCoachMark(response) {
         // 만들어진 내가 만든 카드 수정, 삭제 버튼 안내
         // 카드 쓰기 기능 안내
         // 카드를 받아 쓰고 하루에 10번 입력하면 스탬프 지급 안내
-        
+
 
     }
 }

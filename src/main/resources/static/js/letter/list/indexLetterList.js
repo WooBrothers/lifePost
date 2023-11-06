@@ -17,7 +17,6 @@ async function createIndexLetterList() {
 }
 
 function clickOnboardingBtn() {
-    console.log("test")
     const modal = document.querySelector("#lifepost-onboarding-modal");
     new bootstrap.Modal(modal).show();
 }
