@@ -11,7 +11,7 @@ public interface LetterService {
 
     LetterDto.ReadResponse getLatestLetter();
 
-    Page<PageResponse> getMemberLetterList(int pageNo, int size,
+    Page<PageResponse> getMemberLetterList(Long letterId, int size,
         List<FocusTypeEnum> focusTypeEnumList, UserDetails userDetails);
 
     Page<PageResponse> getIndexLetterList(Long letterId, int size);

@@ -34,17 +34,7 @@ public class LetterController {
         return ResponseEntity.ok().body(letterService.getLatestLetter());
     }
 
-    @GetMapping("/auth/member/{pageNo}/{size}")
-    public Page<LetterDto.PageResponse> getMemberLetterList(
-        @PathVariable int pageNo,
-        @PathVariable int size,
-        @RequestParam(value = "focusType") List<FocusTypeEnum> focusTypeList,
-        @AuthenticationPrincipal UserDetails userDetails
-    ) {
 
-        return letterService.getMemberLetterList(pageNo, size, focusTypeList, userDetails);
-    }
-    
     // TODO 삭제 -> 편지 무료화
     @GetMapping("/auth/stamp/{letterId}")
     public ResponseEntity<LetterDto.ReadResponse> getLetterContentsUsingStamp(
@@ -70,6 +60,17 @@ public class LetterController {
         return ResponseEntity
             .created(URI.create("/api/v1/letter/auth/" + letterReqDto.getLetterId()))
             .body("member letter is focus request success.");
+    }
+
+    @GetMapping("/auth/member/{letterId}/{size}")
+    public Page<LetterDto.PageResponse> getMemberLetterList(
+        @PathVariable Long letterId,
+        @PathVariable int size,
+        @RequestParam(value = "focusType") List<FocusTypeEnum> focusTypeList,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+
+        return letterService.getMemberLetterList(letterId, size, focusTypeList, userDetails);
     }
 
     @GetMapping("/open/index/{letterId}/{size}")

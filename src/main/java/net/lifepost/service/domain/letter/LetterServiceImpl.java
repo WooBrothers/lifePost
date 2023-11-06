@@ -66,16 +66,24 @@ public class LetterServiceImpl implements LetterService {
     }
 
     @Override
-    public Page<PageResponse> getMemberLetterList(int pageNo, int size,
+    public Page<PageResponse> getMemberLetterList(Long letterId, int size,
         List<FocusTypeEnum> focusTypeList, UserDetails userDetails) {
-        pageNo = common.verifyPageNo(pageNo);
+
+        Pageable pageable = PageRequest.of(0, size);
 
         Member member = common.getMemberByUserDetail(userDetails);
 
-        Pageable pageable = PageRequest.of(pageNo, size);
-
-        Page<MemberLetter> memberLetters = memberLetterRepository
-            .findByMemberIdAndFocusInOrderByCreatedAtDesc(member.getId(), focusTypeList, pageable);
+        Page<MemberLetter> memberLetters;
+        if (letterId == 0) {
+            memberLetters = memberLetterRepository
+                .findByMemberIdAndFocusInOrderByLetterIdDesc(member.getId(), focusTypeList,
+                    pageable);
+        } else {
+            memberLetters = memberLetterRepository
+                .findByMemberIdAndFocusInAndLetterIdLessThanOrderByLetterIdDesc(
+                    member.getId(), focusTypeList, letterId, pageable
+                );
+        }
 
         List<PageResponse> pageResponses = new ArrayList<>();
         memberLetters.forEach(memberLetter -> {
@@ -96,13 +104,13 @@ public class LetterServiceImpl implements LetterService {
         Pageable pageable = PageRequest.of(0, size);
 
         Page<Letter> letters;
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
         if (letterId == 0) {
-            LocalDate tomorrow = LocalDate.now().plusDays(1);
             letters = letterRepository
                 .findByPostDateBeforeOrderByPostDateDesc(tomorrow, pageable);
         } else {
             letters = letterRepository
-                .findByIdLessThanOrderByPostDateDesc(letterId, pageable);
+                .findByIdLessThanAndPostDateBeforeOrderByPostDateDesc(letterId, tomorrow, pageable);
         }
 
         List<PageResponse> pageResponses = getPageResponse(letters);

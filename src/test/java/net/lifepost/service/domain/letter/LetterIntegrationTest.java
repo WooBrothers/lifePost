@@ -104,7 +104,7 @@ class LetterIntegrationTest {
         focusTypeEnums.add(FocusTypeEnum.NON);
 
         Page<MemberLetter> memberLetter = memberLetterRepository
-            .findByMemberIdAndFocusInOrderByCreatedAtDesc(1L, focusTypeEnums, pageable);
+            .findByMemberIdAndFocusInOrderByLetterIdDesc(1L, focusTypeEnums, pageable);
 
         Page<Letter> letters = memberLetter.map(MemberLetter::getLetter);
 
