@@ -56,6 +56,13 @@ public interface MemberCardRepository extends
     List<MemberCard> findByMemberFocusCards(Long memberCardId, Long memberId, Pageable pageable);
 
     @EntityGraph(attributePaths = {"affirmationCard", "memberCustomCard"})
-    Page<MemberCard> findByIdIsLessThanAndMemberIdAndFocusOrderByIdDesc(Long memberCardId,
-        Long memberId, FocusTypeEnum focusTypeEnum, Pageable pageable);
+    Page<MemberCard> findByMemberIdAndFocusInAndTypeInOrderByIdDesc(
+        Long memberId, List<FocusTypeEnum> focusTypeEnums, List<CardTypeEnum> cardTypeEnums,
+        Pageable pageable);
+
+    @EntityGraph(attributePaths = {"affirmationCard", "memberCustomCard"})
+    Page<MemberCard> findByIdIsLessThanAndMemberIdAndFocusInAndTypeInOrderByIdDesc(
+        Long memberCardId,
+        Long memberId, List<FocusTypeEnum> focusTypeEnums, List<CardTypeEnum> cardTypeEnums,
+        Pageable pageable);
 }

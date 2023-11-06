@@ -1,8 +1,8 @@
 import {authFetch} from "../../common/apiUtil.js";
 
 
-export async function getCardList(pageNo, size, types, focus) {
-    let url = `/api/v1/card/auth/member/${pageNo}/${size}`;
+export async function getCardList(letterId, size, types, focus) {
+    let url = `/api/v1/card/auth/member/${letterId}/${size}`;
 
     const queryParams = [];
     if (types) {

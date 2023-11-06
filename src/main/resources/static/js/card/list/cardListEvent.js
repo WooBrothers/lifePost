@@ -5,8 +5,6 @@ import {
     setFilterBtnOnOff,
     TodayCardWriteHistory
 } from "../../common/utilTool.js";
-import {createPagination} from "../../pagination/pagination.js";
-import {bindPaginationBtnEvent} from "../../pagination/paginationEvent.js";
 import {createCardListSpace} from "./cardList.js";
 
 export function bindEventToCardListGrid() {
@@ -44,6 +42,42 @@ export function bindEventToCardListGrid() {
     deleteCustomCardBtnList.forEach(deleteCustomCardBtn => {
         deleteCustomCardBtn.addEventListener("click", deleteCardBtnClick);
     });
+
+    window.addEventListener("scroll", scrollCards);
+}
+
+async function scrollCards() {
+
+    if (isScrolledToBottom()) {
+
+        const cardSpace = document.querySelector("#card-list-space");
+        const cardId = getLastCardIdFromLetterSpace(cardSpace);
+
+        await createCardListSpace(cardSpace, cardId, bindEventToCardListGrid);
+    }
+}
+
+// TODO common 으로 옮기기
+function isScrolledToBottom() {
+    // 맨 아래로 스크롤되었는지 여부를 확인하는 로직
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollPosition = window.scrollY;
+    return windowHeight + scrollPosition >= documentHeight;
+}
+
+function getLastCardIdFromLetterSpace(cardSpace) {
+
+    const lastCard = cardSpace.lastChild;
+
+    let cardId;
+    if (lastCard) {
+        cardId = lastCard.dataset.memberCardId;
+    } else {
+        cardId = 0;
+    }
+
+    return cardId;
 }
 
 async function clickFocusBtn() {
@@ -80,16 +114,15 @@ async function filterBtnClick() {
     setFilterBtnOnOff(this);
 
     const cardListSpace = document.getElementById("card-list-space");
+
+    while (cardListSpace.firstChild) {
+        cardListSpace.removeChild(cardListSpace.firstChild);
+    }
+
     const cardList = document.getElementsByClassName("card-space");
     Array.from(cardList).forEach(card => cardListSpace.removeChild(card));
 
-    const response = await createCardListSpace(cardListSpace, 1, bindEventToCardListGrid);
-
-    const cardListPaginationSpace = document.getElementById("pagination-space");
-    cardListPaginationSpace.replaceChildren();
-
-    await createPagination(response, cardListPaginationSpace);
-    bindPaginationBtnEvent("card-list-space", "card-space", createCardListSpace, bindEventToCardListGrid);
+    await createCardListSpace(cardListSpace, 0, bindEventToCardListGrid);
 }
 
 export function cardModifyBtnClick() {

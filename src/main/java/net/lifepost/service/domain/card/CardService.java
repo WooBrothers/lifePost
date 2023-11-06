@@ -10,7 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface CardService {
 
 
-    Page<CardDto.PageResponse> getMemberCards(int size, int pageNo, Optional<FocusTypeEnum> focus,
+    Page<CardDto.PageResponse> getMemberCards(int size, Long letterId,
+        Optional<FocusTypeEnum> focus,
         List<CardTypeEnum> type, UserDetails userDetails);
 
     Page<PageResponse> getMemberCustomCards(int size, int pageNo, UserDetails userDetails);

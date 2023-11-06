@@ -2,7 +2,7 @@ import {getCardList} from "./cardListApi.js";
 import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
 import {bootstrapPopover, createCoupangAdBannerInFeed} from "../../common/utilTool.js";
 
-export async function createCardListSpace(cardListSpace, page, event) {
+export async function createCardListSpace(cardListSpace, letterId, event) {
 
     // bootstrap popover 사용을 위한 조건
     bootstrapPopover();
@@ -12,7 +12,7 @@ export async function createCardListSpace(cardListSpace, page, event) {
 
     let resultResponse = null;
 
-    await getCardList(page, 8, cardType, focusType).then(response => {
+    await getCardList(letterId, 7, cardType, focusType).then(response => {
         createCard(response, cardListSpace);
         resultResponse = response;
         ifNoHaveCardPlayCoachMark(response);
@@ -49,22 +49,6 @@ export function createCard(response, cardListSpace) {
 
     if (preEmptyContentDiv) {
         preEmptyContentDiv.remove();
-    }
-
-    // 카드 없을 시 안내문구 출력 및 렌더링 종료
-    if ((!response || response.content.length === 0) && cardListSpace.childNodes.length === 0) {
-        const emptyTexts = document.querySelectorAll("#card-empty-info")
-
-        if (emptyTexts.length !== 0) {
-            emptyTexts.remove();
-        }
-
-        const emptyText = new DivTag()
-            .setClassName("card-empty-info-text")
-            .setId("card-empty-info")
-            .setInnerHTML("카드가 없습니다. 편지을 읽거나 카드를 만들어 보세요!");
-        cardListSpace.appendChild(emptyText.getTag());
-        return;
     }
 
     for (let idx = 0; idx < response.content.length; idx++) {

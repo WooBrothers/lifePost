@@ -32,7 +32,6 @@ import net.lifepost.service.model.card.memb_cust_card.MemberCustomCardRepository
 import net.lifepost.service.model.letter.Letter;
 import net.lifepost.service.model.letter.LetterRepository;
 import net.lifepost.service.model.member.Member;
-import net.lifepost.service.model.member.MemberRepository;
 import net.lifepost.service.model.stamp.Stamp;
 import net.lifepost.service.model.stamp.StampRepository;
 import org.springframework.data.domain.Page;
@@ -55,7 +54,6 @@ public class CardServiceImpl implements CardService {
     private final AffirmationCardRepository affirmationCardRepository;
     private final MemberCardRepository memberCardRepository;
     private final MemberCustomCardRepository memberCustomCardRepository;
-    private final MemberRepository memberRepository;
     private final LetterRepository letterRepository;
     private final StampRepository stampRepository;
     private final CardMapper cardMapper;
@@ -71,25 +69,31 @@ public class CardServiceImpl implements CardService {
      * @return Page 처리된 카드 정보 (컨텐츠 x)
      */
     @Override
-    public Page<PageResponse> getMemberCards(int size, int pageNo,
+    public Page<PageResponse> getMemberCards(int size, Long memberCardId,
         Optional<FocusTypeEnum> focus, List<CardTypeEnum> type, UserDetails userDetails) {
 
-        pageNo = common.verifyPageNo(pageNo);
-
-        Pageable pageable = PageRequest.of(pageNo, size);
+        Pageable pageable = PageRequest.of(0, size);
 
         Member member = common.getMemberByUserDetail(userDetails);
 
-        List<FocusTypeEnum> focusList = focus.map(Collections::singletonList)
+        List<FocusTypeEnum> focusTypeEnums = focus.map(Collections::singletonList)
             .orElseGet(() -> List.of(FocusTypeEnum.ATTENTION, FocusTypeEnum.NON));
 
         if (type == null || type.isEmpty()) {
             type = List.of(CardTypeEnum.AFFIRMATION, CardTypeEnum.CUSTOM);
         }
 
-        Page<MemberCard> memberCards = memberCardRepository
-            .findMemberCardAndRelatedCardAndLetterInfos(member.getId(), type,
-                focusList, pageable);
+        Page<MemberCard> memberCards;
+        if (memberCardId == 0) {
+            memberCards = memberCardRepository.findByMemberIdAndFocusInAndTypeInOrderByIdDesc(
+                member.getId(), focusTypeEnums, type, pageable
+            );
+        } else {
+            memberCards = memberCardRepository
+                .findByIdIsLessThanAndMemberIdAndFocusInAndTypeInOrderByIdDesc(memberCardId,
+                    member.getId(),
+                    focusTypeEnums, type, pageable);
+        }
 
         List<PageResponse> pageResponses = separateMemberCardByType(memberCards);
 
@@ -339,10 +343,16 @@ public class CardServiceImpl implements CardService {
 
         Pageable pageable = PageRequest.of(0, size);
         Member member = common.getMemberByUserDetail(userDetails);
+        List<FocusTypeEnum> focusTypeEnums = new ArrayList<>();
+        focusTypeEnums.add(FocusTypeEnum.ATTENTION);
+
+        List<CardTypeEnum> cardTypeEnums = List.of(CardTypeEnum.AFFIRMATION, CardTypeEnum.CUSTOM);
 
         Page<MemberCard> memberCards = memberCardRepository
-            .findByIdIsLessThanAndMemberIdAndFocusOrderByIdDesc(memberCardId, member.getId(),
-                FocusTypeEnum.ATTENTION,
+            .findByIdIsLessThanAndMemberIdAndFocusInAndTypeInOrderByIdDesc(memberCardId,
+                member.getId(),
+                focusTypeEnums,
+                cardTypeEnums,
                 pageable);
 
         List<Long> letterIds = memberCards.stream()
