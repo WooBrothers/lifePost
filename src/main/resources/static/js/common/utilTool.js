@@ -1,4 +1,5 @@
 import {getAccessToken} from "./apiUtil.js";
+import {DivTag} from "./tagUtil.js";
 
 const randomRgb = ["#FF6D60", "#F7D060", "#F3E99F", "#98D8AA", "#FF9B9B", "#FFD6A5", "#FFFEC4", "#CBFFA9", "#FFB84C", "#FFBFA9", "#C0EEE4", "#F8F988", "#FFCAC8", "#FF9E9E", "#78C1F3", "#9BE8D8", "#9BE8D8", "#E2F6CA", "#F8FDCF"]
 
@@ -58,9 +59,10 @@ export function removeHTMLAndWhitespace(input) {
 
 export function removeImageTags(html) {
     // 이미지 태그를 제거하는 정규식 패턴
-    return html.replace(/<img[^>]*>/g, '');
+    const newRegex = /<p[^>]*>[\s\S]*?(<br\s*\/?>)[\s\S]*?<\/p>/gi;
+    const oldRegex = /<img[^>]*>/g;
+    return html.replace(newRegex, '');
 }
-
 
 export class TodayCardWriteHistory {
     // local storage 로 관리되는 카드 쓰기 관련 정보를 다루는 클래스
@@ -135,7 +137,6 @@ export class TodayCardWriteHistory {
         return setLocalStorageJson("todayCardWriteHistory", data);
     }
 }
-
 
 export function getLocalStorageJson(key) {
     return JSON.parse(localStorage.getItem(key)) || null;
@@ -231,4 +232,161 @@ export function setFilterBtnOnOff(target) {
             btn.classList.add("active");
         });
     }
+}
+
+export class OnboardingManager {
+    constructor() {
+        // 로컬 스토리지 키
+        this.storageKey = "onboardingData";
+        this.firstTimeVisit = "firstTimeVisit";
+        this.firstLetterRead = "firstLetterRead";
+        this.firstCardPageVisit = "firstCardPageVisit";
+
+        // 기본 데이터 구조 (예: 페이지별로 방문 여부)
+        this.data = {
+            firstTimeVisit: false,
+            firstLetterRead: false,
+            firstCardPageVisit: false,
+        };
+
+        // 로컬 스토리지에서 데이터 불러오기
+        this.loadData();
+    }
+
+    // 데이터 불러오기
+    loadData() {
+        const storedData = localStorage.getItem(this.storageKey);
+        if (storedData) {
+            this.data = JSON.parse(storedData);
+        }
+    }
+
+    // 데이터 저장
+    saveData() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+    }
+
+    // 페이지 방문 여부 설정
+    setVisited(pageName) {
+        if (this.data.hasOwnProperty(pageName)) {
+            this.data[pageName] = true;
+            this.saveData();
+        }
+    }
+
+    // 페이지 방문 여부 확인
+    hasVisited(pageName) {
+        return this.data[pageName];
+    }
+
+    // 각 페이지 방문 여부 설정 메서드
+    setFirstTimeVisited() {
+        this.setVisited(this.firstTimeVisit);
+    }
+
+    setFirstReadVisited() {
+        this.setVisited(this.firstLetterRead);
+    }
+
+    setFirstCardPageVisited() {
+        this.setVisited(this.firstCardPageVisit);
+    }
+
+    isFirstTimeVisit() {
+        return !this.data.firstTimeVisit;
+    }
+
+    isFirstLetterReadVisit() {
+        return !this.data.firstLetterRead;
+    }
+
+    isFirstCardPageVisit() {
+        return !this.data.firstCardPageVisit;
+    }
+}
+
+export class BottomNavigationManager {
+    constructor() {
+        // 로컬 스토리지 키
+        this.storageKey = "bottomNavigationData";
+        this.letterPageOn = "letterPageOn";
+        this.cardPageOn = "cardPageOn";
+        this.motivePageOn = "motivePageOn";
+
+        // 기본 데이터 구조 (기본은 편지 페이지 보도록)
+        this.pageOnInfo = {
+            letterPageOn: true,
+            cardPageOn: false,
+            motivePageOn: false,
+        };
+
+        // 로컬 스토리지에서 데이터 불러오기
+        this.loadData();
+    }
+
+    loadData() {
+        const storedData = localStorage.getItem(this.storageKey);
+        if (storedData) {
+            this.pageOnInfo = JSON.parse(storedData);
+        }
+    }
+
+    // 데이터 저장
+    saveData() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.pageOnInfo));
+    }
+
+    offAllPage() {
+        this.pageOnInfo = {
+            letterPageOn: false,
+            cardPageOn: false,
+            motivePageOn: false,
+        }
+    }
+
+    setLetterPageOn() {
+        this.offAllPage();
+        this.pageOnInfo.letterPageOn = true;
+        this.saveData();
+    }
+
+    setCardPageOn() {
+        this.offAllPage();
+        this.pageOnInfo.cardPageOn = true;
+        this.saveData();
+    }
+
+    setMotivePageOn() {
+        this.offAllPage();
+        this.pageOnInfo.motivePageOn = true;
+        this.saveData();
+    }
+}
+
+export function createCoupangAdBannerInFeed(targetFeed) {
+    /*
+    피드성 게시물에 쿠팡 광고 삽입하는 함수 - 주의점 targetFeed는 피드 객체중 하나여야 하며,
+    해당 피드의 offset 크기 데이터를 사용한다.
+    함수는 targetFeed 객체가 dom에 추가된 이후에 사용할 것
+    */
+
+    const coupangPartnerAdSpace = new DivTag()
+        .setClassName("coupang-partner-ad-space card h-100")
+        .getTag();
+    const paddingDiv = new DivTag()
+        .setClassName("card-body d-flex flex-column align-items-center")
+        .getTag();
+    const coupangAdIframe = document.createElement("iframe");
+
+    coupangAdIframe.src = "https://ads-partners.coupang.com/widgets.html?id=727012&template=carousel&trackingCode=AF0473134&subId=&width=300&height=440&tsource=";
+    coupangAdIframe.height = `${targetFeed.offsetHeight}`;
+    coupangAdIframe.frameBorder = "0";
+    coupangAdIframe.scrolling = "no";
+    coupangAdIframe.referrerPolicy = "unsafe-url";
+    coupangAdIframe.style.marginBottom = "20px";
+
+    paddingDiv.appendChild(coupangAdIframe);
+    coupangPartnerAdSpace.appendChild(paddingDiv);
+
+    return coupangPartnerAdSpace;
 }

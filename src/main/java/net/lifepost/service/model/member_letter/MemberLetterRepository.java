@@ -15,8 +15,12 @@ public interface MemberLetterRepository extends JpaRepository<MemberLetter, Long
     List<MemberLetter> findByMemberId(Long memberId);
 
     @EntityGraph(attributePaths = "letter")
-    Page<MemberLetter> findByMemberIdAndFocusInOrderByCreatedAtDesc(Long memberId,
+    Page<MemberLetter> findByMemberIdAndFocusInOrderByLetterIdDesc(Long memberId,
         List<FocusTypeEnum> focusTypeList, Pageable pageRequest);
+
+    @EntityGraph(attributePaths = "letter")
+    Page<MemberLetter> findByMemberIdAndFocusInAndLetterIdLessThanOrderByLetterIdDesc(Long memberId,
+        List<FocusTypeEnum> focusTypeList, Long letterId, Pageable pageRequest);
 
     @EntityGraph(attributePaths = "letter")
     List<MemberLetter> findByMemberIdAndLetterIdInOrderByLetterIdDesc(Long memberId,

@@ -12,6 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import net.lifepost.service.domain.card.FocusTypeEnum;
 import net.lifepost.service.model.card.affr_card.AffirmationCard;
 import net.lifepost.service.model.card.affr_card.AffirmationCardRepository;
@@ -25,10 +30,6 @@ import net.lifepost.service.model.member.MemberRepository;
 import net.lifepost.service.model.member.Role;
 import net.lifepost.service.model.member_letter.MemberLetter;
 import net.lifepost.service.model.member_letter.MemberLetterRepository;
-import jakarta.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -90,6 +92,23 @@ class LetterIntegrationTest {
                 .letter(letter)
                 .focus(FocusTypeEnum.ATTENTION)
                 .build()));
+    }
+
+    @Test
+    void testMemberLettersToPageLetter() {
+
+        Pageable pageable = PageRequest.of(0, 5);
+
+        List<FocusTypeEnum> focusTypeEnums = new ArrayList<>();
+        focusTypeEnums.add(FocusTypeEnum.ATTENTION);
+        focusTypeEnums.add(FocusTypeEnum.NON);
+
+        Page<MemberLetter> memberLetter = memberLetterRepository
+            .findByMemberIdAndFocusInOrderByLetterIdDesc(1L, focusTypeEnums, pageable);
+
+        Page<Letter> letters = memberLetter.map(MemberLetter::getLetter);
+
+        letters.forEach(letter -> System.out.println(letter.getTitle()));
     }
 
     @Test

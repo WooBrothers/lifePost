@@ -1,5 +1,5 @@
-import {getLetterContentById, getLimitedLetterContentToLogoutMember} from "../letterApi.js";
-import {copyToClipboard, isTokenExpired} from "../../common/utilTool.js";
+import {getLetterContentById, getOpenLetterContents} from "../letterApi.js";
+import {copyToClipboard, isTokenExpired, OnboardingManager} from "../../common/utilTool.js";
 import {createCardBtnClick} from "../../card/list/cardListEvent.js";
 
 window.onload = async () => {
@@ -15,14 +15,16 @@ async function setLetterInfo() {
         });
         bindEventIfLogin();
     } else {
-        await getLimitedLetterContentToLogoutMember(letterId).then(res => {
+        await getOpenLetterContents(letterId).then(res => {
             setLetterPageByResponse(res);
-            renderLoginInduce(); // 로그인 페이지 이동 안내 div 출력
+            renderLoginIntroduce(); // 로그인 페이지 이동 안내 div 출력
             setJsonLdInfo(res);
         });
         // 로그아웃 시 로그인 페이지 이동 버튼 이벤트
         bindEventIfLogout();
     }
+
+    ifFirstLetterReadRunOnboarding();
 }
 
 function setLetterPageByResponse(res) {
@@ -52,7 +54,7 @@ function setLetterPageByResponse(res) {
     wrapImgTagInContentsDiv(contentsDiv);
 }
 
-function renderLoginInduce() {
+function renderLoginIntroduce() {
     const loginInduceDiv = document.querySelector("#login-page-div");
     loginInduceDiv.style.display = "block";
 }
@@ -79,6 +81,9 @@ function bindEventIfLogout() {
     writeCardBtn.addEventListener("click", () => {
         window.location = "/login/page";
     });
+
+    const onBoardingBtn = document.querySelector("#letter-on-boarding-btn");
+    onBoardingBtn.addEventListener("click", clickOnBoardingBtn);
 }
 
 function setJsonLdInfo(res) {
@@ -121,6 +126,9 @@ function bindEventIfLogin() {
 
     const writeCardBtn = document.querySelector("#card-write-btn-mb");
     writeCardBtn.addEventListener("click", clickWriteCardBtn);
+
+    const onBoardingBtn = document.querySelector("#letter-on-boarding-btn");
+    onBoardingBtn.addEventListener("click", clickOnBoardingBtn);
 }
 
 function clickCopyLinkBtn() {
@@ -130,9 +138,23 @@ function clickCopyLinkBtn() {
     const toastLiveExample = document.getElementById('liveToast')
 
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-    toastBootstrap.show()
+    toastBootstrap.show();
 }
 
 function clickWriteCardBtn() {
     createCardBtnClick();
+}
+
+function clickOnBoardingBtn() {
+    const modal = document.querySelector("#letter-read-onboarding-modal");
+    new bootstrap.Modal(modal).show();
+}
+
+function ifFirstLetterReadRunOnboarding() {
+    const onboardingManager = new OnboardingManager();
+
+    if (onboardingManager.isFirstLetterReadVisit()) {
+        clickOnBoardingBtn();
+        onboardingManager.setFirstReadVisited();
+    }
 }

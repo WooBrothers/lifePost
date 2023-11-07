@@ -1,8 +1,8 @@
 import {getCardList} from "./cardListApi.js";
 import {ButtonTag, DivTag, HTag, ImgTag, PTag} from "../../common/tagUtil.js";
-import {bootstrapPopover} from "../../common/utilTool.js";
+import {bootstrapPopover, createCoupangAdBannerInFeed} from "../../common/utilTool.js";
 
-export async function createCardListSpace(cardListSpace, page, event) {
+export async function createCardListSpace(cardListSpace, letterId, event) {
 
     // bootstrap popover 사용을 위한 조건
     bootstrapPopover();
@@ -12,9 +12,10 @@ export async function createCardListSpace(cardListSpace, page, event) {
 
     let resultResponse = null;
 
-    await getCardList(page, 8, cardType, focusType).then(response => {
+    await getCardList(letterId, 7, cardType, focusType).then(response => {
         createCard(response, cardListSpace);
         resultResponse = response;
+        ifNoHaveCardPlayCoachMark(response);
     });
 
     event();
@@ -50,33 +51,21 @@ export function createCard(response, cardListSpace) {
         preEmptyContentDiv.remove();
     }
 
-    // 카드 없을 시 안내문구 출력 및 렌더링 종료
-    if ((!response || response.content.length === 0) && cardListSpace.childNodes.length === 0) {
-        const emptyTexts = document.querySelectorAll("#card-empty-info")
+    for (let idx = 0; idx < response.content.length; idx++) {
+        const content = response.content[idx];
 
-        if (emptyTexts.length !== 0) {
-            emptyTexts.remove();
+        if (idx === 2) {
+            const coupangAdCardSpace = new DivTag()
+                .setClassName("card-space col")
+                .getTag();
+            const firstCard = document.querySelector(`#card-space-${response.content[0].cardId}`);
+            const coupangAdFeed = createCoupangAdBannerInFeed(firstCard);
+
+            coupangAdCardSpace.appendChild(coupangAdFeed);
+            cardListSpace.appendChild(coupangAdCardSpace);
         }
 
-        const emptyText = new DivTag()
-            .setClassName("card-empty-info-text")
-            .setId("card-empty-info")
-            .setInnerHTML("카드가 없습니다. 편지을 읽거나 카드를 만들어 보세요!");
-        cardListSpace.appendChild(emptyText.getTag());
-        return;
-    }
-
-    // API 응답 결과에 따른 카드 렌더링
-    response.content.forEach(content => {
-        const cardSpace = new DivTag()
-            .setClassName("card-space col")
-            .setId(`card-space-${content.cardId}`)
-            .setDataset([{
-                memberCardId: content.memberCardId,
-                cardId: content.cardId,
-                type: content.type,
-            }])
-            .getTag();
+        const cardSpace = createCardSpace(content);
 
         // focus 여부에 따라 북마크 이미지 변경 처리
         const focusInfo = getFocusImgByContent(content);
@@ -85,7 +74,19 @@ export function createCard(response, cardListSpace) {
         setCardGridToCardSpaceByContent(content, focusInfo, cardSpace);
 
         cardListSpace.appendChild(cardSpace);
-    });
+    }
+}
+
+function createCardSpace(content) {
+    return new DivTag()
+        .setClassName("card-space col")
+        .setId(`card-space-${content.cardId}`)
+        .setDataset([{
+            memberCardId: content.memberCardId,
+            cardId: content.cardId,
+            type: content.type,
+        }])
+        .getTag();
 }
 
 function getFocusImgByContent(content) {
@@ -197,4 +198,20 @@ function getCardActBtnListByType(content) {
         .setInnerHTML("카드쓰기"));
 
     return resultBtnList;
+}
+
+function ifNoHaveCardPlayCoachMark(response) {
+    if (response.content.length === 0) {
+        // 화면 어둡게 하기
+        // 기능들을 설명할 순서 정하기
+        // 필터 기능 설명
+        // 카드 만들기 설명
+        // 카드 만들기 url, title, contents 입력 안내
+        // 카드 만들기 저장 버튼 클릭 안내
+        // 만들어진 내가 만든 카드 수정, 삭제 버튼 안내
+        // 카드 쓰기 기능 안내
+        // 카드를 받아 쓰고 하루에 10번 입력하면 스탬프 지급 안내
+
+
+    }
 }

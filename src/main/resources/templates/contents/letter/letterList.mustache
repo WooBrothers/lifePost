@@ -47,28 +47,6 @@
 
 <div class="float-btn-space z-1 filter-group" style="width: 50px;">
   <div class="filter-group">
-    <button class="filter btn btn-secondary flb flb-ch z-2 my-letter-filter active"
-            id="my-letter-filter-btn-mb"
-            data-on-off="true">
-      <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
-           class="bi bi-envelope-arrow-down" viewBox="0 0 16 16">
-        <path
-            d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4.5a.5.5 0 0 1-1 0V5.383l-7 4.2-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h5.5a.5.5 0 0 1 0 1H2a2 2 0 0 1-2-1.99V4Zm1 7.105 4.708-2.897L1 5.383v5.722ZM1 4v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1Z"/>
-        <path
-            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.354-1.646a.5.5 0 0 1-.722-.016l-1.149-1.25a.5.5 0 1 1 .737-.676l.28.305V11a.5.5 0 0 1 1 0v1.793l.396-.397a.5.5 0 0 1 .708.708l-1.25 1.25Z"/>
-      </svg>
-    </button>
-    <button class="filter btn btn-secondary flb flb-ch z-2 miss-letter-filter active"
-            id="miss-letter-filter-btn-mb"
-            data-on-off="true">
-      <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
-           class="bi bi-envelope-dash" viewBox="0 0 16 16">
-        <path
-            d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z"/>
-        <path
-            d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-5.5 0a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 0-1h-3a.5.5 0 0 0-.5.5Z"/>
-      </svg>
-    </button>
     <button class="filter btn btn-secondary flb flb-ch z-2 focus-letter-filter"
             id="focus-letter-filter-btn-mb"
             data-on-off="false">
@@ -88,7 +66,7 @@
       <div class="mb-2">
         <h1 class="text-primary mt-3 mb-0" style="font-family: serif;">Letter List</h1>
         <hr class="mt-1 mb-0">
-        <p class="text-primary mt-0 mb-0">읽은 편지, 놓친 편지 모아보기</p>
+        <p class="text-primary mt-0 mb-0">내가 읽은 편지 모아보기</p>
       </div>
       <div class="d-flex d-none d-md-flex col-lg-4 justify-content-end mb-1">
         <div class="flex-fill"></div>
@@ -103,14 +81,6 @@
     <div class="row justify-content-end collapse" id="filter-btn-group">
       <div class="btn-group d-md-flex d-none col-md-6 col-lg-4 mb-1" role="group">
         <button type="button"
-                class="my-letter-filter letter-list-btn filter btn btn-outline-primary active"
-                id="my-letter-filter-btn" data-on-off="true">받은 편지
-        </button>
-        <button type="button"
-                class="miss-letter-filter letter-list-btn filter btn btn-outline-primary active"
-                id="miss-letter-filter-btn" data-on-off="true">놓친 편지
-        </button>
-        <button type="button"
                 class="focus-letter-filter letter-list-btn filter btn btn-outline-primary"
                 id="focus-letter-filter-btn" data-on-off="false">focus
         </button>
@@ -119,20 +89,6 @@
     <div class="row justify-content-center mt-0">
       <div id="letter-list-space"
            class="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-start mt-0 p-0">
-        <!-- 로그인 편지 인피드 광고 -->
-        <script async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1123285635437863"
-                crossorigin="anonymous"></script>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="fluid"
-             data-ad-layout-key="-5x+c0-2i-8a+14n"
-             data-ad-client="ca-pub-1123285635437863"
-             data-ad-slot="4486480892"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-        <!-- end 로그인 편지 인피드 광고 -->
       </div>
     </div>
   </div>

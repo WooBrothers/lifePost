@@ -27,7 +27,7 @@ export async function getLetterContentById(letterId) {
     return await authFetch(url, option);
 }
 
-export async function getLimitedLetterContentToLogoutMember(letterId) {
+export async function getOpenLetterContents(letterId) {
     const url = `${LETTER_OPEN_API_URL}/${letterId}`;
     let option = {
         method: "GET"

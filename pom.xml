@@ -178,10 +178,15 @@
         <filtering>true</filtering>
         <includes>
           <include>**/static/**</include>
+          <include>**/static/onboarding/**</include>
           <include>**/templates/**</include>
           <include>application.yml</include>
           <include>application-${env}.yml</include>
         </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources/static/img/test</directory>
+        <targetPath>static/img/test</targetPath>
       </resource>
     </resources>
     <plugins>

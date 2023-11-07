@@ -1,3 +1,51 @@
+@font-face {
+  font-family: 'KoPubWorldBatang';
+  font-weight: 300;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangLight.eot');
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangLight.eot?#iefix') format('embedded-opentype'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangLight.woff2') format('woff2'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangLight.woff') format('woff'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangLight.ttf') format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KoPubWorldBatang';
+  font-weight: 500;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangMedium.eot');
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangMedium.eot?#iefix') format('embedded-opentype'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangMedium.woff2') format('woff2'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangMedium.woff') format('woff'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangMedium.ttf') format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KoPubWorldBatang';
+  font-weight: 700;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangBold.eot');
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangBold.eot?#iefix') format('embedded-opentype'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangBold.woff2') format('woff2'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangBold.woff') format('woff'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldBatangBold.ttf') format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KoPubWorldDotum';
+  font-weight: 300;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldDotumLight.eot');
+  src: url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldDotumLight.eot?#iefix') format('embedded-opentype'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldDotumLight.woff2') format('woff2'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldDotumLight.woff') format('woff'),
+  url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldDotumLight.ttf') format("truetype");
+  font-display: swap;
+}
+
 .card:hover {
   cursor: pointer;
 }
@@ -32,4 +80,36 @@
 
 .btn.btn-outline-primary.active {
   color: white !important;
+}
+
+.dot-indicator {
+  text-align: center;
+  padding: 10px;
+}
+
+.dot {
+  width: 10px; /* 각 점의 너비 */
+  height: 10px; /* 각 점의 높이 */
+  background-color: #ddd; /* 비활성화된 점의 색상 */
+  border-radius: 50%; /* 원형 점으로 만들기 */
+  display: inline-block;
+  margin: 0 5px; /* 각 점 사이의 간격 */
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #004AAD; /* 활성화된 점의 색상 */
+}
+
+/* 애니메이션 클래스 */
+.on-boarding {
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.on-boarding.active {
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  opacity: 1;
+  visibility: visible;
 }

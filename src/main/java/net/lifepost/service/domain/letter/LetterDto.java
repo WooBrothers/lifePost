@@ -147,10 +147,10 @@ public class LetterDto {
         String imgTagLessContent = removeImageTags(content);
         StringBuilder sb = new StringBuilder(imgTagLessContent);
 
-        if (sb.length() < 200) {
+        if (sb.length() < 100) {
             sb.setLength(sb.length() / 2);
         } else {
-            sb.setLength(200);
+            sb.setLength(100);
         }
         sb.append("...");
 

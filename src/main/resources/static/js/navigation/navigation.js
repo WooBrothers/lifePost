@@ -15,7 +15,6 @@ export async function setMembership() {
 
 function setLogoutNavMenu() {
     const nameLinkDict = {
-        "navLetter": ["/letter/list/open/page", "편지"],
         "navLanding": ["/landing/page", "서비스 소개"],
         "navLogin": ["/login/page", "로그인/회원가입"],
     };
@@ -25,8 +24,8 @@ function setLogoutNavMenu() {
 
 function setLoginNavMenu() {
     const nameLinkDict = {
-        "navLetter": ["/letter/list/page", "편지"],
-        "navCard": ["/card/list/page", "카드"],
+        "navLetter": ["/letter/list/page", "읽은 편지"],
+        "navCard": ["/card/list/page", "나의 카드"],
         "navMypage": ["/mypage/page", "마이페이지"],
         "navLogout": ["", "로그아웃"],
     };

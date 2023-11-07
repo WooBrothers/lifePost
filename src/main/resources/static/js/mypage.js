@@ -57,7 +57,6 @@ async function clickWithdrawOkBtn() {
     };
 
     await authFetch(url, options).then(res => {
-        console.log(res);
     });
 
     deleteCookie("accessToken");

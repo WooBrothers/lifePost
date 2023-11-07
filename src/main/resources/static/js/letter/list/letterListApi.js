@@ -1,8 +1,8 @@
 import {authFetch} from "../../common/apiUtil.js";
 
-export async function getLetterList(pageNo, size, type, focusTypeList) {
+export async function getLetterList(letterId, size, focusTypeList) {
     // 로그인한 유저가 볼 편지 리스트 조회
-    const url = `/api/v1/letter/auth/member/${pageNo}/${size}?type=${type}&focusType=${focusTypeList}`;
+    const url = `/api/v1/letter/auth/member/${letterId}/${size}?focusType=${focusTypeList}`;
     let option = {
         method: "GET",
     }
@@ -10,15 +10,15 @@ export async function getLetterList(pageNo, size, type, focusTypeList) {
     return await authFetch(url, option);
 }
 
-export async function getOpenLetterList(pageNo, size) {
-    // 로그인을 안한 유저가 볼 편지 리스트 조회
-    const url = `/api/v1/letter/open/${pageNo}/${size}`;
+export async function getIndexLetterList(letterId, size) {
+    // index 페이지에 출력할 편지
+    const url = `/api/v1/letter/open/index/${letterId}/${size}`;
 
     let option = {
-        method: "GET",
+        method: "GET"
     }
 
     return await fetch(url, option).then(res => {
         return res.json();
-    });
+    })
 }
