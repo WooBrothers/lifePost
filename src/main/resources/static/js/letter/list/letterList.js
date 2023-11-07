@@ -68,10 +68,17 @@ function createLetter(response, letterListSpace) {
     for (let idx = 0; idx < response.content.length; idx++) {
         if (idx === 2) {
             // 쿠팡 광고 피드 생성
+
+            const letterSpace = new DivTag()
+                .setClassName("letter-space col mb-4")
+                .setDataset([{}])
+                .getTag();
+
             const targetFeed = letterListSpace.querySelector(`#letter-space-${response.content[0].id}`);
             const coupangPartnerAdSpace = createCoupangAdBannerInFeed(targetFeed);
 
-            letterListSpace.appendChild(coupangPartnerAdSpace);
+            letterSpace.appendChild(coupangPartnerAdSpace);
+            letterListSpace.appendChild(letterSpace);
         }
 
         const content = response.content[idx];
@@ -98,10 +105,16 @@ function createIndexLetter(response, letterListSpace) {
     for (let idx = 0; idx < response.content.length; idx++) {
         if (idx === 2) {
             // 쿠팡 광고 피드 생성
+
+            const letterSpace = new DivTag()
+                .setClassName("letter-space col mb-4")
+                .getTag();
+
             const targetFeed = letterListSpace.querySelector(`#letter-space-${response.content[0].id}`);
             const coupangPartnerAdSpace = createCoupangAdBannerInFeed(targetFeed);
 
-            letterListSpace.appendChild(coupangPartnerAdSpace);
+            letterSpace.appendChild(coupangPartnerAdSpace);
+            letterListSpace.appendChild(letterSpace);
         }
 
         const letterSpace = new DivTag()

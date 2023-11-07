@@ -55,21 +55,17 @@ export function createCard(response, cardListSpace) {
         const content = response.content[idx];
 
         if (idx === 2) {
+            const coupangAdCardSpace = new DivTag()
+                .setClassName("card-space col")
+                .getTag();
             const firstCard = document.querySelector(`#card-space-${response.content[0].cardId}`);
             const coupangAdFeed = createCoupangAdBannerInFeed(firstCard);
 
-            cardListSpace.appendChild(coupangAdFeed);
+            coupangAdCardSpace.appendChild(coupangAdFeed);
+            cardListSpace.appendChild(coupangAdCardSpace);
         }
 
-        const cardSpace = new DivTag()
-            .setClassName("card-space col")
-            .setId(`card-space-${content.cardId}`)
-            .setDataset([{
-                memberCardId: content.memberCardId,
-                cardId: content.cardId,
-                type: content.type,
-            }])
-            .getTag();
+        const cardSpace = createCardSpace(content);
 
         // focus 여부에 따라 북마크 이미지 변경 처리
         const focusInfo = getFocusImgByContent(content);
@@ -79,6 +75,18 @@ export function createCard(response, cardListSpace) {
 
         cardListSpace.appendChild(cardSpace);
     }
+}
+
+function createCardSpace(content) {
+    return new DivTag()
+        .setClassName("card-space col")
+        .setId(`card-space-${content.cardId}`)
+        .setDataset([{
+            memberCardId: content.memberCardId,
+            cardId: content.cardId,
+            type: content.type,
+        }])
+        .getTag();
 }
 
 function getFocusImgByContent(content) {

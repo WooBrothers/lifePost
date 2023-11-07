@@ -371,19 +371,22 @@ export function createCoupangAdBannerInFeed(targetFeed) {
     */
 
     const coupangPartnerAdSpace = new DivTag()
-        .setClassName("coupang-partner-ad-space col mb-4")
+        .setClassName("coupang-partner-ad-space card h-100")
         .getTag();
-
+    const paddingDiv = new DivTag()
+        .setClassName("card-body d-flex flex-column align-items-center")
+        .getTag();
     const coupangAdIframe = document.createElement("iframe");
-    coupangAdIframe.src = "https://ads-partners.coupang.com/widgets.html?id=726508&template=carousel&trackingCode=AF0473134&subId=&width=366&height=298&tsource=";
-    coupangAdIframe.width = `${targetFeed.offsetWidth}`;
+
+    coupangAdIframe.src = "https://ads-partners.coupang.com/widgets.html?id=727012&template=carousel&trackingCode=AF0473134&subId=&width=300&height=440&tsource=";
     coupangAdIframe.height = `${targetFeed.offsetHeight}`;
     coupangAdIframe.frameBorder = "0";
     coupangAdIframe.scrolling = "no";
     coupangAdIframe.referrerPolicy = "unsafe-url";
     coupangAdIframe.style.marginBottom = "20px";
 
-    coupangPartnerAdSpace.appendChild(coupangAdIframe);
+    paddingDiv.appendChild(coupangAdIframe);
+    coupangPartnerAdSpace.appendChild(paddingDiv);
 
-    return coupangAdIframe;
+    return coupangPartnerAdSpace;
 }
