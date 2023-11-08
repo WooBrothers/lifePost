@@ -100,17 +100,17 @@ public class LetterServiceImpl implements LetterService {
     }
 
     @Override
-    public Page<PageResponse> getIndexLetterList(Long letterId, int size) {
+    public Page<PageResponse> getIndexLetterList(LocalDate postDate, int size) {
         Pageable pageable = PageRequest.of(0, size);
 
         Page<Letter> letters;
         LocalDate tomorrow = LocalDate.now().plusDays(1);
-        if (letterId == 0) {
+
+        if (postDate.isBefore(tomorrow) || postDate.equals(tomorrow)) {
             letters = letterRepository
-                .findByPostDateBeforeOrderByPostDateDesc(tomorrow, pageable);
+                .findByPostDateBeforeOrderByPostDateDesc(postDate, pageable);
         } else {
-            letters = letterRepository
-                .findByIdLessThanAndPostDateBeforeOrderByPostDateDesc(letterId, tomorrow, pageable);
+            throw new CommonException(ErrorEnum.POST_DATE_INVALID);
         }
 
         List<PageResponse> pageResponses = getPageResponse(letters);

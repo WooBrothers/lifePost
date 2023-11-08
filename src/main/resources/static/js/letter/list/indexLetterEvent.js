@@ -17,15 +17,15 @@ async function scrollIndexLetters() {
 
         const indexLetterSpace = document.querySelector("#letter-list-space");
 
-        const letterId = getLastLetterIdFromLetterSpace(indexLetterSpace);
-        console.log(letterId);
-        await createOpenLetterListSpace(indexLetterSpace, letterId, bindEventToIndexLetterPage);
+        const postDate = getLastLetterPostDateFromLetterSpace(indexLetterSpace);
+
+        await createOpenLetterListSpace(indexLetterSpace, postDate, bindEventToIndexLetterPage);
     }
 }
 
-function getLastLetterIdFromLetterSpace(indexLetterSpace) {
+function getLastLetterPostDateFromLetterSpace(indexLetterSpace) {
 
     const lastLetter = indexLetterSpace.lastChild;
 
-    return lastLetter.dataset.letterId;
+    return lastLetter.dataset.postDate;
 }

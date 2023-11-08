@@ -2,6 +2,7 @@ package net.lifepost.service.domain.letter;
 
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,11 +74,11 @@ public class LetterController {
         return letterService.getMemberLetterList(letterId, size, focusTypeList, userDetails);
     }
 
-    @GetMapping("/open/index/{letterId}/{size}")
+    @GetMapping("/open/index/{postDate}/{size}")
     public Page<LetterDto.PageResponse> getIndexLetters(
-        @PathVariable Long letterId,
+        @PathVariable LocalDate postDate,
         @PathVariable int size
     ) {
-        return letterService.getIndexLetterList(letterId, size);
+        return letterService.getIndexLetterList(postDate, size);
     }
 }
