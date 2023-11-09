@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.lifepost.service.common.exception.CommonException;
 import net.lifepost.service.common.exception.ErrorEnum;
+import net.lifepost.service.domain.letter.LetterDto.ReadResponse;
 import net.lifepost.service.model.letter.Letter;
+import net.lifepost.service.model.letter.LetterMapper;
 import net.lifepost.service.model.letter.LetterRepository;
 import net.lifepost.service.model.member.Member;
 import net.lifepost.service.model.member.MemberRepository;
@@ -28,13 +30,14 @@ public class IndexController {
     /* beans */
     private final MemberRepository memberRepository;
     private final LetterRepository letterRepository;
+    private final LetterMapper letterMapper;
 
     @Value("${url}")
     private String url;
 
     @GetMapping("/")
     public String index(Model model) throws JsonProcessingException {
-        model.addAttribute("ogImage", url + "/img/full-logo.png");
+        model.addAttribute("ogImage", "https://cdn.life-post.net/img/service/logo/full-logo.png");
         model.addAttribute("ogUrl", url);
         return "index";
     }
@@ -79,10 +82,19 @@ public class IndexController {
         Letter letter = letterRepository.findById(letterId)
             .orElseThrow(() -> new CommonException(ErrorEnum.NOT_FOUND));
 
-        model.addAttribute("letterId", letterId);
-        model.addAttribute("ogTitle", letter.getTitle());
-        model.addAttribute("ogDescription", letter.getContents());
-        model.addAttribute("ogImage", letter.getLetterImage());
+        ReadResponse letterDto = letterMapper.toResponseDto(letter);
+
+        String description;
+        if (letterDto.getContentWithOutTag().length() <= 20) {
+            description = letterDto.getContentWithOutTag();
+        } else {
+            description = letterDto.getContentWithOutTag().substring(0, 20);
+        }
+
+        model.addAttribute("letterId", letterDto.getId());
+        model.addAttribute("ogTitle", letterDto.getTitle());
+        model.addAttribute("ogDescription", description);
+        model.addAttribute("ogImage", letterDto.getLetterImage());
         model.addAttribute("ogUrl", url + "/letter/read/page/" + letterId);
 
         return "contents/letter/letterRead";
@@ -154,5 +166,4 @@ public class IndexController {
 
         return ResponseEntity.ok(result);
     }
-
 }

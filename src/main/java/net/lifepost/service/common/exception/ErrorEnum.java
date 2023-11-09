@@ -11,6 +11,7 @@ public enum ErrorEnum {
     STAMP_NOT_ENOUGH("member doesn't have enough stamp.", "LT0002", 409),
     CARD_TYPE_INVALID("card type is invalid.", "LT0003", 409),
     PAGE_NO_INVALID("page number is invalid.", "LT0004", 409),
+    POST_DATE_INVALID("post date is invalid.", "LT0005", 409),
     ;
 
     private String message;

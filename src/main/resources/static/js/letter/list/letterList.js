@@ -45,13 +45,14 @@ function getFocusType() {
 function getFocusImgByContent(content) {
     let result = {};
 
+    const cdnUrl = "https://cdn.life-post.net/img/service/card";
     if (content.focusType === "ATTENTION") {
         result.focus = true;
-        result.focusImgUrl = "/img/focus-mark-on.png";
+        result.focusImgUrl = `url('${cdnUrl}/focus-mark-on.png')`;
         return result
     } else if (content.focusType === "NON") {
         result.focus = false;
-        result.focusImgUrl = "/img/focus-mark-off.png";
+        result.focusImgUrl = `url('${cdnUrl}/focus-mark-off.png')`;
         return result;
     } else {
         return null;

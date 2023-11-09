@@ -99,10 +99,6 @@ public class LetterDto {
             return result.trim().replace("_", " ");
         }
 
-        public ReadResponse setLimitedContentToLogoutMember() {
-            this.contents = LetterDto.setLetterContentToLogoutMember(this.contents);
-            return this;
-        }
     }
 
     @Getter

@@ -1,6 +1,7 @@
 import {authFetch} from "../../common/apiUtil.js";
 import {
     findParentWithClass,
+    isScrolledToBottom,
     readLetterPage,
     setFilterBtnOnOff,
     TodayCardWriteHistory
@@ -43,12 +44,12 @@ export function bindEventToCardListGrid() {
         deleteCustomCardBtn.addEventListener("click", deleteCardBtnClick);
     });
 
-    window.addEventListener("scroll", scrollCards);
+    window.addEventListener("wheel", scrollCards);
 }
 
 async function scrollCards() {
 
-    if (isScrolledToBottom()) {
+    if (event.deltaY > 0 && isScrolledToBottom()) {
 
         const cardSpace = document.querySelector("#card-list-space");
         const cardId = getLastCardIdFromLetterSpace(cardSpace);
@@ -57,14 +58,6 @@ async function scrollCards() {
     }
 }
 
-// TODO common 으로 옮기기
-function isScrolledToBottom() {
-    // 맨 아래로 스크롤되었는지 여부를 확인하는 로직
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollPosition = window.scrollY;
-    return windowHeight + scrollPosition >= documentHeight;
-}
 
 function getLastCardIdFromLetterSpace(cardSpace) {
 
@@ -94,13 +87,16 @@ async function clickFocusBtn() {
     }
 
     let imgUrl, focus;
+
+    const cdnUrl = "https://cdn.life-post.net/img/service/card";
+
     if (this.dataset.focus !== "true") {
         option.method = "POST";
-        imgUrl = "url('/img/focus-mark-on.png')";
+        imgUrl = `url('${cdnUrl}/focus-mark-on.png')`;
         focus = "true";
     } else {
         option.method = "DELETE";
-        imgUrl = "url('/img/focus-mark-off.png')";
+        imgUrl = `url('${cdnUrl}/focus-mark-off.png')`;
         focus = "false";
     }
 

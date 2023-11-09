@@ -1,5 +1,10 @@
 import {createLetterListSpace} from "./letterList.js";
-import {findParentWithClass, readLetterPage, setFilterBtnOnOff} from "../../common/utilTool.js";
+import {
+    findParentWithClass,
+    isScrolledToBottom,
+    readLetterPage,
+    setFilterBtnOnOff
+} from "../../common/utilTool.js";
 import {authFetch} from "../../common/apiUtil.js";
 
 export function bindEventToLetterListGrid() {
@@ -18,25 +23,17 @@ export function bindEventToLetterListGrid() {
         filterBtn.addEventListener("click", filterBtnClick);
     });
 
-    window.addEventListener("scroll", scrollLetters);
+    window.addEventListener("wheel", scrollLetters);
 }
 
 async function scrollLetters() {
-    if (isScrolledToBottom()) {
+    if (event.deltaY > 0 && isScrolledToBottom()) {
 
         const letterSpace = document.querySelector("#letter-list-space");
         const letterId = getLastLetterIdFromLetterSpace(letterSpace);
 
         await createLetterListSpace(letterSpace, letterId, bindEventToLetterListGrid);
     }
-}
-
-function isScrolledToBottom() {
-    // 맨 아래로 스크롤되었는지 여부를 확인하는 로직
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollPosition = window.scrollY;
-    return windowHeight + scrollPosition >= documentHeight;
 }
 
 function getLastLetterIdFromLetterSpace(letterSpace) {
@@ -77,12 +74,13 @@ async function clickFocusBtn() {
     const url = "/api/v1/letter/auth/focus";
 
     let focusType, imgUrl, focus;
+    const cdnUrl = "https://cdn.life-post.net/img/service/card";
     if (this.dataset.focus !== "true") {
-        imgUrl = "url('/img/focus-mark-on.png')";
+        imgUrl = `url('${cdnUrl}/focus-mark-on.png')`;
         focus = "true";
         focusType = "ATTENTION";
     } else {
-        imgUrl = "url('/img/focus-mark-off.png')";
+        imgUrl = `url('${cdnUrl}/focus-mark-off.png')`;
         focus = "false";
         focusType = "NON";
     }

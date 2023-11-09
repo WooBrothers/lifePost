@@ -34,7 +34,7 @@ public interface LetterRepository extends JpaRepository<Letter, Long> {
 
     Page<Letter> findByIdLessThanOrderByPostDateDesc(Long id, Pageable pageable);
 
-    Page<Letter> findByIdLessThanAndPostDateBeforeOrderByPostDateDesc(Long id, LocalDate postDate,
-        Pageable pageable);
+//    Page<Letter> findByIdLessThanAndPostDateBeforeOrderByPostDateDesc(Long id, LocalDate postDate,
+//        Pageable pageable);
 
 }

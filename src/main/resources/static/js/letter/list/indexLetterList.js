@@ -1,5 +1,6 @@
 import {createOpenLetterListSpace} from "./letterList.js";
 import {bindEventToIndexLetterPage} from "./indexLetterEvent.js";
+import {calculateDateOffset} from "../../common/utilTool.js";
 
 await createIndexLetterList()
 
@@ -13,7 +14,7 @@ async function createIndexLetterList() {
     onboardingBtn.addEventListener("click", clickOnboardingBtn);
 
     // 편지 그리기
-    await createOpenLetterListSpace(indexLetterSpace, 0, bindEventToIndexLetterPage);
+    await createOpenLetterListSpace(indexLetterSpace, calculateDateOffset(new Date(), 1), bindEventToIndexLetterPage);
 }
 
 function clickOnboardingBtn() {

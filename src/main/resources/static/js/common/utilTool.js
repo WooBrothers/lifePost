@@ -48,9 +48,26 @@ export function deleteCookie(cookieName) {
     document.cookie = `${cookieName}=; expires=${getCurrentUtcTime()}; path=/;`;
 }
 
+/* time start */
 export function getCurrentUtcTime() {
     return new Date().toUTCString();
 }
+
+export function calculateDateOffset(baseDate, offset) {
+    let date = new Date(baseDate);
+    date.setDate(baseDate.getDate() + offset);
+
+    // 내일 날짜를 ISO 8601 형식(yyyy-MM-dd)의 문자열로 변환
+    return date.toISOString().split('T')[0];
+}
+
+export function getTodayDate() {
+    const today = new Date();
+
+    return today.toISOString().split('T')[0];
+}
+
+/* time end */
 
 export function removeHTMLAndWhitespace(input) {
     // 태그 및 공백 제거
@@ -146,15 +163,6 @@ export function setLocalStorageJson(key, data) {
     localStorage.setItem(key, JSON.stringify(data));
 }
 
-export function getTodayDate() {
-    const today = new Date();
-
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더함
-    const day = String(today.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-}
 
 export function convertHyphenToCamelCase(target) {
     return target.replace(/-([a-z])/g, function (match, letter) {
@@ -383,10 +391,17 @@ export function createCoupangAdBannerInFeed(targetFeed) {
     coupangAdIframe.frameBorder = "0";
     coupangAdIframe.scrolling = "no";
     coupangAdIframe.referrerPolicy = "unsafe-url";
-    coupangAdIframe.style.marginBottom = "20px";
 
     paddingDiv.appendChild(coupangAdIframe);
     coupangPartnerAdSpace.appendChild(paddingDiv);
 
     return coupangPartnerAdSpace;
+}
+
+export function isScrolledToBottom() {
+    // 맨 아래로 스크롤되었는지 여부를 확인하는 로직
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollPosition = window.scrollY;
+    return windowHeight + scrollPosition >= documentHeight;
 }
