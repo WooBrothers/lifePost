@@ -1,9 +1,12 @@
 import {createLetterListSpace} from "./letterList.js";
 import {
     findParentWithClass,
+    getScrolling,
     isScrolledToBottom,
     readLetterPage,
-    setFilterBtnOnOff
+    setFilterBtnOnOff,
+    setScrollingNotUse,
+    setScrollingUse
 } from "../../common/utilTool.js";
 import {authFetch} from "../../common/apiUtil.js";
 
@@ -27,6 +30,13 @@ export function bindEventToLetterListGrid() {
 }
 
 async function scrollLetters() {
+
+    if (getScrolling()) {
+        return;
+    }
+
+    setScrollingUse();
+
     if (event.deltaY > 0 && isScrolledToBottom()) {
 
         const letterSpace = document.querySelector("#letter-list-space");
@@ -34,6 +44,8 @@ async function scrollLetters() {
 
         await createLetterListSpace(letterSpace, letterId, bindEventToLetterListGrid);
     }
+
+    setScrollingNotUse();
 }
 
 function getLastLetterIdFromLetterSpace(letterSpace) {

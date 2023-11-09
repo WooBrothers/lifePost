@@ -405,3 +405,17 @@ export function isScrolledToBottom() {
     const scrollPosition = window.scrollY;
     return windowHeight + scrollPosition >= documentHeight;
 }
+
+let isScrolling = false;
+
+export function getScrolling() {
+    return isScrolling;
+}
+
+export function setScrollingUse() {
+    isScrolling = true;
+}
+
+export function setScrollingNotUse() {
+    isScrolling = false;
+}
