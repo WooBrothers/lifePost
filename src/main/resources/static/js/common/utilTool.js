@@ -397,3 +397,11 @@ export function createCoupangAdBannerInFeed(targetFeed) {
 
     return coupangPartnerAdSpace;
 }
+
+export function isScrolledToBottom() {
+    // 맨 아래로 스크롤되었는지 여부를 확인하는 로직
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollPosition = window.scrollY;
+    return windowHeight + scrollPosition >= documentHeight;
+}
