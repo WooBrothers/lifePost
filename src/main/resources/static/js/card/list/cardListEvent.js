@@ -87,13 +87,16 @@ async function clickFocusBtn() {
     }
 
     let imgUrl, focus;
+
+    const cdnUrl = "https://cdn.life-post.net/img/service/card";
+
     if (this.dataset.focus !== "true") {
         option.method = "POST";
-        imgUrl = "url('/img/focus-mark-on.png')";
+        imgUrl = `url('${cdnUrl}/focus-mark-on.png')`;
         focus = "true";
     } else {
         option.method = "DELETE";
-        imgUrl = "url('/img/focus-mark-off.png')";
+        imgUrl = `url('${cdnUrl}/focus-mark-off.png')`;
         focus = "false";
     }
 

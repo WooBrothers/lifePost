@@ -74,12 +74,13 @@ async function clickFocusBtn() {
     const url = "/api/v1/letter/auth/focus";
 
     let focusType, imgUrl, focus;
+    const cdnUrl = "https://cdn.life-post.net/img/service/card";
     if (this.dataset.focus !== "true") {
-        imgUrl = "url('/img/focus-mark-on.png')";
+        imgUrl = `url('${cdnUrl}/focus-mark-on.png')`;
         focus = "true";
         focusType = "ATTENTION";
     } else {
-        imgUrl = "url('/img/focus-mark-off.png')";
+        imgUrl = `url('${cdnUrl}/focus-mark-off.png')`;
         focus = "false";
         focusType = "NON";
     }

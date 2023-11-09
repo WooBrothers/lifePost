@@ -91,13 +91,16 @@ function createCardSpace(content) {
 
 function getFocusImgByContent(content) {
     let result = {};
+
+    const cdnUrl = "https://cdn.life-post.net/img/service/card";
+
     if (content.focus === "ATTENTION") {
         result.focus = true;
-        result.focusImgUrl = "url('/img/focus-mark-on.png')";
+        result.focusImgUrl = `url('${cdnUrl}/focus-mark-on.png')`;
         return result
     } else if (content.focus === "NON") {
         result.focus = false;
-        result.focusImgUrl = "url('/img/focus-mark-off.png')";
+        result.focusImgUrl = `url('${cdnUrl}/focus-mark-off.png')`;
         return result;
     } else {
         throw new Error("content focus type 에러.");
