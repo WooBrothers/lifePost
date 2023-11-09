@@ -104,7 +104,7 @@ function setJsonLdInfo(res) {
             "name": "Life Post", // 웹사이트 이름
             "logo": {
                 "@type": "ImageObject",
-                "url": `https://${window.location.hostname}/img/full-logo` // 웹사이트 로고 URL
+                "url": `https://cdn.life-post.net/img/service/logo/full-logo` // 웹사이트 로고 URL
             }
         },
         "mainEntityOfPage": {

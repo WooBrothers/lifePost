@@ -37,7 +37,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model) throws JsonProcessingException {
-        model.addAttribute("ogImage", url + "/img/full-logo.png");
+        model.addAttribute("ogImage", "https://cdn.life-post.net/img/service/logo/full-logo.png");
         model.addAttribute("ogUrl", url);
         return "index";
     }
@@ -166,5 +166,4 @@ public class IndexController {
 
         return ResponseEntity.ok(result);
     }
-
 }
