@@ -16,10 +16,10 @@ export async function createLetterListSpace(letterListSpace, letterId, event) {
     return resultResponse
 }
 
-export async function createOpenLetterListSpace(letterListSpace, letterId, event) {
+export async function createOpenLetterListSpace(letterListSpace, postDate, event) {
     let resultResponse = null;
 
-    await getIndexLetterList(letterId, 7).then(response => {
+    await getIndexLetterList(postDate, 7).then(response => {
         createIndexLetter(response, letterListSpace);
         resultResponse = response;
     });

@@ -1,9 +1,12 @@
 import {authFetch} from "../../common/apiUtil.js";
 import {
     findParentWithClass,
+    getScrolling,
     isScrolledToBottom,
     readLetterPage,
     setFilterBtnOnOff,
+    setScrollingNotUse,
+    setScrollingUse,
     TodayCardWriteHistory
 } from "../../common/utilTool.js";
 import {createCardListSpace} from "./cardList.js";
@@ -49,6 +52,12 @@ export function bindEventToCardListGrid() {
 
 async function scrollCards() {
 
+    if (getScrolling()) {
+        return;
+    }
+
+    setScrollingUse();
+
     if (event.deltaY > 0 && isScrolledToBottom()) {
 
         const cardSpace = document.querySelector("#card-list-space");
@@ -56,6 +65,8 @@ async function scrollCards() {
 
         await createCardListSpace(cardSpace, cardId, bindEventToCardListGrid);
     }
+
+    setScrollingNotUse();
 }
 
 
