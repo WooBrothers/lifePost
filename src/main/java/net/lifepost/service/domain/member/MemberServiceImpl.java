@@ -41,16 +41,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDto getMembershipInfo(UserDetails userDetails) {
-        return null;
-    }
-
-    @Override
-    public MemberDto getPaymentInfo(UserDetails userDetails) {
-        return null;
-    }
-
-    @Override
     public void withdraw(UserDetails userDetails) {
         Member member = common.getMemberByUserDetail(userDetails);
 

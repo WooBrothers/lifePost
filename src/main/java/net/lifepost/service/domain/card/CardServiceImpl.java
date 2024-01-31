@@ -19,7 +19,6 @@ import net.lifepost.service.common.exception.ErrorEnum;
 import net.lifepost.service.domain.card.CardDto.PageResponse;
 import net.lifepost.service.domain.card.CardDto.PostCustomRequest;
 import net.lifepost.service.domain.card.CardDto.PostFocusRequest;
-import net.lifepost.service.domain.card.CardDto.PostRequest;
 import net.lifepost.service.domain.card.CardDto.ReadResponse;
 import net.lifepost.service.model.card.CardMapper;
 import net.lifepost.service.model.card.CardTypeEnum;
@@ -98,64 +97,6 @@ public class CardServiceImpl implements CardService {
         List<PageResponse> pageResponses = separateMemberCardByType(memberCards);
 
         return new PageImpl<>(pageResponses, pageable, memberCards.getTotalElements());
-    }
-
-    /**
-     * 입력한 멤버 커스텀 카드 이후의 size 만큼 멤버 카드 조회
-     *
-     * @param size        조회할 카드 수
-     * @param userDetails security 멤버 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-    @Override
-    public Page<CardDto.PageResponse> getMemberCustomCards(int size, int pageNo,
-        UserDetails userDetails) {
-
-        pageNo = common.verifyPageNo(pageNo);
-
-        Pageable pageable = PageRequest.of(pageNo, size);
-
-        Member member = common.getMemberByUserDetail(userDetails);
-
-        Page<MemberCustomCard> memberCustomCards = memberCustomCardRepository
-            .findByMemberIdOrderByCreatedAtDesc(
-                member.getId(), pageable);
-
-        List<CardDto.PageResponse> pageResponse = memberCustomCards
-            .map(card -> cardMapper.toMemberPageResponse(card)
-                .setCardId(card.getId())
-            ).stream()
-            .map(response -> response.setType(CardTypeEnum.CUSTOM))
-            .collect(
-                Collectors.toList());
-
-        return new PageImpl<>(pageResponse, pageable, memberCustomCards.getTotalElements());
-
-    }
-
-    /**
-     * 입력한 멤버 focus 카드 이후의 size 만큼 focus 카드 조회
-     *
-     * @param size        조회할 카드 수
-     * @param userDetails security 멤버 정보
-     * @return Page 처리된 카드 정보 (컨텐츠 x)
-     */
-    @Override
-    public Page<PageResponse> getFocusCards(int size, int pageNo, UserDetails userDetails) {
-
-        pageNo = common.verifyPageNo(pageNo);
-
-        Pageable pageable = PageRequest.of(pageNo, size);
-
-        Member member = common.getMemberByUserDetail(userDetails);
-
-        Page<MemberCard> memberCards = memberCardRepository
-            .findByMemberIdAndFocusOrderByCreatedAtDesc(
-                member.getId(), FocusTypeEnum.ATTENTION, pageable
-            );
-
-        return new PageImpl<>(separateMemberCardByType(memberCards), pageable,
-            memberCards.getTotalElements());
     }
 
     /**
@@ -282,22 +223,6 @@ public class CardServiceImpl implements CardService {
         memberCardRepository.save(memberCard);
 
         return response;
-    }
-
-    /**
-     * 확언 카드 쓰기
-     *
-     * @param cardPostReqDto 확언 카드를 쓰기위한 카드 정보
-     * @param userDetails    security 멤버 정보
-     * @return 생성한 카드 정보
-     */
-    @Override
-    public ReadResponse postAffirmationCard(PostRequest cardPostReqDto, UserDetails userDetails) {
-        AffirmationCard affirmationCard = cardMapper.toEntity(cardPostReqDto);
-
-        return cardMapper.toReadResponse(
-            affirmationCardRepository.save(affirmationCard)
-        );
     }
 
     /**

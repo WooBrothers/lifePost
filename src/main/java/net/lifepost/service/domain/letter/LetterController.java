@@ -28,23 +28,6 @@ public class LetterController {
     /* beans */
     private final LetterService letterService;
 
-    // TODO 삭제 -> 편지 무료화
-    @GetMapping("/open/latest")
-    public ResponseEntity<LetterDto.ReadResponse> getTodayLetter() {
-
-        return ResponseEntity.ok().body(letterService.getLatestLetter());
-    }
-
-
-    // TODO 삭제 -> 편지 무료화
-    @GetMapping("/auth/stamp/{letterId}")
-    public ResponseEntity<LetterDto.ReadResponse> getLetterContentsUsingStamp(
-        @PathVariable Long letterId,
-        @AuthenticationPrincipal UserDetails userDetails) {
-
-        return ResponseEntity.ok(letterService.getLetterContentsByLetterId(letterId, userDetails));
-    }
-
     @GetMapping("/open/{letterId}")
     public ResponseEntity<LetterDto.ReadResponse> getOpenLetterContents(
         @PathVariable Long letterId) {

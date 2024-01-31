@@ -77,23 +77,8 @@ public class Member {
     @UpdateTimestamp
     private LocalDateTime updateAt;
 
-    public String getRoleKey() {
-        return this.role.getKey();
-    }
-
-    public Member update(String name) {
-        this.name = name;
-
-        return this;
-    }
-
     public Member updateRefreshToken(String reIssueRefreshToken) {
         this.setRefreshToken(reIssueRefreshToken);
-        return this;
-    }
-
-    public Member useStamp() {
-        this.setStampCount(this.getStampCount() - 1);
         return this;
     }
 

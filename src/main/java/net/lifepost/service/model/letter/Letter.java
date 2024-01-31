@@ -58,10 +58,6 @@ public class Letter {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public String getPreviewLetterContent() {
-        return getContents().substring(0, 100) + "...";
-    }
-
     public String getTitleByText() {
         String strPattern = "(<[a-zA-Z/]*>)*";
         Pattern pattern = Pattern.compile(strPattern);

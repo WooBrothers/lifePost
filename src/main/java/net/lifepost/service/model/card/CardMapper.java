@@ -6,7 +6,6 @@ import net.lifepost.service.domain.card.CardDto.PostCustomRequest;
 import net.lifepost.service.domain.card.CardDto.PostRequest;
 import net.lifepost.service.domain.card.CardDto.ReadResponse;
 import net.lifepost.service.model.card.affr_card.AffirmationCard;
-import net.lifepost.service.model.card.memb_card.MemberCard;
 import net.lifepost.service.model.card.memb_cust_card.MemberCustomCard;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -20,13 +19,9 @@ public interface CardMapper {
 
     MemberCustomCard toMemberCustomCardEntity(PostCustomRequest memberCustomCardPostDto);
 
-    PageResponse toMemberPageResponse(MemberCard memberCard);
-
     PageResponse toMemberPageResponse(AffirmationCard affirmationCard);
 
     PageResponse toMemberPageResponse(MemberCustomCard memberCustomCard);
-
-    PageResponse toMemberLetterAffirmationPageResponse(AffirmationCard affirmationCard);
 
     ReadResponse toReadResponse(AffirmationCard affirmationCard);
 

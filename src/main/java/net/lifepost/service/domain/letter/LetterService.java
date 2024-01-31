@@ -10,15 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface LetterService {
 
-    LetterDto.ReadResponse getLatestLetter();
-
     Page<PageResponse> getMemberLetterList(Long letterId, int size,
         List<FocusTypeEnum> focusTypeEnumList, UserDetails userDetails);
 
     Page<PageResponse> getIndexLetterList(LocalDate postDate, int size);
-
-    LetterDto.ReadResponse getLetterContentsByLetterId(Long letterId,
-        UserDetails userDetails);
 
     LetterDto.ReadResponse getOpenLetterContents(Long letterId);
 

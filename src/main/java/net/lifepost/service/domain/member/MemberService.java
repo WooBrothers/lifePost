@@ -7,9 +7,5 @@ public interface MemberService {
 
     MemberDto.InfoResponse getMemberInfo(UserDetails userDetails);
 
-    MemberDto getMembershipInfo(UserDetails userDetails);
-
-    MemberDto getPaymentInfo(UserDetails userDetails);
-
     void withdraw(UserDetails userDetails);
 }

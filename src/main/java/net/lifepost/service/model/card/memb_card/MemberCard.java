@@ -93,12 +93,4 @@ public class MemberCard {
     @UpdateTimestamp
     private LocalDateTime updateAt;
 
-
-    public MemberLetter getMemberLetterIfAffirmationCard() {
-        if (this.getType().equals(CardTypeEnum.AFFIRMATION)) {
-            return this.memberLetter;
-        } else {
-            return null;
-        }
-    }
 }
